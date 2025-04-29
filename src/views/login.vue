@@ -3,7 +3,7 @@
 		<div class="w-[734px] h-[740px] bg-[#121212] rounded-2xl flex items-center py-8 px-24 flex-col">
 			<!-- Start Spotify logo -->
 			<a href="#">
-				<Icon icon="mdi:spotify" class="text-white transition size-14 hover:text-green-500" />
+				<Icon icon="mdi:spotify" class="text-white transition cursor-pointer size-14 hover:text-green-500 " />
 			</a>
 			<!-- End Sportfy logo -->
 
@@ -17,27 +17,27 @@
 					<a href=""
 						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 						<Icon icon="devicon:google" class="size-6" />
-						<p class="text-lg font-medium text-white pl-9">Continue with Google</p>
+						<p class="text-lg font-bold text-white pl-9">Continue with Google</p>
 					</a>
 				</li>
 				<li class="mb-2">
 					<a href=""
 						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 						<Icon icon="logos:facebook" class="size-6" />
-						<p class="text-lg font-medium text-white pl-9">Continue with Facebook</p>
+						<p class="text-lg font-bold text-white pl-9">Continue with Facebook</p>
 					</a>
 				</li>
 				<li class="mb-2">
 					<a href=""
 						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-8 flex items-center hover:border-white transition duration-300">
 						<Icon icon="ic:baseline-apple" class="text-white size-8" />
-						<p class="text-lg font-medium text-white pl-9">Continue with Apple</p>
+						<p class="text-lg font-bold text-white pl-9">Continue with Apple</p>
 					</a>
 				</li>
 				<li class="mb-2">
 					<a href=""
 						class="w-[350px] h-[52px] border border-gray-500 rounded-full justify-center  flex items-center hover:border-white transition duration-300">
-						<p class="text-lg font-medium text-white">Continue with phone number</p>
+						<p class="text-lg font-bold text-white">Continue with phone number</p>
 					</a>
 				</li>
 			</ul>
@@ -47,7 +47,7 @@
 
 			<!-- Start login form -->
 			<form class="flex flex-col w-[350px] py-8">
-				<label for="login-username" class="pb-1 text-lg font-medium text-white">Email or username</label>
+				<label for="login-username" class="pb-1 text-lg font-bold text-white">Email or username</label>
 				<input type="text" id="login-username" placeholder="Email or username"
 					class="p-3 text-white bg-transparent border border-gray-500 rounded-md placeholder:text-sm">
 				<button
@@ -58,9 +58,9 @@
 			<!-- Start sign up link -->
 			<div class="flex flex-row items-center">
 				<p class="text-[#aeaeae]">Don't have an account?</p>
-				<a class="pl-4 font-semibold text-white underline transition underline-offset-2 hover:text-green-500"
-					href="#">Sign
-					up for Spotify</a>
+				<RouterLink to="/signup"
+					class="pl-4 font-semibold text-white underline transition underline-offset-2 hover:text-green-500">
+					Sign up for Spotify</RouterLink>
 			</div>
 			<!-- End sign up link -->
 		</div>
