@@ -2,9 +2,9 @@
 	<div class="h-screen bg-gradient-to-b from-[#292929] to-black from-10% to-80% flex items-center justify-center">
 		<div class="w-[734px] h-[740px] bg-[#121212] rounded-2xl flex items-center py-8 px-24 flex-col">
 			<!-- Start Spotify logo -->
-			<a href="#">
+			<RouterLink to="/">
 				<Icon icon="mdi:spotify" class="text-white transition cursor-pointer size-14 hover:text-green-500 " />
-			</a>
+			</RouterLink>
 			<!-- End Sportfy logo -->
 
 			<!-- Start login header -->

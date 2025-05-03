@@ -2,9 +2,9 @@
 	<div class="bg-[#121212] h-screen flex items-center justify-center">
 		<div class="flex flex-col items-center w-96">
 			<!-- Start signup header -->
-			<a href="#">
+			<RouterLink to="/">
 				<Icon icon="mdi:spotify" class="text-white transition cursor-pointer size-14 hover:text-green-500 " />
-			</a>
+			</RouterLink>
 			<h1 class="text-5xl font-bold text-center text-white">Sign up to</h1>
 			<h1 class="text-5xl font-bold text-center text-white">start listening</h1>
 			<!-- End signup header -->
