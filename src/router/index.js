@@ -1,6 +1,7 @@
 import Index from "@/views/index.vue";
 import Login from "@/views/login.vue";
 import Signup from "@/views/signup.vue";
+import Verify from "@/views/verify.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -20,6 +21,11 @@ const router = createRouter({
 			path: "/",
 			name: "index",
 			component: Index
+		},
+		{
+			path: "/verify",
+			name: "verify",
+			component: Verify
 		}
 	],
 });
