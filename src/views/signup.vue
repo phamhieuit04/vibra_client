@@ -30,11 +30,11 @@
 			<!-- Start signup methods -->
 			<ul class="py-8">
 				<li class="mb-2">
-					<a href=""
+					<button v-on:click="signInPopup()"
 						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 						<Icon icon="devicon:google" class="size-6" />
 						<p class="text-lg font-bold text-white pl-9">Sign up with Google</p>
-					</a>
+					</button>
 				</li>
 				<li class="mb-2">
 					<a href=""
@@ -71,10 +71,29 @@
 
 <script>
 	import { Icon } from '@iconify/vue';
+	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+	import { getAuth } from 'firebase/auth';
 
 	export default {
+		data() {
+			return {
+				googleProvider: new GoogleAuthProvider(),
+				auth: new getAuth()
+			}
+		},
 		components: {
 			Icon
+		},
+		methods: {
+			signInPopup() {
+				signInWithPopup(this.auth, this.googleProvider)
+					.then((res) => {
+						// TODO: call login api -> return sanctum tonken -> set to session storage
+						this.$router.push('/index');
+					}).catch((e) => {
+						console.log(e);
+					})
+			}
 		}
 	}
 </script>

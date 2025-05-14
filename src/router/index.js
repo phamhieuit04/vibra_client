@@ -15,18 +15,18 @@ const router = createRouter({
 		{
 			path: "/signup",
 			name: "signup",
-			component: Signup
+			component: Signup,
 		},
 		{
 			path: "/",
 			name: "index",
-			component: Index
+			component: Index,
 		},
 		{
 			path: "/verify",
 			name: "verify",
-			component: Verify
-		}
+			component: Verify,
+		},
 	],
 });
 

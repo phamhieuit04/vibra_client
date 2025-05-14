@@ -1,25 +1,26 @@
 {
-  "name": "spotify_clone",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
-  },
-  "devDependencies": {
-    "tailwind-scrollbar": "^3.1.0",
-    "@iconify/vue": "^4.3.0",
-    "@vitejs/plugin-vue": "^5.2.3",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.17",
-    "vite": "^6.2.4",
-    "vite-plugin-vue-devtools": "^7.7.2"
-  }
+	"name": "spotify_clone",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"firebase": "^11.7.1",
+		"vue": "^3.5.13",
+		"vue-router": "^4.5.0"
+	},
+	"devDependencies": {
+		"@iconify/vue": "^4.3.0",
+		"@vitejs/plugin-vue": "^5.2.3",
+		"autoprefixer": "^10.4.21",
+		"postcss": "^8.5.3",
+		"tailwind-scrollbar": "^3.1.0",
+		"tailwindcss": "^3.4.17",
+		"vite": "^6.2.4",
+		"vite-plugin-vue-devtools": "^7.7.2"
+	}
 }
