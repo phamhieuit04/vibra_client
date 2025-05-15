@@ -28,29 +28,7 @@
 			</div>
 
 			<!-- Start signup methods -->
-			<ul class="py-8">
-				<li class="mb-2">
-					<button v-on:click="googleSignInPopup(googleProvider)"
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
-						<Icon icon="devicon:google" class="size-6" />
-						<p class="text-lg font-bold text-white pl-9">Sign up with Google</p>
-					</button>
-				</li>
-				<li class="mb-2">
-					<a href=""
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
-						<Icon icon="logos:facebook" class="size-6" />
-						<p class="text-lg font-bold text-white pl-9">Sign up with Facebook</p>
-					</a>
-				</li>
-				<li class="mb-2">
-					<a href=""
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-8 flex items-center hover:border-white transition duration-300">
-						<Icon icon="ic:baseline-apple" class="text-white size-8" />
-						<p class="text-lg font-bold text-white pl-9">Sign up with Apple</p>
-					</a>
-				</li>
-			</ul>
+			<SigninMethods />
 			<!-- End signup methods -->
 
 			<div class="w-full px-[18px] pb-8">
@@ -70,45 +48,13 @@
 </template>
 
 <script>
+	import SigninMethods from '@/components/signinMethods.vue';
 	import { Icon } from '@iconify/vue';
-	import axios from 'axios';
-	import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 	export default {
-		data() {
-			return {
-				googleProvider: new GoogleAuthProvider(),
-				auth: new getAuth()
-			}
-		},
 		components: {
-			Icon
-		},
-		methods: {
-			async callAuthAPI(authRes) {
-				await axios.get('http://spotify_clone_api.test/api/firebase/auth', {
-					params: {
-						'email': authRes.user.email
-					}
-				}).then((apiRes) => {
-					if (apiRes.data.code == 200) {
-						localStorage.setItem('token', apiRes.data.data.token);
-						this.$router.push('/');
-					}
-				}).catch((apiError) => {
-					console.log(apiError);
-					alert("Call API thất bại");
-				})
-			},
-			googleSignInPopup(provider) {
-				signInWithPopup(this.auth, provider)
-					.then((authRes) => {
-						this.callAuthAPI(authRes);
-					})
-					.catch((authError) => {
-						console.log(authError);
-					})
-			}
+			Icon,
+			SigninMethods
 		}
 	}
 </script>

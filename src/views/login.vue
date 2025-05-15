@@ -12,35 +12,7 @@
 			<!-- End login header -->
 
 			<!-- Start login methods -->
-			<ul class="py-8">
-				<li class="mb-2">
-					<a href=""
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
-						<Icon icon="devicon:google" class="size-6" />
-						<p class="text-lg font-bold text-white pl-9">Continue with Google</p>
-					</a>
-				</li>
-				<li class="mb-2">
-					<a href=""
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
-						<Icon icon="logos:facebook" class="size-6" />
-						<p class="text-lg font-bold text-white pl-9">Continue with Facebook</p>
-					</a>
-				</li>
-				<li class="mb-2">
-					<a href=""
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-8 flex items-center hover:border-white transition duration-300">
-						<Icon icon="ic:baseline-apple" class="text-white size-8" />
-						<p class="text-lg font-bold text-white pl-9">Continue with Apple</p>
-					</a>
-				</li>
-				<li class="mb-2">
-					<a href=""
-						class="w-[350px] h-[52px] border border-gray-500 rounded-full justify-center  flex items-center hover:border-white transition duration-300">
-						<p class="text-lg font-bold text-white">Continue with phone number</p>
-					</a>
-				</li>
-			</ul>
+			<SigninMethods />
 			<!-- End login methods -->
 
 			<hr class="w-full text-gray-500 opacity-15">
@@ -68,11 +40,13 @@
 </template>
 
 <script>
+	import SigninMethods from '@/components/signinMethods.vue';
 	import { Icon } from '@iconify/vue';
 
 	export default {
 		components: {
-			Icon
+			Icon,
+			SigninMethods
 		}
 	}
 </script>
