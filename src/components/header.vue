@@ -28,25 +28,57 @@
 		<!-- End search bar -->
 
 		<!-- Start login/signup -->
-		<div class="flex items-center gap-4">
-			<RouterLink to="/signup" class="font-bold text-white transition duration-200 hover:scale-105">
-				Sign up
-			</RouterLink>
-			<RouterLink to="/login"
-				class="py-3 font-bold text-center text-black transition duration-200 bg-white w-28 rounded-3xl hover:scale-105">
-				Login
-			</RouterLink>
+		<div>
+			<div v-if="authStore.isLoggedIn == false" class="flex items-center gap-4">
+				<RouterLink to="/signup" class="font-bold text-white transition duration-200 hover:scale-105">
+					Sign up
+				</RouterLink>
+				<RouterLink to="/login"
+					class="py-3 font-bold text-center text-black transition duration-200 bg-white w-28 rounded-3xl hover:scale-105">
+					Login
+				</RouterLink>
+			</div>
+			<div v-else class="flex items-center gap-4">
+				<h1 class="font-semibold text-white text-1xl">Xin chào {{ authStore.user.name }}!</h1>
+				<button v-on:click="logout()"
+					class="py-3 font-bold text-center text-black transition duration-200 bg-white w-28 rounded-3xl hover:scale-105">
+					Logout
+				</button>
+			</div>
 		</div>
 		<!-- End login/singup -->
 	</div>
 </template>
 
 <script>
+	import { useAuthStore } from '@/stores/auth';
 	import { Icon } from '@iconify/vue';
+	import axios from 'axios';
 
 	export default {
+		setup() {
+			const authStore = useAuthStore();
+			return { authStore };
+		},
 		components: {
 			Icon
+		},
+		methods: {
+			async logout() {
+				await axios.get('http://spotify_clone_api.test/api/logout', {
+					'headers': {
+						'Authorization': 'Bearer ' + this.authStore.user.token
+					}
+				}).then((res) => {
+					if (res.data.code == 200) {
+						this.authStore.$reset();
+						this.$router.push('/login');
+					}
+				}).catch((e) => {
+					console.log(e);
+					alert("Call API thất bại");
+				})
+			}
 		}
 	}
 </script>

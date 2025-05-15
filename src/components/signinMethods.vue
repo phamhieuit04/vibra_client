@@ -1,7 +1,7 @@
 <template>
 	<ul class="py-8">
 		<li class="mb-2">
-			<button v-on:click="googleSignInPopup(googleProvider)"
+			<button v-on:click="firebaseSignInPopup(googleProvider)"
 				class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 				<Icon icon="devicon:google" class="size-6" />
 				<p class="text-lg font-bold text-white pl-9">Sign up with Google</p>
@@ -28,12 +28,17 @@
 	import { Icon } from '@iconify/vue';
 	import axios from 'axios';
 	import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+	import { useAuthStore } from '@/stores/auth';
 
 	export default {
+		setup() {
+			const authStore = useAuthStore();
+			return { authStore };
+		},
 		data() {
 			return {
 				googleProvider: new GoogleAuthProvider(),
-				auth: new getAuth()
+				firebaseAuth: new getAuth()
 			}
 		},
 		components: {
@@ -47,7 +52,8 @@
 					}
 				}).then((apiRes) => {
 					if (apiRes.data.code == 200) {
-						localStorage.setItem('token', apiRes.data.data.token);
+						this.authStore.setIsLoggedIn(true);
+						this.authStore.setUser(apiRes.data.data);
 						this.$router.push('/');
 					}
 				}).catch((apiError) => {
@@ -55,8 +61,8 @@
 					alert("Call API thất bại");
 				})
 			},
-			googleSignInPopup(provider) {
-				signInWithPopup(this.auth, provider)
+			firebaseSignInPopup(provider) {
+				signInWithPopup(this.firebaseAuth, provider)
 					.then((authRes) => {
 						this.callAuthAPI(authRes);
 					})

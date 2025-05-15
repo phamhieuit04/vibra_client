@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/auth";
 import Index from "@/views/index.vue";
 import Login from "@/views/login.vue";
 import Signup from "@/views/signup.vue";
@@ -21,6 +22,9 @@ const router = createRouter({
 			path: "/",
 			name: "index",
 			component: Index,
+			meta: {
+				requiresAuth: true,
+			},
 		},
 		{
 			path: "/verify",
@@ -28,6 +32,15 @@ const router = createRouter({
 			component: Verify,
 		},
 	],
+});
+
+router.beforeEach((to, from) => {
+	const authStore = useAuthStore();
+	if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+		return {
+			path: "/login",
+		};
+	}
 });
 
 export default router;
