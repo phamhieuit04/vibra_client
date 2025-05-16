@@ -8,11 +8,11 @@
 			</button>
 		</li>
 		<li class="mb-2">
-			<a href=""
+			<button v-on:click="firebaseSignInPopup(facebookProvider)"
 				class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 				<Icon icon="logos:facebook" class="size-6" />
 				<p class="text-lg font-bold text-white pl-9">Sign up with Facebook</p>
-			</a>
+			</button>
 		</li>
 		<li class="mb-2">
 			<a href=""
@@ -38,6 +38,7 @@
 		data() {
 			return {
 				googleProvider: new GoogleAuthProvider(),
+				facebookProvider: new FacebookAuthProvider(),
 				firebaseAuth: new getAuth()
 			}
 		},
