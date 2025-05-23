@@ -1,84 +1,89 @@
+<script setup>
+import { ref } from "vue";
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { Icon } from '@iconify/vue';
+import axios from 'axios';
+import { useViewStore } from "@/stores/view";
+
+let openMenu = ref(false);
+
+const useView = useViewStore()
+const authStore = useAuthStore();
+const router = useRouter();
+
+async function logout() {
+	try {
+		const res = await axios.get('http://spotify_clone_api.test/api/logout', {
+			'headers': {
+				'Authorization': 'Bearer ' + this.authStore.user.token,
+			},
+		});
+
+		if (res.data.code === 200) {
+			authStore.$reset();
+			router.push('/login');
+		}
+	} catch (e) {
+		console.log(e);
+		alert('Call API thất bại');
+	}
+}
+</script>
+
+
 <template>
-	<div class="fixed top-0 left-0 right-0 flex items-center justify-between w-full p-2 bg-black">
-		<!-- Start Spotify logo -->
-		<RouterLink to="/" class="px-4">
-			<Icon icon="mdi:spotify"
-				class="text-4xl text-white transition duration-200 cursor-pointer hover:text-green-500" />
-		</RouterLink>
-		<!-- End Spotify logo -->
-
-		<!-- Start search bar -->
-		<div class="flex items-center gap-3">
-			<RouterLink to="/"
-				class="flex items-center justify-center bg-[#1f1f1f] rounded-full size-12 hover:bg-[#2a2a2a] transition duration-200">
-				<Icon icon="material-symbols:home" class="text-3xl text-white transition duration-200 cursor-pointer" />
-			</RouterLink>
-			<div
-				class="py-2 px-3 bg-[#212121] w-[500px] rounded-3xl justify-between flex items-center gap-3 outline outline-2 focus-within:outline-white hover:bg-[#2a2a2a] focus-within:bg-[#2a2a2a] transition-all duration-200">
-				<div class="flex items-center w-full gap-2 border-r-2 border-[#7c7c7c]">
-					<Icon icon="material-symbols:search-rounded"
-						class="text-4xl text-white transition duration-200 cursor-pointer" />
-					<input type="text" class="w-full pr-4 text-white bg-transparent border-none focus:outline-none"
-						placeholder="What do you want to play?">
-				</div>
-				<Icon icon="fluent:collections-empty-16-filled"
-					class="text-3xl text-white transition duration-200 cursor-pointer hover:scale-110" />
-			</div>
+	<div class="w-[100%] h-[64px] fixed right-0 z-20 bg-[#BC4D15] flex items-center justify-between">
+		<div class="flex items-center gap-4 ml-8" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
+			<Icon icon="tabler:poo-filled"
+				class="text-white transition duration-200 cursor-pointer size-10 hover:text-black text-[64px]" />
 		</div>
-		<!-- End search bar -->
 
-		<!-- Start login/signup -->
-		<div>
-			<div v-if="authStore.isLoggedIn == false" class="flex items-center gap-4">
-				<RouterLink to="/signup" class="font-bold text-white transition duration-200 hover:scale-105">
-					Sign up
-				</RouterLink>
-				<RouterLink to="/login"
-					class="py-3 font-bold text-center text-black transition duration-200 bg-white w-28 rounded-3xl hover:scale-105">
-					Login
-				</RouterLink>
-			</div>
-			<div v-else class="flex items-center gap-4">
-				<h1 class="font-semibold text-white text-1xl">Xin chào {{ authStore.user.name }}!</h1>
-				<button v-on:click="logout()"
-					class="py-3 font-bold text-center text-black transition duration-200 bg-white w-28 rounded-3xl hover:scale-105">
-					Logout
+		<!-- Home & Search -->
+		<div class="flex self-center items-center gap-2">
+			<button class="bg-[#1D1512] p-2 rounded-full hover:bg-neutral-700"
+				@click="useView.setComponent('HomePage'); useView.selectItem(this)">
+				<Icon icon="material-symbols:home" class="transition duration-200 cursor-pointer size-7" 
+					:class="useView.currentComponent === 'HomePage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'"/>
+			</button>
+
+			<!-- Search Box -->
+			<div class="flex items-center bg-[#1D1512] text-sm text-[#FFE5D6]/20 rounded-full px-3 py-1 w-80 h-11">
+				<Icon icon="material-symbols:search-rounded"
+						class="transition duration-200 cursor-pointer size-8 mr-1" 
+						:class="useView.currentComponent === 'SearchPage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'"/>
+				<input type="text" placeholder="Bạn muốn phát nội dung gì?"
+					@click="useView.setComponent('SearchPage'); useView.selectItem(this)"
+					style="font-family: 'Montserrat', sans-serif;"
+					class="text-[#FFE5D6]/20 bg-transparent focus:outline-none w-full" />
+				<button class="ml-2">
+
 				</button>
 			</div>
 		</div>
-		<!-- End login/singup -->
+
+
+		<!-- Right Controls -->
+		<div class="flex items-center gap-4">
+			<div class="text-white">
+				XIN CHÀO
+			</div>
+			<div class="w-8 h-8 mr-[10px] rounded-full flex items-center justify-center text-white font-bold">
+				<button @click="openMenu = !openMenu" type="button" class=" cursor-pointer">
+					<div class="flex items-center">
+						<img class="rounded-full" width="30"
+							src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/327906584_1623414034763055_2313595742443607128_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=110&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeHU7kPK7H2yzZUnTlh8ZMxVOMNfpq35Qsw4w1-mrflCzMYLokSXxT9J2NllOm6moxIp2TS6fKMX1p8w3b7z9m_q&_nc_ohc=nRmSn2BIUxwQ7kNvwGlh4B8&_nc_oc=AdmeH6EkPvPHiDDMzv4fs5mYVufKYGAt-P-PW8-hxM6Qy6ipvVZoJnbJ0lMczr6MdDKbxbXhT1Bsy8lvwrKEGdAY&_nc_zt=24&_nc_ht=scontent.fhan2-4.fna&_nc_gid=lCIC4Bx56CiH104oBXlJ1Q&oh=00_AfJEry-lRiRTpncqdE8Ipt728bj62-uIybneG90y_Zv5NA&oe=682F775F"
+							alt="">
+					</div>
+				</button>
+				<span v-if="openMenu" class="fixed bg-[#282828] w-[200px] z-50 top-[64px] right-1 p-1">
+					<ul class="text-gray-200 font-semibold text-[14px]">
+						<li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer"
+							@click="useView.setComponent('UserPage'); useView.selectItem(this)">Hồ sơ</li>
+						<li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="logout();">Đăng xuất</li>
+					</ul>
+				</span>
+			</div>
+		</div>
 	</div>
 </template>
-
-<script>
-	import { useAuthStore } from '@/stores/auth';
-	import { Icon } from '@iconify/vue';
-	import axios from 'axios';
-
-	export default {
-		setup() {
-			const authStore = useAuthStore();
-			return { authStore };
-		},
-		components: {
-			Icon
-		},
-		methods: {
-			async logout() {
-				await axios.get('http://spotify_clone_api.test/api/logout', {
-					'headers': {
-						'Authorization': 'Bearer ' + this.authStore.user.token
-					}
-				}).then((res) => {
-					if (res.data.code == 200) {
-						this.authStore.$reset();
-						this.$router.push('/login');
-					}
-				}).catch((e) => {
-					console.log(e);
-					alert("Call API thất bại");
-				})
-			}
-		}
-	}
-</script>
