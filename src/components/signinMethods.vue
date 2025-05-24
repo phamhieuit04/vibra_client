@@ -4,23 +4,23 @@
 			<button v-on:click="firebaseSignInPopup(googleProvider)"
 				class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 				<Icon icon="devicon:google" class="size-6" />
-				<p class="text-lg font-bold text-white pl-9">Sign up with Google</p>
+				<p class="text-lg font-bold text-white pl-9">Đăng nhập với Google</p>
 			</button>
 		</li>
 		<li class="mb-2">
 			<button v-on:click="firebaseSignInPopup(facebookProvider)"
 				class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-9 flex items-center hover:border-white transition duration-300">
 				<Icon icon="logos:facebook" class="size-6" />
-				<p class="text-lg font-bold text-white pl-9">Sign up with Facebook</p>
+				<p class="text-lg font-bold text-white pl-9">Đăng nhập với Facebook</p>
 			</button>
 		</li>
-		<li class="mb-2">
+		<!-- <li class="mb-2">
 			<a href=""
 				class="w-[350px] h-[52px] border border-gray-500 rounded-full pl-8 flex items-center hover:border-white transition duration-300">
 				<Icon icon="ic:baseline-apple" class="text-white size-8" />
-				<p class="text-lg font-bold text-white pl-9">Sign up with Apple</p>
+				<p class="text-lg font-bold text-white pl-9">Đăng nhập với Apple</p>
 			</a>
-		</li>
+		</li> -->
 	</ul>
 </template>
 
