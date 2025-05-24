@@ -88,13 +88,13 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         class="fixed bottom-0 flex items-center justify-between w-full z-50 h-[90px] bg-[#181413] border-t border-t-[#272727]">
         <div class=" flex items-center w-1/4 ">
             <div class="flex items-center ml-4">
-                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail']" />
+                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail_path']" />
                 <div class="ml-4">
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
-                        {{ currentTrack.name }}
+                        {{ currentTrack.name ? currentTrack.name : 'Bài hát' }}
                     </div>
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[13px] text-[#FFE5D6]/30 font-medium hover:text-white hover:underline cursor-pointer">
-                        {{ currentTrack.artist }}
+                        {{ currentTrack.author.name ? currentTrack.author.name : 'Tác giả' }}
                     </div>
                 </div>
             </div>
@@ -122,7 +122,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
 
             <div class="flex items-center h-[25px]">
                 <div class="text-white text-[12px] pr-2 pt-[11px]">
-                    {{ isTrackTimeCurrent }}
+                    {{ isTrackTimeCurrent ? isTrackTimeCurrent : '00' }}
                 </div>
                 <div ref="seekerContainer" class="w-full relative mt-2 mb-3" @mouseenter="isHover = true"
                     @mouseleave="isHover = false">
@@ -134,7 +134,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                     </div>
                 </div>
                 <div class="text-white text-[12px] pl-2 pt-[11px]">
-                    {{ isTrackTimeTotal }}
+                    {{ isTrackTimeTotal ? isTrackTimeTotal : '00' }}
                 </div>
             </div>
         </div>

@@ -41,24 +41,28 @@ async function logout() {
 
 		<!-- Home & Search -->
 		<div class="flex self-center items-center gap-2">
-			<button class="bg-[#1D1512] p-2 rounded-full hover:bg-neutral-700"
-				@click="useView.setComponent('HomePage'); useView.selectItem(this)">
-				<Icon icon="material-symbols:home" class="transition duration-200 cursor-pointer size-7" 
-					:class="useView.currentComponent === 'HomePage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'"/>
-			</button>
-
-			<!-- Search Box -->
-			<div class="flex items-center bg-[#1D1512] text-sm text-[#FFE5D6]/20 rounded-full px-3 py-1 w-80 h-11">
-				<Icon icon="material-symbols:search-rounded"
-						class="transition duration-200 cursor-pointer size-8 mr-1" 
-						:class="useView.currentComponent === 'SearchPage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'"/>
-				<input type="text" placeholder="Bạn muốn phát nội dung gì?"
-					@click="useView.setComponent('SearchPage'); useView.selectItem(this)"
-					style="font-family: 'Montserrat', sans-serif;"
-					class="text-[#FFE5D6]/20 bg-transparent focus:outline-none w-full" />
-				<button class="ml-2">
-
-				</button>
+			<div class="flex items-center gap-3">
+				<div @click="useView.setComponent('HomePage'); useView.selectItem(this)"
+					class="flex items-center justify-center bg-[#1f1f1f] rounded-full size-12 hover:bg-[#2a2a2a] transition duration-200">
+					<Icon icon="material-symbols:home"
+						class="transition duration-200 cursor-pointer size-8" 
+						:class="useView.currentComponent === 'HomePage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'"/>
+				</div>
+				<div
+					class="py-2 px-3 bg-[#212121] w-96 rounded-3xl justify-between flex items-center gap-3 outline outline-2 focus-within:outline-white hover:bg-[#2a2a2a] focus-within:bg-[#2a2a2a] transition-all duration-200">
+					<div class="flex items-center w-full gap-2 border-r-2 border-[#7c7c7c]">
+						<Icon icon="material-symbols:search-rounded"
+							class="transition duration-200 cursor-pointer size-8"
+							:class="useView.currentComponent === 'SearchPage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'" />
+						<input type="text" class="w-full text-white bg-transparent border-none outline-[#BC4D15] focus:outline-none"
+							@click="useView.setComponent('SearchPage'); useView.selectItem(this)"
+							placeholder="Bạn muốn phát nội dung gì?">
+					</div>
+					<Icon icon="fluent:collections-empty-16-filled"
+						class="text-3xl transition duration-200 cursor-pointer hover:scale-110" 
+						@click="useView.setComponent('CategoriesPage'); useView.selectItem(this)"
+						:class="useView.currentComponent === 'CategoriesPage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'"/>
+				</div>
 			</div>
 		</div>
 
@@ -71,9 +75,7 @@ async function logout() {
 			<div class="w-8 h-8 mr-[10px] rounded-full flex items-center justify-center text-white font-bold">
 				<button @click="openMenu = !openMenu" type="button" class=" cursor-pointer">
 					<div class="flex items-center">
-						<img class="rounded-full" width="30"
-							src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/327906584_1623414034763055_2313595742443607128_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=110&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeHU7kPK7H2yzZUnTlh8ZMxVOMNfpq35Qsw4w1-mrflCzMYLokSXxT9J2NllOm6moxIp2TS6fKMX1p8w3b7z9m_q&_nc_ohc=nRmSn2BIUxwQ7kNvwGlh4B8&_nc_oc=AdmeH6EkPvPHiDDMzv4fs5mYVufKYGAt-P-PW8-hxM6Qy6ipvVZoJnbJ0lMczr6MdDKbxbXhT1Bsy8lvwrKEGdAY&_nc_zt=24&_nc_ht=scontent.fhan2-4.fna&_nc_gid=lCIC4Bx56CiH104oBXlJ1Q&oh=00_AfJEry-lRiRTpncqdE8Ipt728bj62-uIybneG90y_Zv5NA&oe=682F775F"
-							alt="">
+						<img class="rounded-full" width="30" src="@/assets/default.jpg" alt="">
 					</div>
 				</button>
 				<span v-if="openMenu" class="fixed bg-[#282828] w-[200px] z-50 top-[64px] right-1 p-1">

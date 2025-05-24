@@ -12,6 +12,7 @@ import SongPage from "@/components/SongPage.vue";
 import { useViewStore } from "@/stores/view";
 import { useSongStore } from "@/stores/song";
 import { storeToRefs } from "pinia";
+import CategoriesPage from "@/components/CategoriesPage.vue";
 
 const useSong = useSongStore()
 const { currentTrack } = storeToRefs(useSong)
@@ -26,6 +27,7 @@ const components = {
   PlaylistPage,
   UserPage,
   SearchPage,
+  CategoriesPage
 };
 
 onMounted(() => {

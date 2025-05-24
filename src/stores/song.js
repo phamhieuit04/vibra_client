@@ -23,7 +23,7 @@ export const useSongStore = defineStore("song", {
       }
 
       this.audio = new Audio();
-      this.audio.src = track.path;
+      this.audio.src = track.song_path;
 
       setTimeout(() => {
         this.isPlaying = true;
@@ -42,7 +42,7 @@ export const useSongStore = defineStore("song", {
     },
 
     playOrPauseThisSong(playlist, track) {
-      if (!this.audio || !this.audio.src || this.currentTrack.id !== track.id) {
+      if (!this.audio || !this.audio.src || currentTrack.id !== track.id) {
         this.loadSong(playlist, track);
         return;
       }
@@ -50,21 +50,24 @@ export const useSongStore = defineStore("song", {
     },
 
     prevSong(currentTrack, playlist) {
-      if(currentTrack.id === 1) return;
-      let track = playlist.tracks[currentTrack.id - 2];
+      if(currentTrack.id === 1 || playlist == null) return;
+      const currentIndex = playlist.findIndex(song => song.id === currentTrack.id);
+      let track = playlist[currentIndex - 1];
       this.loadSong(playlist, track);
     },
 
     nextSong(currentTrack, playlist) {
-      if (currentTrack.id === playlist.tracks.length) {
-        this.loadSong(playlist, playlist.tracks[0]);
+      if(playlist == null) return;
+      const currentIndex = playlist.findIndex(song => song.id === currentTrack.id);
+      if (currentIndex === playlist.length) {
+        this.playFromFirst(playlist);
       } else {
-        this.loadSong(playlist, playlist.tracks[currentTrack.id]);
+        this.loadSong(playlist, playlist[currentIndex + 1]);
       }
     },
 
     playFromFirst(playlist) {
-      this.loadSong(playlist, playlist.tracks[0]);
+      this.loadSong(playlist, playlist[0]);
     },
 
     resetState() {
