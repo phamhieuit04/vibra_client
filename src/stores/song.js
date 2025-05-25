@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import defaultImgage from '@/assets/default.jpg'
 
 export const useSongStore = defineStore("song", {
   state: () => ({
@@ -7,6 +8,7 @@ export const useSongStore = defineStore("song", {
     currentPlaylist: null,
     currentTrack: {
       name: "Bài hát chào người mới",
+      thumbnail_path: defaultImgage,
       author: {
         name: "Duy",
       },
@@ -35,7 +37,7 @@ export const useSongStore = defineStore("song", {
       this.audio = new Audio();
       this.audio.src = track.song_path;
 
-      if (!this.audio.src || this.audio) {
+      if (!this.audio.src || !this.audio) {
         console.log("Nguồn không tồn tại hoặc bài hát bị lỗi định dạng");
         return;
       }

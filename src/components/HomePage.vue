@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from "@/stores/view";
 import axios from 'axios';
 import { useSongStore } from "@/stores/song";
+import defaultImgage from '@/assets/default.jpg'
 
 const useView = useViewStore()
 const authStore = useAuthStore();
@@ -74,10 +75,9 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in popularAlbum" :key="popularAlbum.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
-                            <div class=" "
-                                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
+                            <div @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                                 <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                    <img :src="item.albumCover" alt="">
+                                    <img class="rounded-xl w-48 h-48" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.total_song }} bài hát</p>
@@ -92,9 +92,9 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topArtist" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
-                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage'); console.log(item)">
+                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage');">
                                 <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
-                                    <img :src="item.avatar_path" alt="">
+                                    <img class="rounded-full w-48 h-48" :src="item.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.followers }} người theo dõi</p>
@@ -110,9 +110,9 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topSong" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105" 
-                            @click=" console.log(item);useSong.playOrPauseThisSong(topSong, item);">
+                            @click="useSong.playOrPauseThisSong(topSong, item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
-                                <img :src="item.thumbnail_path" alt="">
+                                <img class="rounded-full w-40 h-40" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
                             </div>
                             <p class="font-medium ">{{ item.name }}</p>
                             <p class="text-sm ">{{ item.total_played }} lượt nghe</p>

@@ -6,6 +6,7 @@ import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+import defaultImgage from '@/assets/default.jpg'
 
 let openMenu = ref(false);
 let openUploadAlbum = ref(false);
@@ -25,7 +26,7 @@ onMounted(() => {
     <div class="text-white space-y-10 rounded-[24px] bg-[#1D1512] w-full h-[76%]">
         <div class="px-10 py-6 h-52 flex items-center bg-gradient-to-b from-[#1D1512]/20 to-[#312825]/100 space-x-7 ">
             <div class="rounded-full bg-gray-600 w-[160px] h-[160px]">
-                <img class="" :src="authStore.user.avatar" alt="">
+                <img class="rounded-full w-[160px] h-[160px]" :src="authStore.user.avatar" alt="" @error="event => event.target.src = defaultImgage">
             </div>
             <div class="space-y-2">
                 <p class="text-lg text-zinc-400">Hồ sơ</p>

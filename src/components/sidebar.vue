@@ -8,6 +8,7 @@ import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+import defaultImgage from '@/assets/default.jpg'
 
 const useView = useViewStore();
 const authStore = useAuthStore();
@@ -168,7 +169,7 @@ onMounted(() => {
                 @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
                 :class="{ 'bg-white/10': useView.selected === item }">
                 <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
-                    <img :src="item.playlist.thumbnail_path" class="rounded w-10 h-10" />
+                    <img :src="item.playlist.thumbnail_path" class="rounded w-10 h-10" @error="event => event.target.src = defaultImgage"/>
                 </div>
 
                 <div>
@@ -195,7 +196,7 @@ onMounted(() => {
                 @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
                 :class="{ 'bg-white/10': useView.selected === item }">
                 <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
-                    <img :src="item.playlist.thumbnail_path" class="rounded w-10 h-10" />
+                    <img :src="item.playlist.thumbnail_path" class="rounded w-10 h-10" @error="event => event.target.src = defaultImgage"/>
                 </div>
 
                 <div>
@@ -218,7 +219,7 @@ onMounted(() => {
                 @click="useView.selectItem(item.artist); console.log(useView.selected.email); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);"
                 :class="{ 'bg-white/10': useView.selected?.email == item.artist.email }">
                 <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full">
-                    <img :src="item.artist.avatar_path" class="rounded-full w-10 h-10" />
+                    <img :src="item.artist.avatar_path" class="rounded-full w-10 h-10" @error="event => event.target.src = defaultImgage"/>
                 </div>
 
                 <div>

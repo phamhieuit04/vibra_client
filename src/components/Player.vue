@@ -5,6 +5,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useSongStore } from "@/stores/song";
 import { storeToRefs } from "pinia";
 import PlayerFunc from "./PlayerFunc.vue";
+import defaultImgage from '@/assets/default.jpg'
 
 const useSong = useSongStore()
 const { isPlaying, audio, currentPlaylist, currentTrack } = storeToRefs(useSong)
@@ -52,7 +53,7 @@ onMounted(() => {
 })
 
 const timeupdate = () => {
-    if(!currentTrack.value) return;
+    // if(!currentTrack.value) return;
     audio.value.addEventListener('timeupdate', function () {
         var minutes = Math.floor(audio.value.currentTime / 60)
         var seconds = Math.floor(audio.value.currentTime - minutes * 60)
@@ -64,7 +65,7 @@ const timeupdate = () => {
 }
 
 const loadmetadata = () => {
-    if(!currentTrack.value) return;
+    // if(!currentTrack.value) return;
     audio.value.addEventListener('loadedmetadata', function () {
         const duration = audio.value.duration;
         const minutes = Math.floor(duration / 60);
@@ -93,7 +94,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         class="fixed bottom-0 flex items-center justify-between w-full z-50 h-[90px] bg-[#181413] border-t border-t-[#272727]">
         <div class=" flex items-center w-1/4 ">
             <div class="flex items-center ml-4">
-                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack ? currentTrack['thumbnail_path'] : ''" />
+                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail_path']" @error="event => event.target.src = defaultImgage"/>
                 <div class="ml-4">
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
                         {{ currentTrack ? currentTrack['name'] : 'Bài hát' }}
