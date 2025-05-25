@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { Icon } from '@iconify/vue';
-import FujiiKazeAlbum from "@/assets/FujiiKazeAlbum.json"
-import FavPlaylist from "@/assets/FavPlaylist"
 import { useViewStore } from "@/stores/view";
 import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";
@@ -22,10 +20,9 @@ onMounted(() => {
 <template>
     <div class="text-white space-y-10 rounded-[24px] bg-[#1D1512] w-full h-[76%]">
         <div class="px-10 py-6 h-52 flex items-center bg-gradient-to-b from-[#1D1512]/20 to-[#312825]/100 space-x-7 ">
-            <img class="rounded-full" width="160"
-            
-            :src="authStore.user.avatar"
-            alt="">
+            <div class="rounded-full bg-gray-600 w-[160px] h-[160px]">
+                <img class="" :src="authStore.user.avatar" alt="">
+            </div>
             <div class="space-y-2">
                 <p class="text-lg text-zinc-400">Hồ sơ</p>
                 <h1 class="text-6xl font-bold">{{ authStore.user.name }}</h1>

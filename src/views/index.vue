@@ -45,7 +45,7 @@ onMounted(() => {
     </div>
     <div ref="player">
       <SongPage v-if="isFullscreen"/>
-      <!-- <Player v-if="currentTrack" />-->
+      <Player v-if="currentTrack" />
     </div>
   </div>
 </template>

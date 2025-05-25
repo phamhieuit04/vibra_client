@@ -17,6 +17,7 @@ let seekerContainer = ref(null)
 let range = ref(0)
 
 onMounted(() => {
+    if(!currentTrack) return;
     isPlaying.value = false
     if (audio.value) {
         setTimeout(() => {
@@ -76,7 +77,6 @@ watch(() => audio.value, () => {
 
 watch(() => isTrackTimeCurrent.value, (time) => {
     if (time && time == isTrackTimeTotal.value) {
-        console.log("Song over")
         useSong.nextSong(currentTrack.value, currentPlaylist.value)
     }
 })
@@ -91,10 +91,10 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail_path']" />
                 <div class="ml-4">
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
-                        {{ currentTrack.name ? currentTrack.name : 'Bài hát' }}
+                        {{ currentTrack ? currentTrack.name : 'Bài hát' }}
                     </div>
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[13px] text-[#FFE5D6]/30 font-medium hover:text-white hover:underline cursor-pointer">
-                        {{ currentTrack.author.name ? currentTrack.author.name : 'Tác giả' }}
+                        {{ currentTrack ? currentTrack.author.name : 'Tác giả' }}
                     </div>
                 </div>
             </div>

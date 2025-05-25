@@ -59,7 +59,7 @@ export const useSongStore = defineStore("song", {
     nextSong(currentTrack, playlist) {
       if(playlist == null) return;
       const currentIndex = playlist.findIndex(song => song.id === currentTrack.id);
-      if (currentIndex === playlist.length) {
+      if (currentIndex === playlist.length - 1) {
         this.playFromFirst(playlist);
       } else {
         this.loadSong(playlist, playlist[currentIndex + 1]);
