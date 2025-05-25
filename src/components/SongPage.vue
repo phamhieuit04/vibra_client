@@ -3,6 +3,7 @@ import { useSongStore } from "@/stores/song";
 import { Icon } from '@iconify/vue';
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
+import defaultImgage from '@/assets/default.jpg'
 
 const useSong = useSongStore();
 const { currentTrack } = storeToRefs(useSong);
@@ -13,14 +14,12 @@ const { currentTrack } = storeToRefs(useSong);
 </script>
 
 <template>
-    <img :src="currentTrack['thumbnail']" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-40"/>
+    <img :src="currentTrack['thumbnail']" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-40" @error="event => event.target.src = defaultImgage"/>
     <div class="flex relative z-10 h-screen">
-        <!-- Bên trái: ảnh -->
         <div class="w-1/2 flex items-center justify-end mb-[90px]">
-            <img :src="currentTrack['thumbnail']" alt="Album" class=" w-[500px] h-[500px] rounded-xl" />
+            <img :src="currentTrack['thumbnail']" alt="Album" class=" w-[500px] h-[500px] rounded-xl" @error="event => event.target.src = defaultImgage"/>
         </div>
 
-        <!-- Bên phải: lời bài hát -->
         <div class="w-1/2 flex pl-8 items-center justify-start overflow-y-auto mb-[90px]">
             <div class="space-y-4 text-gray-300 leading-relaxed w-[500px] h-[500px]">
                 <!-- <div v-if="!lyric"> -->
