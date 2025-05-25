@@ -1,11 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
-import { useViewStore } from "@/stores/view";
 import defaultImgage from '@/assets/default.jpg'
+import { useAuthStore } from '@/stores/auth';
+import { useSongStore } from "@/stores/song";
+import { useViewStore } from "@/stores/view";
+
+const useSong = useSongStore();
 
 let openMenu = ref(false);
 
@@ -23,6 +26,8 @@ async function logout() {
 
 		if (res.data.code === 200) {
 			authStore.$reset();
+			useSong.$reset();
+			useView.$reset();
 			router.push('/login');
 		}
 	} catch (e) {
