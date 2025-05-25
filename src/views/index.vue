@@ -8,6 +8,8 @@ import PlaylistPage from '@/components/PlaylistPage.vue'
 import UserPage from "@/components/UserPage.vue";
 import SearchPage from "@/components/SearchPage.vue"
 import SongPage from "@/components/SongPage.vue";
+import ArtistPage from "@/components/ArtistPage.vue";
+import ProfileModal from "@/components/ProfileModal.vue";
 
 import { useViewStore } from "@/stores/view";
 import { useSongStore } from "@/stores/song";
@@ -18,7 +20,7 @@ const useSong = useSongStore()
 const { currentTrack } = storeToRefs(useSong)
 
 const useView = useViewStore()
-const { currentComponent, isFullscreen } = storeToRefs(useView)
+const { currentComponent, isFullscreen, openEditProfile } = storeToRefs(useView)
 
 const player = ref(null)
 
@@ -27,7 +29,8 @@ const components = {
   PlaylistPage,
   UserPage,
   SearchPage,
-  CategoriesPage
+  CategoriesPage,
+  ArtistPage
 };
 
 onMounted(() => {
@@ -47,5 +50,6 @@ onMounted(() => {
       <SongPage v-if="isFullscreen"/>
       <Player v-if="currentTrack" />
     </div>
+    <ProfileModal v-if="openEditProfile"/>
   </div>
 </template>

@@ -72,14 +72,16 @@ onMounted(() => {
             <div class="text-[#FFE5D6] mb-8">
                 <h2 class="mb-1 text-2xl font-semibold">Album phổ biến</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
-                    <div v-for="item in popularAlbum" :key="popularAlbum.id" class="flex-shrink-0 w-48 ">
-                        <div class=" cursor-pointer "
-                            @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
-                            <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                <img :src="item.albumCover" alt="">
+                    <div class="flex px-1 py-2 space-x-4 w-max">
+                        <div v-for="item in popularAlbum" :key="popularAlbum.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
+                            <div class=" "
+                                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
+                                <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
+                                    <img :src="item.albumCover" alt="">
+                                </div>
+                                <p class="font-medium ">{{ item.name }}</p>
+                                <p class="text-sm ">{{ item.total_song }} bài hát</p>
                             </div>
-                            <p class="font-medium ">{{ item.name }}</p>
-                            <p class="text-sm ">{{ item.total_song }} bài hát</p>
                         </div>
                     </div>
                 </div>
@@ -88,24 +90,33 @@ onMounted(() => {
             <div class="text-[#FFE5D6] mb-8">
                 <h2 class="mb-1 text-2xl font-semibold">Nghệ sĩ với nhiều người theo dõi</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
-                    <div v-for="item in topArtist" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer">
-                        <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
-                            <img :src="item.avatar_path" alt="">
+                    <div class="flex px-1 py-2 space-x-4 w-max">
+                        <div v-for="item in topArtist" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
+                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage');">
+                                <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
+                                    <img :src="item.avatar_path" alt="">
+                                </div>
+                                <p class="font-medium ">{{ item.name }}</p>
+                                <p class="text-sm ">{{ item.followers }} người theo dõi</p>
+                            </div>
                         </div>
-                        <p class="font-medium ">{{ item.name }}</p>
-                        <p class="text-sm ">{{ item.followers }} người theo dõi</p>
                     </div>
                 </div>
             </div>
+
+
             <div class="text-[#FFE5D6] mb-8">
                 <h2 class="mb-1 text-2xl font-semibold">Bài hát có nhiều lượt nghe</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
-                    <div v-for="item in topSong" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer" @click=" console.log(item);useSong.playOrPauseThisSong(topSong, item);">
-                        <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
-                            <img :src="item.thumbnail_path" alt="">
+                    <div class="flex px-1 py-2 space-x-4 w-max">
+                        <div v-for="item in topSong" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105" 
+                            @click=" console.log(item);useSong.playOrPauseThisSong(topSong, item);">
+                            <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
+                                <img :src="item.thumbnail_path" alt="">
+                            </div>
+                            <p class="font-medium ">{{ item.name }}</p>
+                            <p class="text-sm ">{{ item.total_played }} lượt nghe</p>
                         </div>
-                        <p class="font-medium ">{{ item.name }}</p>
-                        <p class="text-sm ">{{ item.total_played }} lượt nghe</p>
                     </div>
                 </div>
             </div>

@@ -7,9 +7,13 @@ import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 
+let openMenu = ref(false);
+let openUploadAlbum = ref(false);
+
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
+const { currentComponent, isFullscreen, openEditProfile } = storeToRefs(useView)
 
 
 onMounted(() => {
@@ -29,11 +33,18 @@ onMounted(() => {
                 <p class="mt-1 text-lg text-zinc-400">? Playlist công khai • ??? đang theo dõi</p>
             </div>
         </div>
-        
-        <div class="px-10 overflow-auto scrollbar-style h-[calc(100vh-450px)]">
-            <button class="text-zinc-400 text-3xl mb-5 p-2 rounded-full hover:bg-zinc-600 hover:text-white">
-                <Icon icon="ph:dots-three-outline-fill"/>
+
+        <div class="relative px-10 overflow-auto scrollbar-style h-[calc(100vh-450px)]">
+            <button class="text-zinc-400 text-3xl mb-5 p-2 rounded-full hover:bg-zinc-600 hover:text-white"
+                @click="openMenu = !openMenu">
+                <Icon icon="ph:dots-three-outline-fill" />
             </button>
+            <span v-if="openMenu" class="absolute bg-[#282828] w-[200px] z-20 left-10 top-14 p-1">
+                <ul class="text-gray-200 font-semibold text-[14px]">
+                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="openEditProfile = true">Chỉnh sửa hồ sơ</li>
+                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer">Đăng tải bài hát</li>
+                </ul>
+            </span>
             <div>
                 <h2 class="mb-4 text-lg font-semibold">Playlist công khai</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">

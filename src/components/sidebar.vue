@@ -20,35 +20,28 @@ const albumList = ref([]);
 const filter = ref('all');
 const search = ref('');
 
-const items = ref([
-    artistList,
-    myPlaylistList,
-    albumList
-]);
+const filteredPlaylist = computed(() => {
+    return myPlaylistList.value.filter(item => 
+        item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
+})
+const filteredAlbum = computed(() => {
+    return albumList.value.filter(item => 
+        item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
+})
+const filteredArtist = computed(() => {
+    return artistList.value.filter(item => 
+        item.artist.name.toLowerCase().includes(search.value.toLowerCase()));
+})
 
-const filteredItems = computed(() => {
-    if (filter.value === 'all') {
-        return items.value.filter(item =>
-            item.name.toLowerCase().includes(search.value.toLowerCase()));
-    }
-    else if (filter.value === 'playlist') {
-        return items.value.filter(
-            (item) =>
-                (item.type === 1 || item.type === 2) && item.name.toLowerCase().includes(search.value.toLowerCase()));
-    }
-    else {
-        // Nghệ sĩ
-    }
-});
 async function FetchData() {
     try {
-        const albumRes = await axios.get('http://spotify_clone_api.test/api/library/list-playlist', {
+        const albumRes = await axios.get('http://spotify_clone_api.test/api/library/list-playlist?type=1', {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             },
             'type': 1
         });
-        const myPlaylistRes = await axios.get('http://spotify_clone_api.test/api/library/list-playlist', {
+        const myPlaylistRes = await axios.get('http://spotify_clone_api.test/api/library/list-playlist?type=2', {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             },
@@ -59,9 +52,14 @@ async function FetchData() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        console.log(albumRes.data);
-        console.log(myPlaylistRes.data);
-        console.log(artistRes.data)
+        const songRes = await axios.get('http://spotify_clone_api.test/api/library/list-song', {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        artistList.value = artistRes.data.data
+        myPlaylistList.value = myPlaylistRes.data.data
+        albumList.value = albumRes.data.data
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -81,6 +79,7 @@ const createPlaylist = async () => {
         );
         console.log(res.data);
         alert('Tạo playlist thành công!');
+        FetchData();
     } catch (error) {
         console.error('Lỗi khi tạo playlist:', error);
         alert('Tạo playlist thất bại!');
@@ -127,22 +126,56 @@ onMounted(() => {
             class="w-full px-3 py-1.5 rounded-full border border-[#BC4D15] bg-[#1D1512] text-[#FFE5D6] text-sm mb-4 focus:ring-11 focus:ring-[#BC4D15] focus:outline-none" />
 
         <div class="space-y-2 overflow-y-auto max-h-[calc(100vh-200px)]">
-            <!-- <div v-for="(item, index) in filteredItems" :key="index"
+
+            <div v-for="(item, index) in filteredPlaylist" :key="index" v-if="filter == 'all' || filter == 'playlist'"
                 class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
-                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);"
+                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
                 :class="{ 'bg-white/10': useView.selected === item }">
-                <img :src="item.albumCover" class="w-10 h-10 rounded object-cover" v-if="item.albumCover" />
-                <div v-else class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
-                    🎵
+                <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
+                    <img :src="item.playlist.thumbnail_path" class="rounded w-10 h-10" />
                 </div>
 
                 <div>
-                    <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.name }}</div>
+                    <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.playlist.name }}</div>
                     <div class="text-[#FFE5D6]/50 text-s font-medium">
-                        {{ item.type === 2 ? 'Danh sách phát • ' + item.tracks.length + " bài hát" : 'Album của nghệ sĩ • ' + item.tracks.length + " bài hát"}}
+                        {{ item.playlist.type === 2 ? 'Danh sách phát • ' + item.playlist.total_song + " bài hát" :
+                            'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát"}}
                     </div>
                 </div>
-            </div> -->
+            </div>
+
+            <div v-for="(item, index) in filteredAlbum" :key="index" v-if="filter == 'all' || filter == 'playlist'"
+                class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
+                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
+                :class="{ 'bg-white/10': useView.selected === item }">
+                <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
+                    <img :src="item.playlist.thumbnail_path" class="rounded w-10 h-10" />
+                </div>
+
+                <div>
+                    <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.playlist.name }}</div>
+                    <div class="text-[#FFE5D6]/50 text-s font-medium">
+                        {{ item.playlist.type === 2 ? 'Danh sách phát • ' + item.playlist.total_song + " bài hát" :
+                            'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát"}}
+                    </div>
+                </div>
+            </div>
+
+            <div v-for="(item, index) in filteredArtist" :key="index" v-if="filter == 'all' || filter == 'artist'"
+                class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
+                @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);"
+                :class="{ 'bg-white/10': useView.selected === item }">
+                <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full">
+                    <img :src="item.artist.avatar_path" class="rounded-full w-10 h-10" />
+                </div>
+
+                <div>
+                    <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.artist.name }}</div>
+                    <div class="text-[#FFE5D6]/50 text-s font-medium">
+                        {{ ' Nghệ sĩ • ' }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

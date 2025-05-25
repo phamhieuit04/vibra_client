@@ -6,19 +6,28 @@ export const useViewStore = defineStore("view", {
     page: null,
     isFullscreen: false,
     playlistData: null,
+    artistData: null,
     userData: null,
+    openEditProfile: false,
   }),
 
   actions: {
     setComponent(name) {
       this.currentComponent = name;
     },
+
     selectItem(item) {
       this.selected = item;
     },
+
     setPlaylistData(playlist) {
       this.playlistData = playlist;
     },
+
+    setArtistData(artist){
+      this.artistData = artist;
+    },
+
     toggleFullscreen() {
       const el = this.page;
       if (!document.fullscreenElement) {
@@ -29,13 +38,16 @@ export const useViewStore = defineStore("view", {
         this.isFullscreen = false;
       }
     },
+
     setFullscreenPage(page){
       this.page = page;
     },
+
     listenFullscreenChange() {
       document.addEventListener('fullscreenchange', () => {
         this.isFullscreen = !!document.fullscreenElement;
       });
     },
+    
   },
 });
