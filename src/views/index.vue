@@ -48,7 +48,7 @@ onMounted(() => {
     </div>
     <div ref="player">
       <SongPage v-if="isFullscreen"/>
-      <Player v-if="currentTrack" />
+      <Player />
     </div>
     <ProfileModal v-if="openEditProfile"/>
   </div>

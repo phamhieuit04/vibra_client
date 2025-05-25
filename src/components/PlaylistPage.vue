@@ -15,7 +15,7 @@ const { playlistData } = storeToRefs(useView)
 
 async function FetchPlaylistData() {
     try {
-        const res = await axios.get('http://spotify_clone_api.test/api/home/show/${playlistData.value.id}', {
+        const res = await axios.get(`http://spotify_clone_api.test/api/home/show/${playlistData.value.id}`, {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }

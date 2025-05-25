@@ -92,7 +92,7 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topArtist" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
-                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage');">
+                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage'); console.log(item)">
                                 <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
                                     <img :src="item.avatar_path" alt="">
                                 </div>

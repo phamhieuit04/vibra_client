@@ -21,15 +21,15 @@ const filter = ref('all');
 const search = ref('');
 
 const filteredPlaylist = computed(() => {
-    return myPlaylistList.value.filter(item => 
+    return myPlaylistList.value.filter(item =>
         item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
 })
 const filteredAlbum = computed(() => {
-    return albumList.value.filter(item => 
+    return albumList.value.filter(item =>
         item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
 })
 const filteredArtist = computed(() => {
-    return artistList.value.filter(item => 
+    return artistList.value.filter(item =>
         item.artist.name.toLowerCase().includes(search.value.toLowerCase()));
 })
 
@@ -86,6 +86,42 @@ const createPlaylist = async () => {
     }
 };
 
+const deletePlaylist = async (id) => {
+    try {
+        const res = await axios.get(
+            `http://spotify_clone_api.test/api/library/destroy-playlist/${id}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + authStore.user.token,
+                },
+            }
+        );
+        alert('Xóa playlist thành công!');
+        FetchData();
+        useView.setComponent('HomePage');
+    } catch (error) {
+        console.error('Lỗi khi xóa playlist:', error);
+        alert('Xóa playlist thất bại!');
+    }
+}
+const editPlaylist = async (id) => {
+    try {
+        const res = await axios.post(
+            `http://spotify_clone_api.test/api/library/update-playlist/${id}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + authStore.user.token,
+                },
+            }
+        );
+        alert('Sửa playlist thành công!');
+        FetchData();
+    } catch (error) {
+        console.error('Lỗi khi sửa playlist:', error);
+        alert('Sửa playlist thất bại!');
+    }
+}
+
 onMounted(() => {
     FetchData();
 })
@@ -97,7 +133,7 @@ onMounted(() => {
             <h2 class="text-[#FFE5D6] text-xl font-semibold">Thư viện</h2>
             <div class="flex items-center gap-2">
                 <button @click="createPlaylist"
-                    class="flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFE5D6] text-sm">
+                    class="flex items-center gap-2 px-3 py-1 rounded-full bg-[#47342D] text-sm text-[#FFE5D6] hover:bg-transparent">
                     <span class="text-base font-semibold">+</span>
                     <span class="font-semibold">Tạo</span>
                 </button>
@@ -139,8 +175,18 @@ onMounted(() => {
                     <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.playlist.name }}</div>
                     <div class="text-[#FFE5D6]/50 text-s font-medium">
                         {{ item.playlist.type === 2 ? 'Danh sách phát • ' + item.playlist.total_song + " bài hát" :
-                            'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát"}}
+                            'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát" }}
                     </div>
+                </div>
+                <div class="ml-auto">
+                    <button class=" hover:bg-white/5 p-2 rounded text-[#FFE5D6]/50"
+                        @click.stop="console.log('edit ' + item.playlist_id)">
+                        <Icon icon="material-symbols:edit-square-rounded" class=" text-xl" />
+                    </button>
+                    <button class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50"
+                        @click.stop="deletePlaylist(item.playlist_id)">
+                        <Icon icon="material-symbols:delete-rounded" class=" text-2xl" />
+                    </button>
                 </div>
             </div>
 
@@ -156,15 +202,21 @@ onMounted(() => {
                     <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.playlist.name }}</div>
                     <div class="text-[#FFE5D6]/50 text-s font-medium">
                         {{ item.playlist.type === 2 ? 'Danh sách phát • ' + item.playlist.total_song + " bài hát" :
-                            'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát"}}
+                            'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát" }}
                     </div>
+                </div>
+                <div class="ml-auto">
+                    <button class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50"
+                        @click.stop="deletePlaylist(item.playlist_id)">
+                        <Icon icon="material-symbols:delete-rounded" class="text-2xl" />
+                    </button>
                 </div>
             </div>
 
             <div v-for="(item, index) in filteredArtist" :key="index" v-if="filter == 'all' || filter == 'artist'"
                 class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
-                @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);"
-                :class="{ 'bg-white/10': useView.selected === item }">
+                @click="useView.selectItem(item.artist); console.log(useView.selected.email); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);"
+                :class="{ 'bg-white/10': useView.selected?.email == item.artist.email }">
                 <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full">
                     <img :src="item.artist.avatar_path" class="rounded-full w-10 h-10" />
                 </div>
@@ -172,7 +224,7 @@ onMounted(() => {
                 <div>
                     <div class="text-[#FFE5D6] font-semibold leading-4">{{ item.artist.name }}</div>
                     <div class="text-[#FFE5D6]/50 text-s font-medium">
-                        {{ ' Nghệ sĩ • ' }}
+                        {{ ' Nghệ sĩ ' }}
                     </div>
                 </div>
             </div>

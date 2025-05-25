@@ -17,8 +17,9 @@ let seekerContainer = ref(null)
 let range = ref(0)
 
 onMounted(() => {
-    if(!currentTrack) return;
+    console.log(currentTrack)
     isPlaying.value = false
+    if(!currentTrack.value) return;
     if (audio.value) {
         setTimeout(() => {
             timeupdate()
@@ -51,6 +52,7 @@ onMounted(() => {
 })
 
 const timeupdate = () => {
+    if(!currentTrack.value) return;
     audio.value.addEventListener('timeupdate', function () {
         var minutes = Math.floor(audio.value.currentTime / 60)
         var seconds = Math.floor(audio.value.currentTime - minutes * 60)
@@ -62,6 +64,7 @@ const timeupdate = () => {
 }
 
 const loadmetadata = () => {
+    if(!currentTrack.value) return;
     audio.value.addEventListener('loadedmetadata', function () {
         const duration = audio.value.duration;
         const minutes = Math.floor(duration / 60);
@@ -71,13 +74,13 @@ const loadmetadata = () => {
 }
 
 watch(() => audio.value, () => {
-    if(!currentTrack) return;
+    if(!currentTrack.value) return;
     timeupdate()
     loadmetadata()
 })
 
 watch(() => isTrackTimeCurrent.value, (time) => {
-    if(!currentTrack) return;
+    if(!currentTrack.value) return;
     if (time && time == isTrackTimeTotal.value) {
         useSong.nextSong(currentTrack.value, currentPlaylist.value)
     }
@@ -90,10 +93,10 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         class="fixed bottom-0 flex items-center justify-between w-full z-50 h-[90px] bg-[#181413] border-t border-t-[#272727]">
         <div class=" flex items-center w-1/4 ">
             <div class="flex items-center ml-4">
-                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail_path']" />
+                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack ? currentTrack['thumbnail_path'] : ''" />
                 <div class="ml-4">
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
-                        {{ currentTrack ? currentTrack.name : 'Bài hát' }}
+                        {{ currentTrack ? currentTrack['name'] : 'Bài hát' }}
                     </div>
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[13px] text-[#FFE5D6]/30 font-medium hover:text-white hover:underline cursor-pointer">
                         {{ currentTrack ? currentTrack.author.name : 'Tác giả' }}

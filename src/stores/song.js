@@ -5,17 +5,20 @@ export const useSongStore = defineStore("song", {
     isPlaying: false,
     audio: null,
     currentPlaylist: null,
-    currentTrack: null,
+    currentTrack: {
+      name: "Bài hát chào người mới",
+      author: {
+        name: "Duy",
+      },
+    },
   }),
   actions: {
     setPlaylist(playlist) {
       this.currentPlaylist = playlist;
     },
 
-    loadSingleSong(track){
-      const playlistSong = [
-        track
-      ]
+    loadSingleSong(track) {
+      const playlistSong = [track];
       this.loadSong(playlistSong, track);
     },
 
@@ -32,9 +35,9 @@ export const useSongStore = defineStore("song", {
       this.audio = new Audio();
       this.audio.src = track.song_path;
 
-      if(!this.audio.src || this.audio) {
-        console.log('Nguồn không tồn tại hoặc bài hát bị lỗi định dạng');
-        return
+      if (!this.audio.src || this.audio) {
+        console.log("Nguồn không tồn tại hoặc bài hát bị lỗi định dạng");
+        return;
       }
 
       setTimeout(() => {
@@ -62,16 +65,20 @@ export const useSongStore = defineStore("song", {
     },
 
     prevSong(currentTrack, playlist) {
-      if(playlist === null) return;
-      const currentIndex = playlist.findIndex(song => song.id === currentTrack.id);
-      if(currentIndex === 0) return;
+      if (playlist === null) return;
+      const currentIndex = playlist.findIndex(
+        (song) => song.id === currentTrack.id
+      );
+      if (currentIndex === 0) return;
       let track = playlist[currentIndex - 1];
       this.loadSong(playlist, track);
     },
 
     nextSong(currentTrack, playlist) {
-      if(playlist == null) return;
-      const currentIndex = playlist.findIndex(song => song.id === currentTrack.id);
+      if (playlist == null) return;
+      const currentIndex = playlist.findIndex(
+        (song) => song.id === currentTrack.id
+      );
       if (currentIndex === playlist.length - 1) {
         this.playFromFirst(playlist);
       } else {
@@ -88,7 +95,7 @@ export const useSongStore = defineStore("song", {
       audio = null;
       currentPlaylist = null;
       currentTrack = null;
-    }
+    },
   },
-  persist: true
+  persist: true,
 });
