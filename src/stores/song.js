@@ -12,6 +12,13 @@ export const useSongStore = defineStore("song", {
       this.currentPlaylist = playlist;
     },
 
+    loadSingleSong(track){
+      const playlistSong = [
+        track
+      ]
+      this.loadSong(playlistSong, track);
+    },
+
     loadSong(playlist, track) {
       this.currentPlaylist = playlist;
       this.currentTrack = track;
@@ -24,6 +31,11 @@ export const useSongStore = defineStore("song", {
 
       this.audio = new Audio();
       this.audio.src = track.song_path;
+
+      if(!this.audio.src || this.audio) {
+        console.log('Nguồn không tồn tại hoặc bài hát bị lỗi định dạng');
+        return
+      }
 
       setTimeout(() => {
         this.isPlaying = true;
@@ -42,7 +54,7 @@ export const useSongStore = defineStore("song", {
     },
 
     playOrPauseThisSong(playlist, track) {
-      if (!this.audio || !this.audio.src || currentTrack.id !== track.id) {
+      if (!this.audio || !this.audio.src || this.currentTrack.id !== track.id) {
         this.loadSong(playlist, track);
         return;
       }
@@ -50,8 +62,9 @@ export const useSongStore = defineStore("song", {
     },
 
     prevSong(currentTrack, playlist) {
-      if(currentTrack.id === 1 || playlist == null) return;
+      if(playlist === null) return;
       const currentIndex = playlist.findIndex(song => song.id === currentTrack.id);
+      if(currentIndex === 0) return;
       let track = playlist[currentIndex - 1];
       this.loadSong(playlist, track);
     },

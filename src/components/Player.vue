@@ -71,11 +71,13 @@ const loadmetadata = () => {
 }
 
 watch(() => audio.value, () => {
+    if(!currentTrack) return;
     timeupdate()
     loadmetadata()
 })
 
 watch(() => isTrackTimeCurrent.value, (time) => {
+    if(!currentTrack) return;
     if (time && time == isTrackTimeTotal.value) {
         useSong.nextSong(currentTrack.value, currentPlaylist.value)
     }
