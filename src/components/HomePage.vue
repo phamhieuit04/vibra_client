@@ -1,16 +1,19 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch, toRefs, computed } from "vue";
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
+import axios from 'axios';
+import { storeToRefs } from "pinia";
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from "@/stores/view";
-import axios from 'axios';
 import { useSongStore } from "@/stores/song";
+import { useModalStore } from "@/stores/modal";
 import defaultImgage from '@/assets/default.jpg'
 
-const useView = useViewStore()
+const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
+const useModal = useModalStore();
 const router = useRouter();
 
 const popularAlbum = ref([]);
@@ -92,7 +95,7 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topArtist" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
-                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage');">
+                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item); console.log(item)">
                                 <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
                                     <img class="rounded-full w-48 h-48 object-cover" :src="item.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
                                 </div>

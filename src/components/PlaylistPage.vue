@@ -6,22 +6,24 @@ import { useViewStore } from '@/stores/view';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from "pinia";
 import axios from 'axios';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import defaultImgage from '@/assets/default.jpg'
 
 const authStore = useAuthStore();
 
 const useView = useViewStore()
+const playlistSong = ref([])
 const { playlistData } = storeToRefs(useView)
 
 async function FetchPlaylistData() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/home/show/${playlistData.value.id}`, {
+        const res = await axios.get(`http://spotify_clone_api.test/api/playlist/show/${playlistData.value.id}`, {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        console.log(res.data)
+        playlistSong.value = res.data.data
+        console.log(playlistSong.value)
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -67,9 +69,9 @@ onMounted(() => {
 
         <div class="border-b border-b-[#A2A2A2] mt-2"></div>
         <div class="mb-4"></div>
-        <!-- <ul class="w-full" v-for="track, index in playlistData.tracks" :key="track">
-            <SongRow :playlist="playlistData" :track="track" :index="++index" />
-        </ul> -->
+        <ul class="w-full" v-for="track, index in playlistSong" :key="track">
+            <SongRow :playlist="playlistSong" :track="track" :index="++index" />
+        </ul>
 
     </div>
 </template>

@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { Icon } from '@iconify/vue';
-import FujiiKazeAlbum from "@/assets/FujiiKazeAlbum.json"
-import FavPlaylist from "@/assets/FavPlaylist"
 import { useViewStore } from "@/stores/view";
 import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";

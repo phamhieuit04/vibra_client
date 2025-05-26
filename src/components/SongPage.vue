@@ -17,7 +17,7 @@ const { currentTrack } = storeToRefs(useSong);
     <img :src="currentTrack['thumbnail_path']" class="absolute inset-0 w-full h-full object-cover blur-lg opacity-40" @error="event => event.target.src = defaultImgage"/>
     <div class="flex relative z-10 h-screen">
         <div class="w-1/2 flex items-center justify-end mb-[90px]">
-            <img :src="currentTrack['thumbnail_path']" alt="Album" class="w-[500px] h-[500px] rounded-xl" @error="event => event.target.src = defaultImgage"/>
+            <img :src="currentTrack['thumbnail_path']" alt="Album" class="w-[500px] h-[500px] rounded-xl object-cover" @error="event => event.target.src = defaultImgage"/>
         </div>
 
         <div class="w-1/2 flex pl-8 items-center justify-start overflow-y-auto mb-[90px]">

@@ -51,7 +51,7 @@ onMounted(() => {
                     class="text-white font-semibold ">
                     {{ track.name }}
                 </div>
-                <span class="text-sm font-semibold text-gray-400">{{ track.artist }}</span>
+                <span class="text-sm font-semibold text-gray-400">{{ track.author.name }}</span>
             </div>
         </div>
         <div class="flex items-center">
