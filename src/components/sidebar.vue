@@ -1,23 +1,28 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { onMounted, ref, watch, toRefs, computed } from "vue";
+import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import { useViewStore } from "@/stores/view";
-import { storeToRefs } from "pinia";
-import { useSongStore } from "@/stores/song";
-import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
-import defaultImgage from '@/assets/default.jpg'
+import { storeToRefs } from "pinia";
+import { useAuthStore } from '@/stores/auth';
+import { useViewStore } from "@/stores/view";
+import { useSongStore } from "@/stores/song";
 import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
+import defaultImgage from '@/assets/default.jpg'
 
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
+const useActivity = useActivityStore();
 
+
+const { followArtistList, favSongList, userAction } = storeToRefs(useActivity)
 const { openEditPlaylist } = storeToRefs(useModal)
 
-const artistList = ref([]);
 const myPlaylistList = ref([]);
+const myArtistList = ref([])
 const albumList = ref([]);
 
 const filter = ref('all');
@@ -32,7 +37,7 @@ const filteredAlbum = computed(() => {
         item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
 })
 const filteredArtist = computed(() => {
-    return artistList.value.filter(item =>
+    return myArtistList.value.filter(item =>
         item.artist.name.toLowerCase().includes(search.value.toLowerCase()));
 })
 
@@ -60,7 +65,9 @@ async function FetchData() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        artistList.value = artistRes.data.data
+        useActivity.setFollowArtistList(artistRes.data.data)
+        useActivity.setFavSongList(songRes.data.data)
+        myArtistList.value = artistRes.data.data
         myPlaylistList.value = myPlaylistRes.data.data
         albumList.value = albumRes.data.data
     } catch (e) {
@@ -119,6 +126,12 @@ watch(() => openEditPlaylist.value, (newVal, oldVal) => {
     }
   }
 )
+watch(() => userAction.value, (newVal, oldVal) => {
+        console.log("vừa có sự kiện")
+      FetchData();
+  }
+)
+
 
 onMounted(() => {
     FetchData();

@@ -8,28 +8,78 @@ import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from "@/stores/view";
 import { useSongStore } from "@/stores/song";
 import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
 
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
+const useActivity = useActivityStore();
 
 
+const { artistData } = storeToRefs(useView);
+const { followArtistList } = storeToRefs(useActivity)
+
+const isFollowed = ref(false) 
+
+
+async function followThisArtist() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/artist/follow/${artistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        useActivity.onUserAction();
+        isFollowed.value = !isFollowed.value
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+async function unfollowThisArtist() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-favorite-artist/${artistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        useActivity.onUserAction();
+        isFollowed.value = !isFollowed.value
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
+
+onMounted(() => {
+    followArtistList.value.forEach(artist => {
+        if (artist.artist_id === artistData.value.id) {
+            isFollowed.value = true
+        }
+    })
+})
 </script>
 <template>
     <div
         class="text-[#FFE5D6] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style">
-        <div
-            class="h-96 items-center bg-gradient-to-b from-[#1D1512]/20 to-[#312825]/100  flex flex-col justify-end p-16">
-            <img class="object-cover" width="160" src="" alt="">
-            <div class="mt-12 space-y-2">
+
+        <div class="relative items-center h-96">
+            <img 
+                :src="artistData.avatar_path"
+                alt="" 
+                class="absolute z-0 object-cover w-full h-full"
+            />
+
+            <div class="relative z-10 flex flex-col justify-end p-16 space-y-2">             
                 <p class="text-lg font-semibold ">
-                    <i class="text-2xl text-blue-500 fas fa-check-circle"></i>
-                    Nghệ sĩ được xác minh
+                    <i class="text-2xl text-blue-500 fas fa-check-circle"></i> 
+                    Nghệ sĩ
                 </p>
-                <h1 class="font-black text-8xl">Sabrina Carpenter</h1>
-                <p class="mt-1 text-lg font-semibold ">??? người nghe hàng tháng</p>
+                <h1 class="font-black text-8xl">{{ artistData.name }}</h1>
+                <p class="mt-1 text-lg font-semibold ">{{ artistData.followers }} người theo dõi</p>
             </div>
         </div>
 
@@ -41,9 +91,11 @@ const useModal = useModalStore();
                         <i class="fas fa-play text-black ml-0.5 text-3xl group-hover:text-[#BC4D15]"></i>
                     </button>
 
-                    <button
-                        class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                    <button v-if="!isFollowed" @click="followThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
                         Theo dõi
+                    </button>
+                    <button v-else @click="unfollowThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                        Hủy theo dõi
                     </button>
 
                     <button class="text-[#BC4D15] text-2xl hover:text-white transition">

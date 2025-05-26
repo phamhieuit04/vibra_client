@@ -8,12 +8,14 @@ import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from "@/stores/view";
 import { useSongStore } from "@/stores/song";
 import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
 
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
+const useActivity = useActivityStore();
 const router = useRouter();
 
 const popularAlbum = ref([]);
