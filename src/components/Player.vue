@@ -1,14 +1,24 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { onMounted, ref, watch, toRefs, computed } from "vue";
+import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import { RouterLink, RouterView } from 'vue-router'
-import { useSongStore } from "@/stores/song";
+import axios from 'axios';
 import { storeToRefs } from "pinia";
-import PlayerFunc from "./PlayerFunc.vue";
+import { useAuthStore } from '@/stores/auth';
+import { useViewStore } from "@/stores/view";
+import { useSongStore } from "@/stores/song";
+import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
+import PlayerFunc from "./PlayerFunc.vue";
 
-const useSong = useSongStore()
+const useView = useViewStore();
+const authStore = useAuthStore();
+const useSong = useSongStore();
+const useModal = useModalStore();
+const useActivity = useActivityStore();
 const { isPlaying, audio, currentPlaylist, currentTrack } = storeToRefs(useSong)
+const { favSongList } = storeToRefs(useActivity)
 
 let isHover = ref(false)
 let isTrackTimeCurrent = ref(null)
@@ -17,10 +27,48 @@ let seeker = ref(null)
 let seekerContainer = ref(null)
 let range = ref(0)
 
+const isLoved = ref(false) 
+
+async function loveThisSong() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/song/store/${currentTrack.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+
+        if(res.data.code == 200){
+            useActivity.onUserAction();
+            isLoved.value = !isLoved.value
+        }
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+async function unloveThisSong() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-favorite-song/${currentTrack.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+
+        if(res.data.code == 200){
+            useActivity.onUserAction();
+            isLoved.value = !isLoved.value
+        }
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
 onMounted(() => {
-    console.log(currentTrack)
+    // console.log(favSongList.value)
     isPlaying.value = false
     if(!currentTrack.value) return;
+
     if (audio.value) {
         setTimeout(() => {
             timeupdate()
@@ -74,6 +122,29 @@ const loadmetadata = () => {
     })
 }
 
+watch(() => favSongList.value, () => {
+    console.log("Danh sách bài hát ưa thích vừa thay đổi")
+    isLoved.value = false
+    favSongList.value.forEach(song => {
+        if (song.id === currentTrack.value.id) {
+            isLoved.value = true
+            console.log("Bài này trong danh sách ưa thích")
+        }
+    })
+  }
+)
+watch(() => currentTrack.value, () => {
+    console.log("Bài hát vừa thay đổi")
+    isLoved.value = false
+    favSongList.value.forEach(song => {
+        if (song.id === currentTrack.value.id) {
+            isLoved.value = true
+            console.log("Bài này trong danh sách ưa thích")
+        }
+    })
+  }
+)
+
 watch(() => audio.value, () => {
     if(!currentTrack.value) return;
     timeupdate()
@@ -105,7 +176,8 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 </div>
             </div>
             <div class="flex items-center ml-8">
-                <Icon icon="solar:heart-linear" class="text-[#FFE5D6] text-[23px] cursor-pointer"/>
+                <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear" class="text-[#FFE5D6] text-[23px] cursor-pointer" />
+                <Icon v-else @click="unloveThisSong" icon="solar:heart-bold" class="text-[#FFE5D6] text-[23px] cursor-pointer"/>
                 <Icon icon="material-symbols:add-circle-outline" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
             </div>
         </div>

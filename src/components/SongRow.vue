@@ -1,9 +1,21 @@
 <script setup>
-import { ref, toRefs, onMounted } from 'vue'
+import { onMounted, ref, watch, toRefs, computed } from "vue";
+import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import { useSongStore } from "@/stores/song";
+import axios from 'axios';
 import { storeToRefs } from "pinia";
+import { useAuthStore } from '@/stores/auth';
+import { useViewStore } from "@/stores/view";
+import { useSongStore } from "@/stores/song";
+import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
 
+
+const useView = useViewStore();
+const authStore = useAuthStore();
+const useModal = useModalStore();
+const useActivity = useActivityStore();
+const { favSongList } = storeToRefs(useActivity)
 const useSong = useSongStore()
 const { isPlaying, currentTrack } = storeToRefs(useSong)
 
@@ -13,10 +25,30 @@ let isTrackTime = ref(null);
 const props = defineProps({
     track: Object,
     playlist: Object,
-    index: Number
+    index: Number,
+    isFav: Boolean,
 })
 
-const { track, playlist, index } = toRefs(props);
+const { track, playlist, index, isFav } = toRefs(props);
+const emit = defineEmits(['deleteFavSong'])
+
+async function unloveThisSong() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-favorite-song/${track.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+
+        if(res.data.code == 200){
+            useActivity.onUserAction();
+            emit('deleteFavSong', track.value.id)
+        }
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
 
 onMounted(() => {
     const audio = new Audio(track.value.song_path);
@@ -30,16 +62,17 @@ onMounted(() => {
 
 </script>
 <template>
-<li class="flex items-center justify-between rounded-md hover:bg-[#2A2929]" @mouseenter="isHover = true"
+    <li class="flex items-center justify-between rounded-md hover:bg-[#2A2929]" @mouseenter="isHover = true"
         @mouseleave="isHover = false">
         <div class="flex items-center w-full py-1.5">
             <div v-if="isHover" class="w-[40px] ml-[14px] mr-[6px] cursor-pointer">
                 <Icon icon="material-symbols:play-arrow-rounded" v-if="!isPlaying" class="size-7 text-white"
-                    @click="useSong.playOrPauseThisSong(playlist, track)"/>
-                <Icon icon="material-symbols:play-arrow-rounded" v-else-if="isPlaying && currentTrack.name !== track.name"
-                    class="size-7 text-white" @click="useSong.loadSong(playlist, track)"/>
+                    @click="useSong.playOrPauseThisSong(playlist, track)" />
+                <Icon icon="material-symbols:play-arrow-rounded"
+                    v-else-if="isPlaying && currentTrack.name !== track.name" class="size-7 text-white"
+                    @click="useSong.loadSong(playlist, track)" />
                 <Icon icon="material-symbols:pause-rounded" v-else class="size-7 text-white"
-                    @click="useSong.playOrPauseSong(playlist, track)"/>
+                    @click="useSong.playOrPauseSong(playlist, track)" />
             </div>
             <div v-else class="text-white font-semibold w-[40px] ml-5 p-1">
                 <span :class="{ 'text-green-500': currentTrack && currentTrack.name == track.name }">
@@ -55,10 +88,12 @@ onMounted(() => {
             </div>
         </div>
         <div class="flex items-center">
-
             <div v-if="isTrackTime" class="text-xs mx-5 text-gray-400">
                 {{ isTrackTime }}
             </div>
+            <button v-if="!isFav" @click="unloveThisSong" class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                <Icon icon="material-symbols:delete-rounded" class=" text-2xl" />
+            </button>
         </div>
     </li>
 </template>

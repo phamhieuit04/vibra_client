@@ -22,6 +22,20 @@ const { followArtistList, favSongList, userAction } = storeToRefs(useActivity)
 const { openEditPlaylist } = storeToRefs(useModal)
 
 const myPlaylistList = ref([]);
+
+const myFavSongList = ref([
+  {
+    name: '',
+    total_song: 0,
+    thumbnail_path: '',
+    isFav: true,
+    author: [{
+        name: authStore.user.name
+    }],
+    songs: [] 
+  }
+]);
+
 const myArtistList = ref([])
 const albumList = ref([]);
 
@@ -66,7 +80,18 @@ async function FetchData() {
             }
         });
         useActivity.setFollowArtistList(artistRes.data.data)
-        useActivity.setFavSongList(songRes.data.data)
+        
+        const rawList = songRes.data.data;
+        const onlySongs = rawList.map(item => item.song);
+        useActivity.setFavSongList(onlySongs)
+
+        myFavSongList.value.songs = onlySongs;
+        myFavSongList.value.total_song = onlySongs.length;
+        myFavSongList.value.name = 'Bài hát yêu thích';
+        myFavSongList.value.thumbnail_path = '';
+        myFavSongList.value.isFav = true;
+
+
         myArtistList.value = artistRes.data.data
         myPlaylistList.value = myPlaylistRes.data.data
         albumList.value = albumRes.data.data
@@ -121,14 +146,12 @@ const editPlaylist = async (playlist) => {
 
 watch(() => openEditPlaylist.value, (newVal, oldVal) => {
     if (oldVal === true && newVal === false) {
-      console.log('Modal vừa đóng!!!!!!!!!!!!!!!!!!!!!!!!!!');
       FetchData();
     }
   }
 )
-watch(() => userAction.value, (newVal, oldVal) => {
-        console.log("vừa có sự kiện")
-      FetchData();
+watch(() => userAction.value, () => {
+    FetchData();
   }
 )
 
@@ -172,7 +195,25 @@ onMounted(() => {
         <input type="text" v-model="search" placeholder="Tìm kiếm"
             class="w-full px-3 py-1.5 rounded-full border border-[#BC4D15] bg-[#1D1512] text-[#FFE5D6] text-sm mb-4 focus:ring-11 focus:ring-[#BC4D15] focus:outline-none" />
 
+
+
+
+
         <div class="space-y-2 overflow-y-auto max-h-[calc(100vh-200px)]">
+
+            <div v-if="filter == 'all' || filter == 'playlist'"
+                class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
+                @click="useView.selectItem(myFavSongList); useView.setComponent('PlaylistPage'); useView.setPlaylistData(myFavSongList);"
+                :class="{ 'bg-white/10': useView.selected === myFavSongList }">
+                <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
+                    <img  class="object-cover rounded w-10 h-10" :src="myFavSongList.thumbnail_path" @error="event => event.target.src = defaultImgage"/>
+                </div>
+
+                <div>
+                    <div class="text-[#FFE5D6] font-semibold leading-4">Bài hát yêu thích</div>
+                    <div class="text-[#FFE5D6]/50 text-s font-medium">{{ myFavSongList.total_song }} bài hát</div>
+                </div>
+            </div>
 
             <div v-for="(item, index) in filteredPlaylist" :key="index" v-if="filter == 'all' || filter == 'playlist'"
                 class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
