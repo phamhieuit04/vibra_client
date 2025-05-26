@@ -8,6 +8,7 @@ export const useViewStore = defineStore("view", {
     playlistData: null,
     artistData: null,
     userData: null,
+    openEditProfile: false,
   }),
 
   actions: {

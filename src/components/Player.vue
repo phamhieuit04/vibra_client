@@ -105,8 +105,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 </div>
             </div>
             <div class="flex items-center ml-8">
-                <Icon icon="solar:heart-linear" class="text-[#FFE5D6] text-[23px] cursor-pointer"/>
-                <Icon icon="material-symbols:add-circle-outline" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
+                <i class="fa-regular fa-square-plus text-[#FFE5D6] text-[23px]" color="#FFE5D6"></i>
             </div>
         </div>
 

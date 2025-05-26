@@ -10,9 +10,9 @@ import defaultImgage from '@/assets/default.jpg'
 
 
 const authStore = useAuthStore();
+const useView = useViewStore()
+const { openEditProfile } = storeToRefs(useView)
 const { user } = storeToRefs(authStore)
-const useModal = useModalStore()
-const { openEditProfile } = storeToRefs(useModal)
 
 const previewImg = ref(null)
 const fileInput = ref(null)
