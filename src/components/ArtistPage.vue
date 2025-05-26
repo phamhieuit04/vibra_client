@@ -31,8 +31,11 @@ async function followThisArtist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        useActivity.onUserAction();
-        isFollowed.value = !isFollowed.value
+
+        if(res.data.code == 200){
+            useActivity.onUserAction();
+            isFollowed.value = !isFollowed.value
+        }
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -45,8 +48,10 @@ async function unfollowThisArtist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        useActivity.onUserAction();
-        isFollowed.value = !isFollowed.value
+        if(res.data.code == 200) {
+            useActivity.onUserAction();
+            isFollowed.value = !isFollowed.value
+        }
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
