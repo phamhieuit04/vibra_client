@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useViewStore } from "@/stores/view";
 import { useAuthStore } from '@/stores/auth';
+import { useModalStore } from "@/stores/modal";
 import { Icon } from '@iconify/vue';
 import { storeToRefs } from "pinia";
 import axios from 'axios';
@@ -26,6 +27,7 @@ function onImgChoosed(event) {
   if (file) {
     avatar.value = file
     previewImg.value = URL.createObjectURL(file)
+    console.log(avatar.value)
   }
 }
 function chooseImg() {
@@ -45,17 +47,18 @@ const saveProfile = async () => {
   try {
     const res = await axios.post('http://spotify_clone_api.test/api/profile/update', formData, {
       'headers': {
-        'Authorization': 'Bearer ' + authStore.user.token,
+        'Authorization': 'Bearer ' + user.value.token,
       },
     });
-    alert('Chỉnh sửa thành công');
     const fetchUser = await axios.get('http://spotify_clone_api.test/api/profile/show', {
       'headers': {
-        'Authorization': 'Bearer ' + authStore.user.token,
+        'Authorization': 'Bearer ' + user.value.token,
       },
     });
-    fetchUser.data.data.token = authStore.user.token;
+    fetchUser.data.data.token = user.value.token;
     authStore.setUser(fetchUser.data.data);
+    console.log(res)
+    alert('Chỉnh sửa thành công');
   } catch (e) {
     console.log(e);
     alert('Call API thất bại');

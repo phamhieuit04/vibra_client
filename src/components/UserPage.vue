@@ -5,6 +5,7 @@ import { useViewStore } from "@/stores/view";
 import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
+import { useModalStore } from "@/stores/modal";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
 
@@ -14,7 +15,9 @@ let openUploadAlbum = ref(false);
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
-const { currentComponent, isFullscreen, openEditProfile } = storeToRefs(useView)
+const useModal = useModalStore();
+const { currentComponent, isFullscreen } = storeToRefs(useView)
+const { openEditProfile } = storeToRefs(useModal)
 
 onMounted(() => {
     console.log(authStore.user)
