@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import defaultImgage from '@/assets/default.jpg'
+import defaultSong from '@/assets/DefaultSong.mp3'
 
 export const useSongStore = defineStore("song", {
   state: () => ({
@@ -13,6 +14,7 @@ export const useSongStore = defineStore("song", {
       author: {
         name: "Duy",
       },
+      song_path: defaultSong,
     },
   }),
   actions: {
