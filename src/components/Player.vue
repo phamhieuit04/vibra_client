@@ -94,7 +94,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         class="fixed bottom-0 flex items-center justify-between w-full z-50 h-[90px] bg-[#181413] border-t border-t-[#272727]">
         <div class=" flex items-center w-1/4 ">
             <div class="flex items-center ml-4">
-                <img class="rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail_path']" @error="event => event.target.src = defaultImgage"/>
+                <img class="rounded-sm shadow-2xl object-cover" width="55" :src="currentTrack['thumbnail_path']" @error="event => event.target.src = defaultImgage"/>
                 <div class="ml-4">
                     <div style="font-family: 'Montserrat', sans-serif;" class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
                         {{ currentTrack ? currentTrack['name'] : 'Bài hát' }}
@@ -105,7 +105,8 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 </div>
             </div>
             <div class="flex items-center ml-8">
-                <i class="fa-regular fa-square-plus text-[#FFE5D6] text-[23px]" color="#FFE5D6"></i>
+                <Icon icon="solar:heart-linear" class="text-[#FFE5D6] text-[23px] cursor-pointer"/>
+                <Icon icon="material-symbols:add-circle-outline" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
             </div>
         </div>
 

@@ -77,7 +77,7 @@ onMounted(() => {
                         <div v-for="item in popularAlbum" :key="popularAlbum.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
                             <div @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                                 <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                    <img class="rounded-xl w-48 h-48" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
+                                    <img class="object-cover rounded-xl w-48 h-48" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.total_song }} bài hát</p>
@@ -94,7 +94,7 @@ onMounted(() => {
                         <div v-for="item in topArtist" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
                             <div @click="useView.selectItem(item); useView.setComponent('ArtistPage');">
                                 <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
-                                    <img class="rounded-full w-48 h-48" :src="item.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
+                                    <img class="rounded-full w-48 h-48 object-cover" :src="item.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.followers }} người theo dõi</p>
@@ -112,7 +112,7 @@ onMounted(() => {
                         <div v-for="item in topSong" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105" 
                             @click="useSong.playOrPauseThisSong(topSong, item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
-                                <img class="rounded-full w-40 h-40" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
+                                <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
                             </div>
                             <p class="font-medium ">{{ item.name }}</p>
                             <p class="text-sm ">{{ item.total_played }} lượt nghe</p>

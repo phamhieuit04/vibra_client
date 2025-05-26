@@ -81,7 +81,7 @@ async function logout() {
 			<div class="w-8 h-8 mr-[10px] rounded-full flex items-center justify-center text-white font-bold">
 				<button @click="openMenu = !openMenu" type="button" class=" cursor-pointer">
 					<div class="flex items-center">
-						<img class="rounded-full" width="30" :src="authStore.user.avatar_path ? authStore.user.avatar_path : defaultImgage" @error="event => event.target.src = defaultImgage" alt="">
+						<img class="object-cover rounded-full" width="30" :src="authStore.user.avatar_path ? authStore.user.avatar_path : defaultImgage" @error="event => event.target.src = defaultImgage" alt="">
 					</div>
 				</button>
 				<span v-if="openMenu" class="fixed bg-[#282828] w-[200px] z-50 top-[64px] right-1 p-1">

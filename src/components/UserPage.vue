@@ -5,6 +5,7 @@ import { useViewStore } from "@/stores/view";
 import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
+import { useModalStore } from "@/stores/modal";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
 
@@ -14,7 +15,9 @@ let openUploadAlbum = ref(false);
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
-const { currentComponent, isFullscreen, openEditProfile } = storeToRefs(useView)
+const useModal = useModalStore();
+const { currentComponent, isFullscreen } = storeToRefs(useView)
+const { openEditProfile } = storeToRefs(useModal)
 
 onMounted(() => {
     console.log(authStore.user)
@@ -25,7 +28,7 @@ onMounted(() => {
     <div class="text-white space-y-10 rounded-[24px] bg-[#1D1512] w-full h-[76%]">
         <div class="px-10 py-6 h-52 flex items-center bg-gradient-to-b from-[#1D1512]/20 to-[#312825]/100 space-x-7 ">
             <div class="rounded-full bg-gray-600 w-[160px] h-[160px] aspect-square">
-                <img class="rounded-full w-[160px] h-[160px] aspect-square" :src="authStore.user.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
+                <img class="rounded-full w-[160px] h-[160px] aspect-square object-cover" :src="authStore.user.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
             </div>
             <div class="space-y-2">
                 <p class="text-lg text-zinc-400">Hồ sơ</p>

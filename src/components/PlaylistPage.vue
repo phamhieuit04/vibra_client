@@ -30,6 +30,7 @@ async function FetchPlaylistData() {
 
 onMounted(() => {
     FetchPlaylistData();
+    console.log(playlistData.value)
 })
 </script>
 <template>
@@ -37,8 +38,8 @@ onMounted(() => {
         <div class="py-15"></div>
 
         <div class="flex items-center w-full relative h-full">
-            <div class="w-48 h-48 rounded-xl bg-gray-500">
-                <img class="w-48 h-48 rounded-xl" :src="playlistData.thumbnail_path" @error="event => event.target.src = defaultImgage">
+            <div class="w-48 h-48 rounded-xl bg-gray-500 aspect-square">
+                <img class="w-48 h-48 rounded-xl aspect-square object-cover" :src="playlistData.thumbnail_path" @error="event => event.target.src = defaultImgage">
             </div>
             <div class="w-[100% - 192px] ml-5">
                 <div class="text-white text-lg font-semibold">Album</div>
