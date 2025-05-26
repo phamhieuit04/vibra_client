@@ -6,6 +6,7 @@ export const useSongStore = defineStore("song", {
     isPlaying: false,
     audio: null,
     currentPlaylist: null,
+    vol: 80,
     currentTrack: {
       name: "Bài hát chào người mới",
       thumbnail_path: defaultImgage,
@@ -17,6 +18,10 @@ export const useSongStore = defineStore("song", {
   actions: {
     setPlaylist(playlist) {
       this.currentPlaylist = playlist;
+    },
+
+    setVolume(range){
+      this.vol = range
     },
 
     loadSingleSong(track) {

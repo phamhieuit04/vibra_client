@@ -7,15 +7,22 @@ import { storeToRefs } from "pinia";
 
 const useSong = useSongStore();
 const useView = useViewStore();
-const { audio } = storeToRefs(useSong);
+const { audio, vol } = storeToRefs(useSong);
 
 let isHover = ref(false);
-let vol = ref(80);
 let volume = ref(null);
+
+
+watch(() => audio.value, (newVal, oldVal) => {
+    console.log('Vừa đổi bài hát!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    audio.value.volume = vol.value / 100;
+  }
+)
 
 onMounted(() => {
   volume.value.addEventListener('input', (e) => {
     audio.value.volume = e.currentTarget.value / 100;
+    useSong.setVolume(e.currentTarget.value);
   });
   useView.listenFullscreenChange();
 })

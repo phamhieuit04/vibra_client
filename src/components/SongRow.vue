@@ -19,7 +19,7 @@ const props = defineProps({
 const { track, playlist, index } = toRefs(props);
 
 onMounted(() => {
-    const audio = new Audio(track.value.path);
+    const audio = new Audio(track.value.song_path);
     audio.addEventListener('loadedmetadata', function () {
         const duration = audio.duration;
         const minutes = Math.floor(duration / 60);
