@@ -110,7 +110,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
             </div>
         </div>
 
-        <div class="max-w-[35%] mx-auto w-2/4 mb-3">
+        <div class="max-w-[35%] mx-auto w-2/4">
             <div class=" flex-col items-center justify-center">
                 <div class="flex items-center justify-center h-[30px]">
                     <button class="mx-2" @click="useSong.prevSong(currentTrack, currentPlaylist)">
