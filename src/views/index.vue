@@ -10,17 +10,22 @@ import SearchPage from "@/components/SearchPage.vue"
 import SongPage from "@/components/SongPage.vue";
 import ArtistPage from "@/components/ArtistPage.vue";
 import ProfileModal from "@/components/ProfileModal.vue";
+import PlaylistModal from "@/components/PlaylistModal.vue";
 
-import { useViewStore } from "@/stores/view";
 import { useSongStore } from "@/stores/song";
+import { useViewStore } from "@/stores/view";
 import { storeToRefs } from "pinia";
 import CategoriesPage from "@/components/CategoriesPage.vue";
+import { useModalStore } from "@/stores/modal";
 
 const useSong = useSongStore()
 const { currentTrack } = storeToRefs(useSong)
 
 const useView = useViewStore()
-const { currentComponent, isFullscreen, openEditProfile } = storeToRefs(useView)
+const { currentComponent, isFullscreen } = storeToRefs(useView)
+
+const useModal = useModalStore()
+const { openEditProfile, openEditPlaylist } = storeToRefs(useModal)
 
 const player = ref(null)
 
@@ -50,6 +55,8 @@ onMounted(() => {
       <SongPage v-if="isFullscreen"/>
       <Player />
     </div>
+
     <ProfileModal v-if="openEditProfile"/>
+    <PlaylistModal v-if="openEditPlaylist"/>
   </div>
 </template>

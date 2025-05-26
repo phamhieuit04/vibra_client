@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { Icon } from '@iconify/vue';
 import FujiiKazeAlbum from "@/assets/FujiiKazeAlbum.json"
 import FavPlaylist from "@/assets/FavPlaylist"
@@ -9,10 +9,14 @@ import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
+import { useModalStore } from "@/stores/modal";
 
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
+const useModal = useModalStore();
+
+const { openEditPlaylist } = storeToRefs(useModal)
 
 const artistList = ref([]);
 const myPlaylistList = ref([]);
@@ -105,23 +109,18 @@ const deletePlaylist = async (id) => {
         alert('Xóa playlist thất bại!');
     }
 }
-const editPlaylist = async (id) => {
-    try {
-        const res = await axios.post(
-            `http://spotify_clone_api.test/api/library/update-playlist/${id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
-            }
-        );
-        alert('Sửa playlist thành công!');
-        FetchData();
-    } catch (error) {
-        console.error('Lỗi khi sửa playlist:', error);
-        alert('Sửa playlist thất bại!');
-    }
+const editPlaylist = async (playlist) => {
+    useModal.setPlaylistEditData(playlist);
+     openEditPlaylist.value = true;
 }
+
+watch(() => openEditPlaylist.value, (newVal, oldVal) => {
+    if (oldVal === true && newVal === false) {
+      console.log('Modal vừa đóng!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      FetchData();
+    }
+  }
+)
 
 onMounted(() => {
     FetchData();
@@ -181,7 +180,7 @@ onMounted(() => {
                 </div>
                 <div class="ml-auto">
                     <button class=" hover:bg-white/5 p-2 rounded text-[#FFE5D6]/50"
-                        @click.stop="console.log('edit ' + item.playlist_id)">
+                        @click.stop="editPlaylist(item.playlist); console.log(item.playlist);">
                         <Icon icon="material-symbols:edit-square-rounded" class=" text-xl" />
                     </button>
                     <button class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50"
