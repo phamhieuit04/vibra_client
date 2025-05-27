@@ -12,6 +12,7 @@ import ArtistPage from "@/components/ArtistPage.vue";
 import ProfileModal from "@/components/ProfileModal.vue";
 import PlaylistModal from "@/components/PlaylistModal.vue";
 import SongModal from "@/components/SongModal.vue";
+import SidePanel from "@/components/SidePanel.vue";
 
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
@@ -54,6 +55,7 @@ onMounted(() => {
     </div>
     <div v-if="showSidePanel"
       class="fixed top-[64px] left-[1514px] w-[352px] overflow-auto h-full bg-[#1D1512] rounded-[24px]">
+      <SidePanel/>
     </div>
     <div ref="player">
       <SongPage v-if="isFullscreen" />

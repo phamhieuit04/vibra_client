@@ -23,6 +23,7 @@ onMounted(() => {
 
 })
 </script>
+
 <template>
     <h1 class="text-white">Side Panel nè</h1>
 </template>
