@@ -52,7 +52,7 @@ onMounted(() => {
     <Header />
     <Sidebar />
     <div :class="['transition-all duration-300 fixed top-[64px] overflow-auto h-full bg-[#1D1512] rounded-[24px]',
-      showSidePanel ? 'left-[23%] w-[57.3%]' : 'left-[432px] w-[calc(100%-440px)]']">
+      showSidePanel ? 'left-[23%] w-[57.4%]' : 'left-[23%] w-[76.6%]']">
       <component :is="components[currentComponent]" />
     </div>
     <div v-if="showSidePanel"
