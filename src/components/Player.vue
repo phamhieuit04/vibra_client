@@ -18,7 +18,7 @@ const useSong = useSongStore();
 const useModal = useModalStore();
 const useActivity = useActivityStore();
 const { isPlaying, audio, currentPlaylist, currentTrack } = storeToRefs(useSong)
-const { favSongList } = storeToRefs(useActivity)
+const { favSongList, myPlaylistList } = storeToRefs(useActivity)
 
 let isHover = ref(false)
 let isTrackTimeCurrent = ref(null)
@@ -28,6 +28,7 @@ let seekerContainer = ref(null)
 let range = ref(0)
 
 const isLoved = ref(false) 
+const openMenu = ref(false)
 
 async function loveThisSong() {
     try {
@@ -64,8 +65,11 @@ async function unloveThisSong() {
     }
 }
 
+function isTrackInPlaylist(playlist) {
+  return playlist.playlist.some(song => song.id === currentTrack.value.id);
+}
+
 onMounted(() => {
-    // console.log(favSongList.value)
     isPlaying.value = false
     if(!currentTrack.value) return;
 
@@ -101,7 +105,7 @@ onMounted(() => {
 })
 
 const timeupdate = () => {
-    // if(!currentTrack.value) return;
+    if(!audio.value) return
     audio.value.addEventListener('timeupdate', function () {
         var minutes = Math.floor(audio.value.currentTime / 60)
         var seconds = Math.floor(audio.value.currentTime - minutes * 60)
@@ -113,7 +117,6 @@ const timeupdate = () => {
 }
 
 const loadmetadata = () => {
-    // if(!currentTrack.value) return;
     audio.value.addEventListener('loadedmetadata', function () {
         const duration = audio.value.duration;
         const minutes = Math.floor(duration / 60);
@@ -123,23 +126,19 @@ const loadmetadata = () => {
 }
 
 watch(() => favSongList.value, () => {
-    console.log("Danh sách bài hát ưa thích vừa thay đổi")
     isLoved.value = false
     favSongList.value.forEach(song => {
         if (song.id === currentTrack.value.id) {
             isLoved.value = true
-            console.log("Bài này trong danh sách ưa thích")
         }
     })
   }
 )
 watch(() => currentTrack.value, () => {
-    console.log("Bài hát vừa thay đổi")
     isLoved.value = false
     favSongList.value.forEach(song => {
         if (song.id === currentTrack.value.id) {
             isLoved.value = true
-            console.log("Bài này trong danh sách ưa thích")
         }
     })
   }
@@ -178,8 +177,19 @@ watch(() => isTrackTimeCurrent.value, (time) => {
             <div class="flex items-center ml-8">
                 <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear" class="text-[#FFE5D6] text-[23px] cursor-pointer" />
                 <Icon v-else @click="unloveThisSong" icon="solar:heart-bold" class="text-[#FFE5D6] text-[23px] cursor-pointer"/>
-                <Icon icon="material-symbols:add-circle-outline" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
+                <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
             </div>
+            <span v-if="openMenu" class="absolute bg-[#282828] w-[200px] z-20 left-[250px] bottom-[68px]  p-1">
+                <div v-for="item in myPlaylistList" :key="item.id" class="text-gray-200 font-semibold text-[14px]">
+                    <div class="flex hover:bg-[#3E3D3D] my-1">
+                        <div class="px-3 py-2  cursor-pointer">
+                            {{ item.playlist.name }}
+                        </div>
+                        <!-- <button v-if="true" class="text-white bg-white/10 p-1 rounded">{{ isTrackInPlaylist(playlist) ? 'Xóa' : 'Thêm' }}</button>
+                        <button v-else class="text-white bg-white/10 p-1 rounded">Xóa</button> -->
+                    </div>
+                </div>
+            </span>
         </div>
 
         <div class="max-w-[35%] mx-auto w-2/4">

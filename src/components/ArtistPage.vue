@@ -31,11 +31,8 @@ async function followThisArtist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-
-        if(res.data.code == 200){
-            useActivity.onUserAction();
-            isFollowed.value = !isFollowed.value
-        }
+        useActivity.onUserAction();
+        isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -48,10 +45,8 @@ async function unfollowThisArtist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        if(res.data.code == 200) {
-            useActivity.onUserAction();
-            isFollowed.value = !isFollowed.value
-        }
+        useActivity.onUserAction();
+        isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -69,7 +64,7 @@ onMounted(() => {
 </script>
 <template>
     <div
-        class="text-[#FFE5D6] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style">
+        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style" >
 
         <div class="relative items-center h-96">
             <img 
@@ -78,10 +73,10 @@ onMounted(() => {
                 class="absolute z-0 object-cover w-full h-full"
             />
 
-            <div class="relative z-10 flex flex-col justify-end p-16 space-y-2">             
-                <p class="text-lg font-semibold ">
-                    <i class="text-2xl text-blue-500 fas fa-check-circle"></i> 
-                    Nghệ sĩ
+            <div class="relative z-10 flex flex-col justify-end h-full p-16 space-y-2">             
+                <p class="flex text-lg font-semibold ">
+                    <Icon icon="mdi:check-decagram" class="mr-2 text-2xl text-blue-500" /> 
+                    Nghệ sĩ được xác minh
                 </p>
                 <h1 class="font-black text-8xl">{{ artistData.name }}</h1>
                 <p class="mt-1 text-lg font-semibold ">{{ artistData.followers }} người theo dõi</p>
@@ -93,7 +88,10 @@ onMounted(() => {
                 <div class="flex items-center mb-5 space-x-6">
                     <button
                         class="flex items-center justify-center w-14 h-14 rounded-full bg-[#BC4D15] hover:bg-black transition group">
-                        <i class="fas fa-play text-black ml-0.5 text-3xl group-hover:text-[#BC4D15]"></i>
+                        <Icon 
+                            icon="mdi:play" 
+                            class="text-black ml-0.5 text-5xl group-hover:text-[#BC4D15]" 
+                        />
                     </button>
 
                     <button v-if="!isFollowed" @click="followThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
@@ -131,7 +129,7 @@ onMounted(() => {
             <div class="mt-8 ">
                 <h2 class="mb-3 text-2xl font-semibold pl-14">Giới thiệu về nghệ sĩ</h2>
                 <div class="">
-                    <div class="w-full mb-3 rounded-3xl h-[30rem] flex flex-col justify-end p-12 bg-zinc-700">
+                    <div class="w-full mb-3 rounded-3xl h-[30rem] flex flex-col justify-end p-12 bg-zinc-700 hover:scale-[102%] duration-200 ease-in-out cursor-pointer">
 
                         <p class="text-2xl font-semibold">60.345.760 người nghe hằng tháng</p>
                         <p class="text-xl font-semibold">
@@ -162,8 +160,8 @@ onMounted(() => {
                     </div>
                 </div>
 
-                <div class="w-full overflow-x-auto">
-                    <div class="flex px-1 py-2 space-x-4 w-max scrollbar-style">
+                <div class="w-full overflow-x-auto scrollbar-style">
+                    <div class="flex px-1 py-2 space-x-4 w-max ">
                         <div v-for="i in 8" :key="i"
                             class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">
                             <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">

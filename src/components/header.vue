@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
@@ -7,14 +7,34 @@ import defaultImgage from '@/assets/default.jpg'
 import { useAuthStore } from '@/stores/auth';
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
+import { useActivityStore } from "@/stores/activity";
 
 const useSong = useSongStore();
 
 let openMenu = ref(false);
 
+const useActivity = useActivityStore()
 const useView = useViewStore()
 const authStore = useAuthStore();
 const router = useRouter();
+
+async function getAllCategories() {
+	try {
+		const res = await axios.get('http://spotify_clone_api.test/api/category/index', {
+			'headers': {
+				'Authorization': 'Bearer ' + authStore.user.token,
+			},
+		});
+
+		if (res.data.code === 200) {
+			useActivity.setCategories(res.data.data)
+			console.log(res.data.data)
+		}
+	} catch (e) {
+		console.log(e);
+		alert('Call API thất bại');
+	}
+}
 
 async function logout() {
 	try {
@@ -35,6 +55,10 @@ async function logout() {
 		alert('Call API thất bại');
 	}
 }
+
+onMounted(() => {
+	getAllCategories();
+})
 </script>
 
 

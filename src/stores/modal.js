@@ -4,6 +4,7 @@ export const useModalStore = defineStore("modal", {
     playlistEditData: null,
     openEditProfile: false,
     openEditPlaylist: false,
+    openUploadSong: false,
   }),
 
   actions: {

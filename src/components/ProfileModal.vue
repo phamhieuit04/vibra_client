@@ -7,12 +7,15 @@ import { Icon } from '@iconify/vue';
 import { storeToRefs } from "pinia";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
+import { useActivityStore } from "@/stores/activity";
 
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore)
 const useModal = useModalStore()
 const { openEditProfile } = storeToRefs(useModal)
+const useActivity = useActivityStore();
+const { allCategories } = storeToRefs(useActivity);
 
 const previewImg = ref(null)
 const fileInput = ref(null)

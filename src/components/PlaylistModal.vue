@@ -15,7 +15,6 @@ const { openEditPlaylist, playlistEditData } = storeToRefs(useModal)
 const previewImg = ref(null)
 const fileInput = ref(null)
 const playlistName = ref(playlistEditData.value.name);
-const playlistDescrip = ref(playlistEditData.value.description);
 const thumbnail = ref(null)
 
 
@@ -32,12 +31,8 @@ function chooseImg() {
 
 
 const saveProfile = async () => {
-    if(!playlistDescrip.value) {
-        playlistDescrip.value = 'Mô tả';
-    }
   const formData = new FormData()
   formData.append('name', playlistName.value)
-  formData.append('description', playlistDescrip.value)
   if (thumbnail.value) {
     formData.append('thumbnail', thumbnail.value)
   }
@@ -81,11 +76,9 @@ onMounted(() => {
             <input type="file" accept="image/*" ref="fileInput" style="display: none" @change="onImgChoosed" />
           </div>
         </div>
-        <div class="">
+        <div class="ml-6">
           <input v-model="playlistName" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
             placeholder="Tên Playlist" />
-          <input v-model="playlistDescrip" class=" bg-zinc-800  float-end text-white rounded mb-3 px-4 py-2"
-            placeholder="Mô tả Playlist" />
         </div>
       </div>
 

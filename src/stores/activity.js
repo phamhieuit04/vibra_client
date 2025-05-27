@@ -3,6 +3,8 @@ export const useActivityStore = defineStore("activity", {
   state: () => ({
     followArtistList: [],
     favSongList: [],
+    myPlaylistList: [],
+    allCategories: [],
     userAction: false,
   }),
 
@@ -12,6 +14,12 @@ export const useActivityStore = defineStore("activity", {
     },
     setFavSongList(listSong) {
       this.favSongList = listSong;
+    },
+    setMyPlaylistList(playlist) {
+      this.myPlaylistList = playlist;
+    },
+    setCategories(categoriesList){
+      this.allCategories = categoriesList;
     },
     onUserAction(){
         this.userAction = !this.userAction;

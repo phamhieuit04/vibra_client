@@ -57,7 +57,6 @@ async function FetchSongData() {
             },
         });
         topSong.value = res.data.data;
-        console.log(topSong.value)
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');

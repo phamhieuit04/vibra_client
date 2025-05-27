@@ -6,21 +6,24 @@ import { storeToRefs } from "pinia";
 import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
 import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
 
 let openMenu = ref(false);
 let openUploadAlbum = ref(false);
 
+const useActivity = useActivityStore();
 const useView = useViewStore();
 const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
 const { currentComponent, isFullscreen } = storeToRefs(useView)
-const { openEditProfile } = storeToRefs(useModal)
+const { openEditProfile, openUploadSong } = storeToRefs(useModal)
+const { myPlaylistList, followArtistList} = storeToRefs(useActivity)
 
 onMounted(() => {
-    console.log(authStore.user)
+    console.log(followArtistList.value)
 })
 </script>
 
@@ -33,7 +36,7 @@ onMounted(() => {
             <div class="space-y-2">
                 <p class="text-lg text-zinc-400">Hồ sơ</p>
                 <h1 class="text-6xl font-bold">{{ authStore.user.name }}</h1>
-                <p class="mt-1 text-lg text-zinc-400">? Playlist công khai • ??? đang theo dõi</p>
+                <p class="mt-1 text-lg text-zinc-400">{{ myPlaylistList.length }} Playlist • {{ followArtistList.length }} nghệ sĩ đang theo dõi</p>
             </div>
         </div>
 
@@ -45,17 +48,17 @@ onMounted(() => {
             <span v-if="openMenu" class="absolute bg-[#282828] w-[200px] z-20 left-10 top-14 p-1">
                 <ul class="text-gray-200 font-semibold text-[14px]">
                     <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="openEditProfile = true">Chỉnh sửa hồ sơ</li>
-                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer">Đăng tải bài hát</li>
+                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="openUploadSong = true">Đăng tải bài hát</li>
+                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer">Tạo một album</li>
                 </ul>
             </span>
             <div>
-                <h2 class="mb-4 text-lg font-semibold">Playlist công khai</h2>
+                <h2 class="mb-4 text-lg font-semibold">Playlist của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="i in 3" :key="i" class="flex-shrink-0 w-32">
+                    <div v-for="item in myPlaylistList" :key="item.id" class="flex-shrink-0 w-32 cursor-pointer">
                         <div class="w-full h-32 mb-2 rounded bg-zinc-700">
                         </div>
-                        <p class="font-medium">Playlist#{{ i }}</p>
-                        <p class="text-sm text-zinc-400">{{ i * 100 }} người theo dõi</p>
+                        <p class="font-medium">{{ item.playlist.name }}</p>
                     </div>
                 </div>
             </div>
@@ -63,10 +66,10 @@ onMounted(() => {
             <div class="mt-8">
                 <h2 class="mb-4 text-lg font-semibold">Đang theo dõi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="i in 4" :key="i" class="flex-shrink-0">
+                    <div v-for="item in followArtistList" :key="item.id" class="flex-shrink-0">
                         <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
                         </div>
-                        <p class="text-sm text-zinc-400"> Ca sĩ {{ i }}</p>
+                        <p class="text-sm text-zinc-400">{{ item.artist.name }}</p>
 
                     </div>
 
@@ -74,14 +77,12 @@ onMounted(() => {
             </div>
 
             <div class="mt-8">
-                <h2 class="mb-4 text-lg font-semibold">Danh sách phát</h2>
+                <h2 class="mb-4 text-lg font-semibold">Album của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="i in 3" :key="i" class="flex-shrink-0 w-32 ">
                         <div class="w-full h-32 mb-2 rounded bg-zinc-700">
-
-
                         </div>
-                        <p class="font-medium">Playlist#{{ i }}</p>
+                        <p class="font-medium">Album#{{ i }}</p>
                         <p class="text-sm text-zinc-400">{{ i * 100 }} người theo dõi</p>
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import SongPage from "@/components/SongPage.vue";
 import ArtistPage from "@/components/ArtistPage.vue";
 import ProfileModal from "@/components/ProfileModal.vue";
 import PlaylistModal from "@/components/PlaylistModal.vue";
+import SongModal from "@/components/SongModal.vue";
 
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
@@ -25,7 +26,7 @@ const useView = useViewStore()
 const { currentComponent, isFullscreen } = storeToRefs(useView)
 
 const useModal = useModalStore()
-const { openEditProfile, openEditPlaylist } = storeToRefs(useModal)
+const { openEditProfile, openEditPlaylist, openUploadSong } = storeToRefs(useModal)
 
 const player = ref(null)
 
@@ -56,6 +57,7 @@ onMounted(() => {
       <Player />
     </div>
 
+    <SongModal v-if="openUploadSong"/>
     <ProfileModal v-if="openEditProfile"/>
     <PlaylistModal v-if="openEditPlaylist"/>
   </div>

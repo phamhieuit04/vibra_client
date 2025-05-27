@@ -80,6 +80,7 @@ async function FetchData() {
             }
         });
         useActivity.setFollowArtistList(artistRes.data.data)
+        useActivity.setMyPlaylistList(myPlaylistRes.data.data)
         
         const rawList = songRes.data.data;
         const onlySongs = rawList.map(item => item.song);
@@ -112,7 +113,6 @@ const createPlaylist = async () => {
                 },
             }
         );
-        console.log(res.data);
         alert('Tạo playlist thành công!');
         FetchData();
     } catch (error) {
