@@ -31,7 +31,7 @@ onMounted(() => {
                 <div v-for="item in allCategories" :key="item.id"
                     class="px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105"             
                     style="width: 21.25rem;"
-                    @click="useView.selectItem(item); useView.setComponent('CategoriesSongPage'); useView.setCategoriesData(item); console.log(item)">
+                    @click="useView.selectItem(item); useView.setComponent('CategoriesSongPage'); useView.setCategoriesData(item);">
 
                     <div class="relative w-full h-48 p-5 mb-2 rounded-xl bg-zinc-700">
                         <p class="text-xl font-semibold">{{ item.name }}</p>
