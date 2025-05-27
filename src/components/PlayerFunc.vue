@@ -40,9 +40,12 @@ onMounted(() => {
       :class="isHover ? 'bg-green-500' : 'bg-white'"></div>
     <div class="absolute h-[4px] z-[-0] mt-[6px] inset-y-0 left-0 w-full bg-gray-500 rounded-full"></div>
   </div>
+    <div class=" ml-4" >
+    <Icon icon="ri:video-line" v-if="!useView.showSidePanel"  class="text-white size-6 cursor-pointer" @click="useView.toggleSidePanel"/>
+    <Icon icon="ri:video-fill" v-else  class="text-white size-6 cursor-pointer" @click="useView.toggleSidePanel"/>
+  </div>
   <div class=" ml-4" >
     <Icon icon="fa6-solid:compress" v-if="useView.isFullscreen"  class="text-white size-6 cursor-pointer" @click="useView.toggleFullscreen"/>
-    
     <Icon icon="fa6-solid:expand" v-else class="text-white size-6 cursor-pointer text-semibold" @click="useView.toggleFullscreen"/>
   </div>
 </template>

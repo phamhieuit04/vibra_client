@@ -5,6 +5,7 @@ export const useViewStore = defineStore("view", {
     selected: null,
     page: null,
     isFullscreen: false,
+    showSidePanel: false,
     playlistData: null,
     artistData: null,
     userData: null,
@@ -36,6 +37,10 @@ export const useViewStore = defineStore("view", {
         document.exitFullscreen();
         this.isFullscreen = false;
       }
+    },
+
+    toggleSidePanel() {
+      this.showSidePanel = !this.showSidePanel;
     },
 
     setFullscreenPage(page){

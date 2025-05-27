@@ -23,7 +23,7 @@ const useSong = useSongStore()
 const { currentTrack } = storeToRefs(useSong)
 
 const useView = useViewStore()
-const { currentComponent, isFullscreen } = storeToRefs(useView)
+const { currentComponent, isFullscreen, showSidePanel } = storeToRefs(useView)
 
 const useModal = useModalStore()
 const { openEditProfile, openEditPlaylist, openUploadSong } = storeToRefs(useModal)
@@ -48,17 +48,20 @@ onMounted(() => {
   <div class="bg-black">
     <Header />
     <Sidebar />
-    <div
-      class="fixed right-1.5 top-[64px] left-[432px] w-[100%-420px] overflow-auto h-full bg-[#1D1512] rounded-[24px]">
-      <component :is="components[currentComponent]"></component>
+    <div :class="['transition-all duration-300 fixed top-[64px] overflow-auto h-full bg-[#1D1512] rounded-[24px]',
+      showSidePanel ? 'left-[432px] w-[calc(100%-800px)]' : 'left-[432px] w-[calc(100%-440px)]']">
+      <component :is="components[currentComponent]" />
+    </div>
+    <div v-if="showSidePanel"
+      class="fixed top-[64px] left-[1514px] w-[352px] overflow-auto h-full bg-[#1D1512] rounded-[24px]">
     </div>
     <div ref="player">
-      <SongPage v-if="isFullscreen"/>
+      <SongPage v-if="isFullscreen" />
       <Player />
     </div>
 
-    <SongModal v-if="openUploadSong"/>
-    <ProfileModal v-if="openEditProfile"/>
-    <PlaylistModal v-if="openEditPlaylist"/>
+    <SongModal v-if="openUploadSong" />
+    <ProfileModal v-if="openEditProfile" />
+    <PlaylistModal v-if="openEditPlaylist" />
   </div>
 </template>
