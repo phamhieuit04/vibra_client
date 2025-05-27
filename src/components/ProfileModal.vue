@@ -20,6 +20,7 @@ const { allCategories } = storeToRefs(useActivity);
 const previewImg = ref(null)
 const fileInput = ref(null)
 const profileName = ref(user.value.name);
+const profileDescrip = ref(user.value.description)
 const profileGender = ref(user.value.gender ? user.value.gender : 'Giới tính khác');
 const profileBirth = ref(user.value.birth ? user.value.birth : '2000/10/10')
 const avatar = ref(null)
@@ -41,6 +42,7 @@ function chooseImg() {
 const saveProfile = async () => {
   const formData = new FormData()
   formData.append('name', profileName.value)
+  formData.append('description', profileDescrip.value)
   formData.append('gender', profileGender.value)
   formData.append('birth', profileBirth.value)
   if (avatar.value) {
@@ -97,6 +99,8 @@ onMounted(() => {
         <div class="">
           <input v-model="profileName" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
             placeholder="Tên hồ sơ" />
+          <input v-model="profileDescrip" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
+            placeholder="Mô tả bản thân" />
           <select class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2" v-model="profileGender">
             <option disabled value="-- Chọn giới tính --">-- Chọn giới tính --</option>
             <option value="Nam">Nam</option>

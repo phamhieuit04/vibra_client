@@ -48,6 +48,7 @@ watch(() => playlistData.value, () => {
 
 
 onMounted(() => {
+    console.log(playlistData.value)
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
     } else {
@@ -65,18 +66,18 @@ onMounted(() => {
                     @error="event => event.target.src = defaultImgage">
             </div>
             <div class="w-[100% - 192px] ml-5">
-                <div class="text-white text-lg font-semibold">Danh sách phát</div>
+                <div class="text-white text-lg font-semibold"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}</div>
                 <div class="text-white text-8xl font-bold text-nowrap">
                     {{ playlistData.name }}
                 </div>
 
-                <div class="text-gray-300 text-[13px] mt-[20px] flex">
-                    <div class="flex">{{ playlistData.author?.name }}</div>
-                    <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg" />
-                    <div class="flex">{{ !playlistData.isFav ? new Date(playlistData.created_at).getFullYear() : "" }}
-                    </div>
-                    <Icon icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg" />
-                    <span class="flex">{{ playlistData.total_song }} bài hát</span>
+                <div class="text-gray-300 mt-[28px] flex">
+                    <Icon v-if="playlistData.type == 1" icon="material-symbols-light:add-circle-rounded" class="flex ml-2 mr-2 pb-2 text-6xl cursor-pointer" />
+                    <div class="flex text-[13px] mt-5">{{ playlistData.author?.name }}</div>
+                    <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg mt-5" />
+                    <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new Date(playlistData.created_at).getFullYear() : "" }}</div>
+                    <Icon icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg mt-5" />
+                    <span class="flex text-[13px] mt-5">{{ playlistData.total_song }} bài hát</span>
                 </div>
             </div>
         </div>

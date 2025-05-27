@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
-import defaultImgage from '@/assets/default.jpg'
-import defaultSong from '@/assets/DefaultSong.mp3'
+import defaultImgage from "@/assets/default.jpg";
+import defaultSong from "@/assets/DefaultSong.mp3";
+import axios from "axios";
+import { useAuthStore } from "./auth";
 
 export const useSongStore = defineStore("song", {
   state: () => ({
@@ -22,8 +24,8 @@ export const useSongStore = defineStore("song", {
       this.currentPlaylist = playlist;
     },
 
-    setVolume(range){
-      this.vol = range
+    setVolume(range) {
+      this.vol = range;
     },
 
     loadSingleSong(track) {
@@ -47,6 +49,21 @@ export const useSongStore = defineStore("song", {
       if (!this.audio.src || !this.audio) {
         console.log("Nguồn không tồn tại hoặc bài hát bị lỗi định dạng");
         return;
+      }
+
+      try {
+        const authStore = useAuthStore();
+        const res = axios.get(
+          `http://spotify_clone_api.test/api/song/update/${track.id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e);
+        alert("Call API thất bại");
       }
 
       setTimeout(() => {
