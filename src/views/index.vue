@@ -13,6 +13,7 @@ import ProfileModal from "@/components/ProfileModal.vue";
 import PlaylistModal from "@/components/PlaylistModal.vue";
 import SongModal from "@/components/SongModal.vue";
 import SidePanel from "@/components/SidePanel.vue";
+import CategoriesSongPage from "@/components/CategoriesSongPage.vue";
 
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
@@ -37,7 +38,8 @@ const components = {
   UserPage,
   SearchPage,
   CategoriesPage,
-  ArtistPage
+  ArtistPage,
+  CategoriesSongPage
 };
 
 onMounted(() => {

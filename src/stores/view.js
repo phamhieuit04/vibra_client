@@ -9,6 +9,7 @@ export const useViewStore = defineStore("view", {
     playlistData: null,
     artistData: null,
     userData: null,
+    categoriesData: null,
   }),
 
   actions: {
@@ -26,6 +27,10 @@ export const useViewStore = defineStore("view", {
 
     setArtistData(artist){
       this.artistData = artist;
+    },
+
+    setCategoriesData(categories){
+      this.categoriesData = categories
     },
 
     toggleFullscreen() {

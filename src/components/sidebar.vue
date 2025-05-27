@@ -245,8 +245,8 @@ onMounted(() => {
 
             <div v-for="(item, index) in filteredAlbum" :key="index" v-if="filter == 'all' || filter == 'playlist'"
                 class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
-                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
-                :class="{ 'bg-white/10': useView.selected === item }">
+                @click="useView.selectItem(item.playlist); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
+                :class="{ 'bg-white/10': useView.selected === item.playlist }">
                 <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded">
                     <img :src="item.playlist.thumbnail_path" class="object-cover rounded w-10 h-10" @error="event => event.target.src = defaultImgage"/>
                 </div>
