@@ -8,13 +8,19 @@ import { storeToRefs } from "pinia";
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 import defaultImgage from '@/assets/default.jpg'
+import { useActivityStore } from '@/stores/activity';
 
 const authStore = useAuthStore();
 const useSong = useSongStore();
-const useView = useViewStore()
-const playlistSong = ref([])
+const useView = useViewStore();
+const useActivity = useActivityStore();
+
+
+const { followAlbumList } = storeToRefs(useActivity)
 const { playlistData } = storeToRefs(useView)
+const playlistSong = ref([])
 const reloadKey = ref(0);
+const isFollowed = ref(false) 
 
 async function FetchPlaylistData() {
     try {
@@ -24,6 +30,35 @@ async function FetchPlaylistData() {
             }
         });
         playlistSong.value = res.data.data
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
+async function addToLibrary() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/home/store/${playlistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        useActivity.onUserAction();
+        isFollowed.value = !isFollowed.value
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+async function removeFromLibrary() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-playlist/${playlistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        useActivity.onUserAction();
+        isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -40,6 +75,12 @@ function onSongDel(trackId) {
 watch(() => playlistData.value, () => {
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
+        followAlbumList.value.forEach(album => {
+        if (album.playlist_id === playlistData.value.id) {
+            isFollowed.value = true
+        }
+    })
+    console.log('playlist data thay đổi');
     } else {
         playlistSong.value = playlistData.value.songs
     }
@@ -48,9 +89,15 @@ watch(() => playlistData.value, () => {
 
 
 onMounted(() => {
-    console.log(playlistData.value)
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
+        followAlbumList.value.forEach(album => {
+        if (album.playlist_id === playlistData.value.id) {
+            isFollowed.value = true
+        }
+    })
+    console.log(followAlbumList.value);
+    console.log(playlistData.value)
     } else {
         playlistSong.value = playlistData.value.songs
     }
@@ -72,7 +119,10 @@ onMounted(() => {
                 </div>
 
                 <div class="text-gray-300 mt-[28px] flex">
-                    <Icon v-if="playlistData.type == 1" icon="material-symbols-light:add-circle-rounded" class="flex ml-2 mr-2 pb-2 text-6xl cursor-pointer" />
+                    <Icon v-if="playlistData.type == 1 && !isFollowed" icon="material-symbols:add-circle-outline-rounded" class="flex ml-2 mr-2 pb-2 text-6xl cursor-pointer" 
+                        @click="addToLibrary" />
+                    <Icon v-else-if="playlistData.type == 1" icon="material-symbols:check-circle" class="flex ml-2 mr-2 pb-2 text-6xl cursor-pointer" 
+                        @click="removeFromLibrary" />
                     <div class="flex text-[13px] mt-5">{{ playlistData.author?.name }}</div>
                     <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg mt-5" />
                     <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new Date(playlistData.created_at).getFullYear() : "" }}</div>

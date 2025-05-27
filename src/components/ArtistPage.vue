@@ -23,17 +23,29 @@ const { followArtistList } = storeToRefs(useActivity)
 
 const isFollowed = ref(false) 
 const thisArtistListSong = ref([])
-
+const thisArtistListAlbum = ref([])
 
 async function getArtistSong() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/artist/index/${artistData.value.id}`, {
+        const res = await axios.get(`http://spotify_clone_api.test/api/artist/get-artist-songs/${artistData.value.id}`, {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        console.log(res.data.data)
         thisArtistListSong.value = res.data.data
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+async function getArtistAlbum() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/artist/get-artist-albums/${artistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        thisArtistListAlbum.value = res.data.data
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -72,7 +84,7 @@ async function unfollowThisArtist() {
 
 onMounted(() => {
     getArtistSong();
-    console.log(artistData.value)
+    getArtistAlbum();
     followArtistList.value.forEach(artist => {
         if (artist.artist_id === artistData.value.id) {
             isFollowed.value = true
@@ -164,13 +176,14 @@ onMounted(() => {
 
                 <div class="w-full overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max ">
-                        <div v-for="i in 8" :key="i"
-                            class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">
+                        <div v-for="item in thisArtistListAlbum" :key="item.id"
+                            class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 "
+                            @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                             <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                <img class="object-cover w-full h-full rounded-xl" >
+                                <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" >
                             </div>
-                            <p class="text-xl font-semibold">Tên số {{ i }}</p>
-                            <p class="text-sm ">Năm {{ i * 1 }} • Album </p>
+                            <p class="text-xl font-semibold">{{ item.name }}</p>
+                            <p class="text-sm ">Năm {{ new Date(item.created_at).getFullYear() }}</p>
                         </div>
                     </div>
                 </div>

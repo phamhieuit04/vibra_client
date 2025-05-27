@@ -81,6 +81,7 @@ async function FetchData() {
         });
         useActivity.setFollowArtistList(artistRes.data.data)
         useActivity.setMyPlaylistList(myPlaylistRes.data.data)
+        useActivity.setFollowAlbumList(albumRes.data.data)
         
         const rawList = songRes.data.data;
         const onlySongs = rawList.map(item => item.song);

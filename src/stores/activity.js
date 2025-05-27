@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useActivityStore = defineStore("activity", {
   state: () => ({
     followArtistList: [],
+    followAlbumList: [],
     favSongList: [],
     myPlaylistList: [],
     allCategories: [],
@@ -15,6 +16,9 @@ export const useActivityStore = defineStore("activity", {
     },
     setFollowArtistList(listArtist) {
       this.followArtistList = listArtist;
+    },
+    setFollowAlbumList(listAlbum){
+      this.followAlbumList = listAlbum
     },
     setFavSongList(listSong) {
       this.favSongList = listSong;

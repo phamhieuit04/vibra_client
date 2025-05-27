@@ -30,7 +30,6 @@ async function getAllCategories() {
 
 		if (res.data.code === 200) {
 			useActivity.setCategories(res.data.data)
-			console.log(res.data.data)
 		}
 	} catch (e) {
 		console.log(e);

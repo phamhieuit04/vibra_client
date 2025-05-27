@@ -20,7 +20,7 @@ const useSong = useSongStore();
 const useModal = useModalStore();
 const { currentComponent, isFullscreen } = storeToRefs(useView)
 const { openEditProfile, openUploadSong } = storeToRefs(useModal)
-const { myPlaylistList, followArtistList} = storeToRefs(useActivity)
+const { myPlaylistList, followArtistList } = storeToRefs(useActivity)
 
 onMounted(() => {
     console.log(followArtistList.value)

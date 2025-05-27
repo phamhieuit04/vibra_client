@@ -3,6 +3,8 @@ import Index from "@/views/index.vue";
 import Login from "@/views/login.vue";
 import Signup from "@/views/signup.vue";
 import Verify from "@/views/verify.vue";
+import Payfail from "@/views/payfail.vue";
+import Paysuccess from "@/views/paysuccess.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -31,6 +33,16 @@ const router = createRouter({
 			name: "verify",
 			component: Verify,
 		},
+		{
+			path: "/payfail",
+			name: "payfail",
+			component: Payfail,
+		},
+		{
+			path: "/paysuccess",
+			name: "paysuccess",
+			component: Paysuccess,
+		}
 	],
 });
 
