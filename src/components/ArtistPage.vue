@@ -133,7 +133,7 @@ onMounted(() => {
                             class="flex items-center justify-between hover:bg-[#2a1d18] py-2 pr-4 rounded-lg transition cursor-pointer ">
                             <div class="flex items-center space-x-4">
                                 <span class="w-5 text-right text-white">{{ ++index }}</span>
-                                <div class="w-16 h-16 rounded-md bg-zinc-700"></div>
+                                    <img  class="object-cover w-16 h-16 rounded-md" :src="item.thumbnail_path" >
                                 <span class="font-medium text-white">{{ item.name }}</span>
                             </div>
                             <div class="flex items-center space-x-8 text-sm text-white">
@@ -144,18 +144,18 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="mt-8 ">
-                <h2 class="mb-3 text-2xl font-semibold pl-14">Giới thiệu về nghệ sĩ</h2>
-                <div class="">
-                    <div class="w-full mb-3 rounded-3xl h-[30rem] flex flex-col justify-end p-12 bg-zinc-700 hover:scale-[102%] duration-200 ease-in-out cursor-pointer">
-                        <p class="text-2xl font-semibold">{{ artistData.followers }} người theo dõi trên nền tảng</p>
-                        <p class="text-xl font-semibold">
-                            {{ artistData.description }}
-                        </p>
+          <div class="mt-8 ">
+            <h2 class="mb-3 text-2xl font-semibold pl-14">Giới thiệu về nghệ sĩ</h2>
+            <div class="">
+                <div class="w-full mb-3 rounded-3xl h-[30rem] flex flex-col justify-end p-12 relative overflow-hidden hover:scale-[102%] duration-200 ease-in-out cursor-pointer">
+                    <img class="absolute inset-0 object-cover w-full h-full rounded-3xl" :src="artistData.avatar_path" >
+                    <div class="relative z-10">
+                        <p class="text-2xl font-semibold text-white">{{ artistData.followers }} người theo dõi trên nền tảng</p>
+                        <p class="text-xl font-semibold text-white">{{ artistData.description }}</p>
                     </div>
-
                 </div>
             </div>
+        </div>
 
             <div class="mt-8 ">
                 <div class="mb-2 space-y-2 font-semibold pl-14">
@@ -167,7 +167,7 @@ onMounted(() => {
                         <div v-for="i in 8" :key="i"
                             class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">
                             <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-
+                                <img class="object-cover w-full h-full rounded-xl" >
                             </div>
                             <p class="text-xl font-semibold">Tên số {{ i }}</p>
                             <p class="text-sm ">Năm {{ i * 1 }} • Album </p>

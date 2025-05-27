@@ -1,5 +1,63 @@
 <script setup>
+import { onMounted, ref, watch, toRefs, computed } from "vue";
+import { useRouter } from 'vue-router';
+import { Icon } from '@iconify/vue';
+import axios from 'axios';
+import { storeToRefs } from "pinia";
+import { useAuthStore } from '@/stores/auth';
+import { useViewStore } from "@/stores/view";
+import { useSongStore } from "@/stores/song";
+import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
+import defaultImgage from '@/assets/default.jpg'
 
+const useView = useViewStore();
+const authStore = useAuthStore();
+const useSong = useSongStore();
+const useModal = useModalStore();
+const useActivity = useActivityStore();
+
+const { searchKey } = storeToRefs(useActivity)
+
+const listAlbumSearch = ref([])
+const listSongSearch = ref([])
+const listArtistSearch = ref([])
+
+function checkNull(){
+    if(listSongSearch.value.length > 0){
+        useSong.loadSingleSong(listSongSearch.value[0]);
+    }
+}
+
+async function FetchSearchData() {
+    if(!searchKey.value) return
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/home/search?search-key=${searchKey.value}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        if(res.data.code == 200){
+            console.log(res.data.data)
+            listAlbumSearch.value = res.data.data.albums;
+            listArtistSearch.value = res.data.data.artists;
+            listSongSearch.value = res.data.data.songs
+        }
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
+watch(() => searchKey.value, () => {
+    FetchSearchData();
+  }
+)
+
+
+onMounted(() => {
+    FetchSearchData();
+})
 </script>
 <template>
    <div class="py-8 space-y-10 text-[#FFFF]">
@@ -10,7 +68,8 @@
 
                    <div class="relative flex-1 max-w-md">
                         <h2 class="mb-1 text-2xl font-semibold">Top result</h2>
-                        <div class="bg-[#2a2a2a] hover:bg-[#333] transition rounded-lg p-4 cursor-pointer relative group">
+                        <div class="bg-[#2a2a2a] hover:bg-[#333] transition rounded-lg p-4 cursor-pointer relative group"
+                            @click="checkNull">
                             <button
                                 class="absolute bottom-6 right-6 flex items-center justify-center w-16 h-16 rounded-full bg-[#BC4D15] hover:bg-black transition-all 
                                         opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
@@ -18,12 +77,12 @@
                             </button>
                             <div class="items-start space-y-3 mb-9">
                                 <div class="relative w-24 h-24 overflow-hidden rounded-md bg-zinc-700">
-                                    <img class="object-cover w-full h-full rounded-xl" src="" alt="">                                 
+                                    <img class="object-cover w-full h-full rounded-xl" :src="listSongSearch[0] ? listSongSearch[0]?.thumbnail_path : defaultImgage" alt="">                                 
                                 </div>                          
                                 <div class="">
-                                    <h3 class="text-2xl font-bold">Bück dich</h3>
+                                    <h3 class="text-2xl font-bold">{{ listSongSearch[0]?.name }}</h3>
                                     <p class="mt-1 text-sm text-gray-400">
-                                        Song • <span class="font-semibold">Rammstein</span>
+                                        Song • <span class="font-semibold">{{ listSongSearch[0]?.author.name }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -33,15 +92,17 @@
                     <div class="flex-1 ">
                         <h2 class="mb-1 text-2xl font-semibold ">Songs</h2>
                         <div class="pr-8 mt-3">
-                            <div v-for="i in 4" :key="i" class="flex items-center justify-between hover:bg-[#2a1d18] p-2 rounded-lg transition cursor-pointer ">
+                            <div v-for="item, index in listSongSearch" :key="item.id" 
+                                class="flex items-center justify-between hover:bg-[#2a1d18] p-2 rounded-lg transition cursor-pointer "
+                                @click="useSong.loadSingleSong(item)">
                                 <div class="flex items-center space-x-4">
                                     <div class="w-10 h-10 rounded-md bg-zinc-700">
-                                        <img class="object-cover w-full h-full rounded-xl" >
+                                        <img class="object-cover w-full h-full rounded-xl" :src="item?.thumbnail_path" >
                                     </div>
-                                    <span class="font-medium ">Bài hát {{ i }}</span>
+                                    <span class="font-medium ">{{ item.name }}</span>
                                 </div>
                                 <div class="flex items-center space-x-8 text-sm">
-                                    <span>3:0{{ i }}</span>
+                                    <span>{{ item.total_played }} lượt nghe</span>
                                 </div>
                             </div>
                         </div>
@@ -55,12 +116,14 @@
                 <h2 class="mb-1 text-2xl font-semibold">Artists</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
-                        <div v-for="i in 10" :key="i" class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">          
+                        <div v-for="item in listArtistSearch" :key="item.id" 
+                            class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 "
+                            @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item);">          
                             <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
-                                <img class="object-cover w-48 h-48 rounded-full" >
+                                <img class="object-cover w-48 h-48 rounded-full" :src="item.avatar_path">
                             </div>
-                            <p class="font-medium ">???{{ i }}</p>
-                            <p class="text-sm ">{{ i * 100 }} ???</p>
+                            <p class="font-medium ">{{ item.name }}</p>
+                            <p class="text-sm ">{{ item.followers }} người theo dõi</p>
                         </div>
                     </div>
                 </div>
@@ -70,61 +133,18 @@
                 <h2 class="mb-1 text-2xl font-semibold">Albums</h2>
                 <div class="w-full overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max ">
-                        <div v-for="i in 10" :key="i" class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">          
+                        <div v-for="item in listAlbumSearch" :key="item.id" 
+                            class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 "
+                            @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">          
                             <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                <img class="object-cover w-48 h-48 rounded-xl" >
+                                <img class="object-cover w-48 h-48 rounded-xl" :src="item.thumbnail_path">
                             </div>
-                            <p class="font-medium ">???{{ i }}</p>
-                            <p class="text-sm ">{{ i * 100 }} ???</p>
+                            <p class="font-medium ">{{ item.name }}</p>
+                            <p class="text-sm ">{{ item.description }}</p>
                         </div>
                     </div>
                 </div> 
             </div>
-
-            <div class="text-[#FFE5D6] mb-8">
-                <h2 class="mb-1 text-2xl font-semibold">Playlists</h2>
-                <div class="w-full overflow-x-auto scrollbar-style">
-                    <div class="flex px-1 py-2 space-x-4 w-max ">
-                        <div v-for="i in 10" :key="i" class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">          
-                            <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                <img class="object-cover w-48 h-48 rounded-xl" >
-                            </div>
-                            <p class="font-medium ">???{{ i }}</p>
-                            <p class="text-sm ">{{ i * 100 }} ???</p>
-                        </div>
-                    </div>
-                </div> 
-            </div>
-
-            <div class="text-[#FFE5D6] mb-8">
-                <h2 class="mb-1 text-2xl font-semibold">Profiles</h2>
-                <div class="flex space-x-4 overflow-x-auto scrollbar-style">
-                    <div class="flex px-1 py-2 space-x-4 w-max">
-                        <div v-for="i in 10" :key="i" class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">          
-                            <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
-                                <img class="object-cover w-48 h-48 rounded-full" >
-                            </div>
-                            <p class="font-medium ">???{{ i }}</p>
-                            <p class="text-sm ">{{ i * 100 }} ???</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-[#FFE5D6] mb-8">
-                <h2 class="mb-1 text-2xl font-semibold">Genres&Moods</h2>
-                <div class="w-full overflow-x-auto scrollbar-style">
-                    <div class="flex px-1 py-2 space-x-4 w-max ">
-                        <div v-for="i in 10" :key="i" class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 ">          
-                            <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                <img class="object-cover w-48 h-48 rounded-xl" >
-                            </div>
-                            <p class="font-medium ">???{{ i }}</p>
-                            <p class="text-sm ">{{ i * 100 }} ???</p>
-                        </div>
-                    </div>
-                </div> 
-            </div>       
         </div>
     </div>
 </template>

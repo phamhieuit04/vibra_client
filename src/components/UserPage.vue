@@ -22,8 +22,6 @@ const { currentComponent, isFullscreen } = storeToRefs(useView)
 const { openEditProfile, openUploadSong } = storeToRefs(useModal)
 const { myPlaylistList, followArtistList} = storeToRefs(useActivity)
 
-
-
 onMounted(() => {
     console.log(followArtistList.value)
 })
@@ -43,7 +41,7 @@ onMounted(() => {
         </div>
 
         <div class="relative px-10 overflow-auto scrollbar-style h-[calc(100vh-450px)]">
-            <button class="text-zinc-400 text-3xl mb-5 p-2 rounded-full hover:bg-zinc-600 hover:text-white"
+            <button class="p-2 mb-5 text-3xl rounded-full text-zinc-400 hover:bg-zinc-600 hover:text-white"
                 @click="openMenu = !openMenu">
                 <Icon icon="ph:dots-three-outline-fill" />
             </button>
@@ -59,6 +57,7 @@ onMounted(() => {
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="item in myPlaylistList" :key="item.id" class="flex-shrink-0 w-32 cursor-pointer">
                         <div class="w-full h-32 mb-2 rounded bg-zinc-700">
+                            <img class="object-cover w-full h-full rounded-xl" :src="item.playlist.thumbnail_path" >
                         </div>
                         <p class="font-medium">{{ item.playlist.name }}</p>
                     </div>
@@ -70,6 +69,7 @@ onMounted(() => {
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="item in followArtistList" :key="item.id" class="flex-shrink-0">
                         <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
+                            <img class="object-cover w-full h-full rounded-full" :src="item.artist.avatar_path" >
                         </div>
                         <p class="text-sm text-zinc-400">{{ item.artist.name }}</p>
 
@@ -83,6 +83,7 @@ onMounted(() => {
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="i in 3" :key="i" class="flex-shrink-0 w-32 ">
                         <div class="w-full h-32 mb-2 rounded bg-zinc-700">
+                            <img class="object-cover w-full h-full rounded-xl" src="" >
                         </div>
                         <p class="font-medium">Album#{{ i }}</p>
                         <p class="text-sm text-zinc-400">{{ i * 100 }} người theo dõi</p>

@@ -267,7 +267,7 @@ onMounted(() => {
 
             <div v-for="(item, index) in filteredArtist" :key="index" v-if="filter == 'all' || filter == 'artist'"
                 class="flex items-center gap-3 p-2 rounded hover:bg-white/10 cursor-pointer"
-                @click="useView.selectItem(item.artist); console.log(useView.selected.email); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);"
+                @click="useView.selectItem(item.artist); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);"
                 :class="{ 'bg-white/10': useView.selected?.email == item.artist.email }">
                 <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full">
                     <img :src="item.artist.avatar_path" class="object-cover rounded-full w-10 h-10" @error="event => event.target.src = defaultImgage"/>

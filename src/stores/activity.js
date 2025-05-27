@@ -5,10 +5,14 @@ export const useActivityStore = defineStore("activity", {
     favSongList: [],
     myPlaylistList: [],
     allCategories: [],
+    searchKey: '',
     userAction: false,
   }),
 
   actions: {
+    changeSearchKey(searchKeyValue){
+      this.searchKey = searchKeyValue;
+    },
     setFollowArtistList(listArtist) {
       this.followArtistList = listArtist;
     },

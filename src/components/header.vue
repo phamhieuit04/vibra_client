@@ -18,6 +18,8 @@ const useView = useViewStore()
 const authStore = useAuthStore();
 const router = useRouter();
 
+const searchValue = ref('')
+
 async function getAllCategories() {
 	try {
 		const res = await axios.get('http://spotify_clone_api.test/api/category/index', {
@@ -84,7 +86,7 @@ onMounted(() => {
 						<Icon icon="material-symbols:search-rounded"
 							class="transition duration-200 cursor-pointer size-8"
 							:class="useView.currentComponent === 'SearchPage' ? 'text-[#FFE5D6]' : 'text-[#FFE5D6]/30'" />
-						<input type="text" class="w-full text-white bg-transparent border-none outline-[#BC4D15] focus:outline-none"
+						<input v-model="searchValue" @input="useActivity.changeSearchKey(searchValue)" type="text" class="w-full text-white bg-transparent border-none outline-[#BC4D15] focus:outline-none"
 							@click="useView.setComponent('SearchPage'); useView.selectItem(this)"
 							placeholder="Bạn muốn phát nội dung gì?">
 					</div>
