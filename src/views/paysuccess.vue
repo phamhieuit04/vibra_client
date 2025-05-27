@@ -1,3 +1,7 @@
+<script setup>
+
+</script>
+
 <template>
   <div class="min-h-screen w-full bg-[#0A0A0A] relative flex items-center justify-center p-6 font-sans overflow-hidden">
     <!-- Surrounding Effects -->
@@ -73,9 +77,9 @@
           <div class="snowflake" style="left: 90%; top: 25%;"></div>
         </div>
         <!-- Title with Hover Effect -->
-        <h1 class="text-5xl font-black mt-6 bg-clip-text text-transparent bg-gradient-to-r from-[#FFFFFF] to-[#1DB954] animate-pulse-slow tracking-tight transition-all duration-500 hover:bg-gradient-to-r hover:from-[#1DB954] hover:to-[#FFFFFF] hover:text-shadow-[0_0_10px_rgba(29,185,84,0.7)]">
-          Thanh toán thành công!
-        </h1>
+        <a href="/" class=" cursor-pointer text-5xl font-black mt-6 bg-clip-text text-transparent bg-gradient-to-r from-[#FFFFFF] to-[#1DB954] animate-pulse-slow tracking-tight transition-all duration-500 hover:bg-gradient-to-r hover:from-[#1DB954] hover:to-[#FFFFFF] hover:text-shadow-[0_0_10px_rgba(29,185,84,0.7)]">
+          Thanh toán thành công! Nhấn vào đây để quay trở lại trang chủ
+        </a>
         <!-- Subtitle with Fade-In -->
         <p class="text-lg text-[#B3B3B3] mt-4 font-medium animate-fade-in transition-opacity duration-500 hover:opacity-80">Cảm ơn bạn đã nâng cấp trải nghiệm nghe nhạc</p>
       </div>

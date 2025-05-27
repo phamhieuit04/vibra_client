@@ -52,11 +52,11 @@ onMounted(() => {
     <Header />
     <Sidebar />
     <div :class="['transition-all duration-300 fixed top-[64px] overflow-auto h-full bg-[#1D1512] rounded-[24px]',
-      showSidePanel ? 'left-[432px] w-[calc(100%-800px)]' : 'left-[432px] w-[calc(100%-440px)]']">
+      showSidePanel ? 'left-[23%] w-[57.3%]' : 'left-[432px] w-[calc(100%-440px)]']">
       <component :is="components[currentComponent]" />
     </div>
     <div v-if="showSidePanel"
-      class="fixed top-[64px] left-[1514px] w-[352px] overflow-auto h-full bg-[#1D1512] rounded-[24px]">
+      class="fixed top-[64px] left-[80.7%] w-[19%] overflow-auto h-full bg-[#1D1512] rounded-[24px]">
       <SidePanel/>
     </div>
     <div ref="player">

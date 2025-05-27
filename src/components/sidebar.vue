@@ -163,7 +163,7 @@ onMounted(() => {
 </script>
 <template>
     <div class="fixed top-0 bottom-0 left-0 w-full bg-[#BC4D15] z-0"></div>
-    <div class="w-[420px] h-[100%] fixed bottom-0 top-[64px] left-1.5 z-50 p-6 bg-[#1D1512] rounded-[24px]">
+    <div class="w-[22.4%] h-[100%] fixed bottom-0 top-[64px] left-1.5 z-50 p-6 bg-[#1D1512] rounded-[24px]">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-[#FFE5D6] text-xl font-semibold">Thư viện</h2>
             <div class="flex items-center gap-2">

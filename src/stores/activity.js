@@ -5,6 +5,7 @@ export const useActivityStore = defineStore("activity", {
     followAlbumList: [],
     favSongList: [],
     myPlaylistList: [],
+    myAlbumList: [],
     allCategories: [],
     searchKey: '',
     userAction: false,
