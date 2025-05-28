@@ -44,14 +44,16 @@ async function logout() {
 				'Authorization': 'Bearer ' + this.authStore.user.token,
 			},
 		});
-
-		if (res.data.code === 200) {
-			authStore.$reset();
-			useSong.audio?.pause();
-			useSong.$reset();
-			useView.$reset();
-			router.push('/login');
-		}
+		
+		setTimeout(() => {
+			if (res.data.code === 200) {
+				authStore.$reset();
+				useSong.audio?.pause();
+				useSong.$reset();
+				useView.$reset();
+				router.push('/login');
+			}
+		}, 1000)
 	} catch (e) {
 		console.log(e);
 		alert('Call API thất bại');
