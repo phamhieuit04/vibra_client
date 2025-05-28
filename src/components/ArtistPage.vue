@@ -81,6 +81,17 @@ async function unfollowThisArtist() {
     }
 }
 
+watch(() => artistData.value, () => {
+    getArtistSong();
+    getArtistAlbum();
+    isFollowed.value = false
+    followArtistList.value.forEach(artist => {
+        if (artist.artist_id === artistData.value.id) {
+            isFollowed.value = true
+        }
+    })
+}
+)
 
 onMounted(() => {
     getArtistSong();
