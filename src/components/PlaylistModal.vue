@@ -6,11 +6,13 @@ import { Icon } from '@iconify/vue';
 import { storeToRefs } from "pinia";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
+import { useActivityStore } from "@/stores/activity";
 
 
 const authStore = useAuthStore();
 const useModal = useModalStore()
 const { openEditPlaylist, playlistEditData } = storeToRefs(useModal)
+const useActivity = useActivityStore();
 
 const previewImg = ref(null)
 const fileInput = ref(null)
@@ -43,7 +45,10 @@ const saveProfile = async () => {
         'Authorization': 'Bearer ' + authStore.user.token,
       },
     });
-    alert('Chỉnh sửa thành công');
+    if(res.data.code == 200){
+      alert('Chỉnh sửa thành công');
+      useActivity.fetchData();
+    }
   } catch (e) {
     console.log(e);
     alert('Call API thất bại');

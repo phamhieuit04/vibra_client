@@ -30,7 +30,7 @@ async function followThisArtist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        useActivity.onUserAction();
+        useActivity.fetchData();
         isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);
@@ -44,7 +44,7 @@ async function unfollowThisArtist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        useActivity.onUserAction();
+        useActivity.fetchData();
         isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);

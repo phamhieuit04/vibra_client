@@ -47,7 +47,7 @@ async function logout() {
 
 		if (res.data.code === 200) {
 			authStore.$reset();
-			useSong.audio.pause();
+			useSong.audio?.pause();
 			useSong.$reset();
 			useView.$reset();
 			router.push('/login');

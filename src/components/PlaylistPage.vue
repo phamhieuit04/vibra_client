@@ -43,7 +43,7 @@ async function addToLibrary() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        useActivity.onUserAction();
+        useActivity.fetchData();
         isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);
@@ -57,7 +57,7 @@ async function removeFromLibrary() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        useActivity.onUserAction();
+        useActivity.fetchData();
         isFollowed.value = !isFollowed.value
     } catch (e) {
         console.log(e);
@@ -107,26 +107,26 @@ onMounted(() => {
     <div class="p-8">
         <div class="py-15"></div>
 
-        <div class="flex items-center w-full relative h-full">
-            <div class="w-48 h-48 rounded-xl bg-gray-500 aspect-square">
-                <img class="w-48 h-48 rounded-xl aspect-square object-cover" :src="playlistData.thumbnail_path"
+        <div class="relative flex items-center w-full h-full">
+            <div class="w-48 h-48 bg-gray-500 rounded-xl aspect-square">
+                <img class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="playlistData.thumbnail_path"
                     @error="event => event.target.src = defaultImgage">
             </div>
             <div class="w-[100% - 192px] ml-5">
-                <div class="text-white text-lg font-semibold"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}</div>
-                <div class="text-white text-8xl font-bold text-nowrap">
+                <div class="text-lg font-semibold text-white"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}</div>
+                <div class="flex-1 font-bold text-white break-normal whitespace-pre text-7xl wrap-normal md:break-all md:whitespace-normal">
                     {{ playlistData.name }}
                 </div>
 
                 <div class="text-gray-300 mt-[28px] flex">
-                    <Icon v-if="playlistData.type == 1 && !isFollowed" icon="material-symbols:add-circle-outline-rounded" class="flex ml-2 mr-2 pb-2 text-6xl cursor-pointer" 
+                    <Icon v-if="playlistData.type == 1 && !isFollowed" icon="material-symbols:add-circle-outline-rounded" class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" 
                         @click="addToLibrary" />
-                    <Icon v-else-if="playlistData.type == 1" icon="material-symbols:check-circle" class="flex ml-2 mr-2 pb-2 text-6xl cursor-pointer" 
+                    <Icon v-else-if="playlistData.type == 1" icon="material-symbols:check-circle" class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" 
                         @click="removeFromLibrary" />
                     <div class="flex text-[13px] mt-5">{{ playlistData.author?.name }}</div>
-                    <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg mt-5" />
+                    <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
                     <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new Date(playlistData.created_at).getFullYear() : "" }}</div>
-                    <Icon icon="ci:dot-03-m" class="flex ml-2 mr-2 text-lg mt-5" />
+                    <Icon icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
                     <span class="flex text-[13px] mt-5">{{ playlistData.total_song }} bài hát</span>
                 </div>
             </div>

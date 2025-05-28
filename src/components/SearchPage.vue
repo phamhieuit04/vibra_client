@@ -45,7 +45,6 @@ async function FetchSearchData() {
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
     }
 }
 

@@ -8,15 +8,16 @@ import { storeToRefs } from "pinia";
 const useSong = useSongStore();
 const useView = useViewStore();
 const { audio, vol } = storeToRefs(useSong);
+const { isFullscreen } = storeToRefs(useView)
 
 let isHover = ref(false);
 let volume = ref(null);
 
 
 watch(() => audio.value, (newVal, oldVal) => {
-    console.log('Vừa đổi bài hát!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    audio.value.volume = vol.value / 100;
-  }
+  console.log('Vừa đổi bài hát!!!!!!!!!!!!!!!!!!!!!!!!!!');
+  audio.value.volume = vol.value / 100;
+}
 )
 
 onMounted(() => {
@@ -30,8 +31,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <Icon icon="ic:round-volume-off" v-if="vol == 0" class=" text-white size-7"/>
-  <Icon icon="ic:round-volume-up" v-else class=" text-white size-7"/>
+  <Icon icon="ic:round-volume-off" v-if="vol == 0" class=" text-white size-7" />
+  <Icon icon="ic:round-volume-up" v-else class=" text-white size-7" />
   <div class="flex items-center ml-2 w-[150px] relative mt-2 mb-[23px]" @mouseenter="isHover = true"
     @mouseleave="isHover = false">
     <input v-model="vol" ref="volume" type="range"
@@ -40,12 +41,18 @@ onMounted(() => {
       :class="isHover ? 'bg-green-500' : 'bg-white'"></div>
     <div class="absolute h-[4px] z-[-0] mt-[6px] inset-y-0 left-0 w-full bg-gray-500 rounded-full"></div>
   </div>
-    <div class=" ml-4" >
-    <Icon icon="ri:video-line" v-if="!useView.showSidePanel"  class="text-white size-6 cursor-pointer" @click="useView.toggleSidePanel"/>
-    <Icon icon="ri:video-fill" v-else  class="text-white size-6 cursor-pointer" @click="useView.toggleSidePanel"/>
+  <div class=" ml-4">
+    <div v-if="!isFullscreen">
+      <Icon icon="ri:video-line" v-if="!useView.showSidePanel" class="text-white size-6 cursor-pointer"
+        @click="useView.toggleSidePanel" />
+      <Icon icon="ri:video-fill" v-else class="text-white size-6 cursor-pointer" @click="useView.toggleSidePanel" />
+
+    </div>
   </div>
-  <div class=" ml-4" >
-    <Icon icon="fa6-solid:compress" v-if="useView.isFullscreen"  class="text-white size-6 cursor-pointer" @click="useView.toggleFullscreen"/>
-    <Icon icon="fa6-solid:expand" v-else class="text-white size-6 cursor-pointer text-semibold" @click="useView.toggleFullscreen"/>
+  <div class=" ml-4">
+    <Icon icon="fa6-solid:compress" v-if="useView.isFullscreen" class="text-white size-6 cursor-pointer"
+      @click="useView.toggleFullscreen" />
+    <Icon icon="fa6-solid:expand" v-else class="text-white size-6 cursor-pointer text-semibold"
+      @click="useView.toggleFullscreen" />
   </div>
 </template>

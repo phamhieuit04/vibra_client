@@ -1,4 +1,9 @@
 import { defineStore } from "pinia";
+import axios from "axios";
+import { useAuthStore } from "./auth";
+import { ref } from 'vue'
+
+
 export const useActivityStore = defineStore("activity", {
   state: () => ({
     followArtistList: [],
@@ -6,20 +11,90 @@ export const useActivityStore = defineStore("activity", {
     favSongList: [],
     myPlaylistList: [],
     myAlbumList: [],
+
     allCategories: [],
-    searchKey: '',
-    userAction: false,
+    searchKey: "",
   }),
 
   actions: {
-    changeSearchKey(searchKeyValue){
+    async fetchData() {
+      try {
+        const authStore = useAuthStore();
+        const albumRes = await axios.get(
+          "http://spotify_clone_api.test/api/library/list-playlist?type=1",
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+            type: 1,
+          }
+        );
+        const myPlaylistRes = await axios.get(
+          "http://spotify_clone_api.test/api/library/list-playlist?type=2",
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+            type: 2,
+          }
+        );
+        const artistRes = await axios.get(
+          "http://spotify_clone_api.test/api/library/list-artist",
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+          }
+        );
+        const songRes = await axios.get(
+          "http://spotify_clone_api.test/api/library/list-song",
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+          }
+        );
+        this.setFollowArtistList(artistRes.data.data);
+        this.setMyPlaylistList(myPlaylistRes.data.data);
+        this.setFollowAlbumList(albumRes.data.data);
+        const rawList = songRes.data.data;
+        const onlySongs = rawList.map((item) => item.song);
+        const myFavSongList = ref([
+          {
+            name: "",
+            total_song: 0,
+            thumbnail_path: "",
+            isFav: true,
+            author: [
+              {
+                name: authStore.user.name,
+              },
+            ],
+            songs: [],
+          },
+        ]);
+        myFavSongList.value.songs = onlySongs;
+        myFavSongList.value.total_song = onlySongs.length;
+        myFavSongList.value.name = "Bài hát yêu thích";
+        myFavSongList.value.thumbnail_path = "";
+        myFavSongList.value.isFav = true;
+        this.setFavSongList(myFavSongList.value);
+      } catch (e) {
+        console.log(e);
+        alert("Call API thất bại");
+      }
+    },
+    
+    changeSearchKey(searchKeyValue) {
       this.searchKey = searchKeyValue;
     },
+
+
     setFollowArtistList(listArtist) {
       this.followArtistList = listArtist;
     },
-    setFollowAlbumList(listAlbum){
-      this.followAlbumList = listAlbum
+    setFollowAlbumList(listAlbum) {
+      this.followAlbumList = listAlbum;
     },
     setFavSongList(listSong) {
       this.favSongList = listSong;
@@ -27,11 +102,11 @@ export const useActivityStore = defineStore("activity", {
     setMyPlaylistList(playlist) {
       this.myPlaylistList = playlist;
     },
-    setCategories(categoriesList){
-      this.allCategories = categoriesList;
+    setMyAlbumList(listAlbum) {
+      this.myAlbumList = listAlbum;
     },
-    onUserAction(){
-        this.userAction = !this.userAction;
+    setCategories(categoriesList) {
+      this.allCategories = categoriesList;
     },
   },
 });

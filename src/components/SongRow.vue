@@ -41,7 +41,7 @@ async function unloveThisSong() {
         });
 
         if(res.data.code == 200){
-            useActivity.onUserAction();
+            useActivity.fetchData();
             emit('deleteFavSong', track.value.id)
         }
     } catch (e) {

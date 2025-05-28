@@ -17,6 +17,7 @@ const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
 const useActivity = useActivityStore();
+const { isFullscreen } = storeToRefs(useView)
 const { isPlaying, audio, currentPlaylist, currentTrack } = storeToRefs(useSong)
 const { favSongList, myPlaylistList } = storeToRefs(useActivity)
 
@@ -39,7 +40,7 @@ async function loveThisSong() {
         });
 
         if(res.data.code == 200){
-            useActivity.onUserAction();
+            useActivity.fetchData();
             isLoved.value = !isLoved.value
         }
     } catch (e) {
@@ -56,7 +57,7 @@ async function unloveThisSong() {
         });
 
         if(res.data.code == 200){
-            useActivity.onUserAction();
+            useActivity.fetchData();
             isLoved.value = !isLoved.value
         }
     } catch (e) {
@@ -125,9 +126,9 @@ const loadmetadata = () => {
     })
 }
 
-watch(() => favSongList.value, () => {
+watch(() => favSongList.value.songs, () => {
     isLoved.value = false
-    favSongList.value.forEach(song => {
+    favSongList.value.songs.forEach(song => {
         if (song.id === currentTrack.value.id) {
             isLoved.value = true
         }
@@ -136,7 +137,7 @@ watch(() => favSongList.value, () => {
 )
 watch(() => currentTrack.value, () => {
     isLoved.value = false
-    favSongList.value.forEach(song => {
+    favSongList.value.songs.forEach(song => {
         if (song.id === currentTrack.value.id) {
             isLoved.value = true
         }

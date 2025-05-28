@@ -38,7 +38,7 @@ async function fetchLyricsText(url) {
 
 onMounted(() => {
     // fetchLyricsText(currentTrack.value.lyrics_path)
-    // console.log(currentTrack.value.lyrics_path)
+    console.log(currentTrack.value)
 
 })
 </script>
@@ -52,16 +52,11 @@ onMounted(() => {
                 @error="event => event.target.src = defaultImgage" />
         </div>
 
-        <div class="w-1/2 flex pl-8 items-center justify-start overflow-y-auto mb-[90px]">
-            <div class="space-y-4 text-gray-300 leading-relaxed w-[500px] h-[500px]">
-                <!-- <div v-if="!lyric"> -->
-                <!-- <h1 class="text-white text-3xl">{{ currentTrack.lyrics_path }} Có vẻ bạn sẽ phải tự đoán lời bài hát này rồi</h1> -->
-                <iframe :src="currentTrack.lyrics_path"
-                    class="w-full h-[500px] text-white text-3xl" style="color: white; border: none;"></iframe>
-                <!-- </div>
-                <div v-else>
-                    <h1>{{ lyric }}</h1>
-                </div> -->
+        <div class="w-1/2 flex pl-8 items-center justify-start mb-[90px]">
+            <div class="space-y-4 text-gray-300 leading-relaxed w-full h-[500px] overflow-y-auto scrollbar-none">
+                <div v-for="lyricLine, index in currentTrack.list_lyric" :key="index">
+                    <h1 class="text-white text-3xl">{{ lyricLine }}</h1>
+                </div>
             </div>
         </div>
     </div>

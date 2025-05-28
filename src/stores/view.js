@@ -6,10 +6,11 @@ export const useViewStore = defineStore("view", {
     page: null,
     isFullscreen: false,
     showSidePanel: false,
+    categoriesData: null,
+
     playlistData: null,
     artistData: null,
     userData: null,
-    categoriesData: null,
   }),
 
   actions: {
