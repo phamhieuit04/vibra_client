@@ -21,6 +21,7 @@ export const useSongStore = defineStore("song", {
     },
     currentWaitlist: [],
     prevList: [],
+    isShuffle: false,
   }),
   actions: {
     playThisSong(track) {
@@ -84,7 +85,6 @@ export const useSongStore = defineStore("song", {
     },
 
     deleteSongFromWaitlist(track) {
-      console.log(track.index);
       this.currentWaitlist.splice(track.index, 1);
       this.fetchIndex();
     },
@@ -135,6 +135,11 @@ export const useSongStore = defineStore("song", {
         this.isPlaying = false;
         this.audio.pause();
       }
+    },
+
+    playThisSongInWaitlist(track){
+      this.playThisSong(track);
+      this.deleteSongFromWaitlist(track);
     },
 
 

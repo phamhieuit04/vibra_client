@@ -16,7 +16,7 @@ const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
 const useActivity = useActivityStore();
-const { currentTrack, currentWaitlist } = storeToRefs(useSong)
+const { currentTrack, currentWaitlist, isPlaying } = storeToRefs(useSong)
 
 let isHover = ref(false);
 let isTrackTime = ref(null);
@@ -36,13 +36,15 @@ onMounted(() => {
         <div class=" mx-4 my-4">
             <h2 class="mb-1 text-2xl font-semibold">Bài hát đang phát</h2>
             <div class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer p-3">
-                <div class="flex items-center w-full py-1.5">
+                <div class="flex items-center justify-between w-full py-1.5">
                     <div>
                         <div class="text-white font-semibold ">
                             {{ currentTrack.name }}
                         </div>
                         <span class="text-sm font-semibold text-gray-400">{{ currentTrack.author.name }}</span>
                     </div>
+                    <Icon v-if="isPlaying" icon="svg-spinners:bars-scale-middle"/>
+                    <Icon v-else icon="majesticons:barcode-2-line"/>
                 </div>
             </div>
         </div>
@@ -55,7 +57,7 @@ onMounted(() => {
             </div>
             <div class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer p-3" 
                 v-for="track, index in currentWaitlist" :key="track?.id"
-                @click="useSong.playThisSong(track)">
+                @click="useSong.playThisSongInWaitlist(track)">
                 <div class="flex items-center w-full py-1.5">
                     <div>
                         <div class="text-white font-semibold ">
