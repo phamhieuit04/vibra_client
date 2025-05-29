@@ -37,14 +37,24 @@ onMounted(() => {
             <h2 class="mb-1 text-2xl font-semibold">Bài hát đang phát</h2>
             <div class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer p-3">
                 <div class="flex items-center justify-between w-full py-1.5">
-                    <div>
-                        <div class="text-white font-semibold ">
-                            {{ currentTrack.name }}
+
+                    <div class="flex">
+                        <div class="rounded-full bg-zinc-700 w-12 h-12 ml-0">
+                            <img class="object-cover rounded-full" :src="currentTrack.thumbnail_path" alt=""
+                                :class="{ 'animate-spin': isPlaying }"
+                                style="animation-duration: 5s;" @error="event => event.target.src = defaultImgage">
                         </div>
-                        <span class="text-sm font-semibold text-gray-400">{{ currentTrack.author.name }}</span>
+                        <div class="ml-5">
+                            <div class="text-white font-semibold ">
+                                {{ currentTrack.name }}
+                            </div>
+                            <span class="text-sm font-semibold text-gray-400">{{ currentTrack.author.name }}</span>
+                        </div>
+
                     </div>
-                    <Icon v-if="isPlaying" icon="svg-spinners:bars-scale-middle"/>
-                    <Icon v-else icon="majesticons:barcode-2-line"/>
+
+                    <Icon v-if="isPlaying" icon="svg-spinners:bars-scale-middle" />
+                    <Icon v-else icon="majesticons:barcode-2-line" />
                 </div>
             </div>
         </div>
@@ -55,9 +65,8 @@ onMounted(() => {
                     Xóa tất cả
                 </button>
             </div>
-            <div class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer p-3" 
-                v-for="track, index in currentWaitlist" :key="track?.id"
-                @click="useSong.playThisSongInWaitlist(track)">
+            <div class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer p-3"
+                v-for="track, index in currentWaitlist" :key="track?.id" @click="useSong.playThisSongInWaitlist(track)">
                 <div class="flex items-center w-full py-1.5">
                     <div>
                         <div class="text-white font-semibold ">

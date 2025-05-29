@@ -18,6 +18,8 @@ const useModal = useModalStore();
 const useActivity = useActivityStore();
 const router = useRouter();
 
+const { currentTrack, isPlaying } = storeToRefs(useSong)
+
 const popularAlbum = ref([]);
 const topArtist = ref([]);
 const topSong = ref([]);
@@ -121,6 +123,8 @@ onMounted(() => {
                             @click="useSong.playThisSong(item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
                                 <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt=""
+                                    :class="{'animate-spin' : currentTrack.id == item.id && isPlaying}"
+                                    style="animation-duration: 5s;"
                                     @error="event => event.target.src = defaultImgage">
                             </div>
                             <div class="flex justify-between">
