@@ -47,13 +47,13 @@ async function logout() {
 		
 		setTimeout(() => {
 			if (res.data.code === 200) {
-				authStore.$reset();
 				useSong.audio?.pause();
 				useSong.$reset();
 				useView.$reset();
 				router.push('/login');
+				authStore.$reset();
 			}
-		}, 1000)
+		}, 2000)
 	} catch (e) {
 		console.log(e);
 		alert('Call API thất bại');
@@ -76,7 +76,7 @@ onMounted(() => {
 		<!-- Home & Search -->
 		<div class="flex self-center items-center gap-2">
 			<div class="flex items-center gap-3">
-				<div @click="useView.setComponent('HomePage'); useView.selectItem(this)"
+				<div @click="useView.setComponent('HomePage'); useView.selectItem(this); searchValue = ''"
 					class="flex items-center justify-center bg-[#1f1f1f] rounded-full size-12 hover:bg-[#2a2a2a] transition duration-200">
 					<Icon icon="material-symbols:home"
 						class="transition duration-200 cursor-pointer size-8" 

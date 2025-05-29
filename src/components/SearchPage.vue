@@ -25,7 +25,7 @@ const listArtistSearch = ref([])
 
 function checkNull() {
     if (listSongSearch.value.length > 0) {
-        useSong.loadSingleSong(listSongSearch.value[0]);
+        useSong.playThisSong(listSongSearch.value[0]);
     }
 }
 

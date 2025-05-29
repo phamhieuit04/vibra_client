@@ -94,7 +94,7 @@ watch(() => playlistData.value, () => {
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
-            if (album.playlist_id === playlistData.value.id) {
+            if (album.id === playlistData.value.id) {
                 isFollowed.value = true
             }
         })
@@ -110,7 +110,7 @@ onMounted(() => {
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
-            if (album.playlist_id === playlistData.value.id) {
+            if (album.id === playlistData.value.id) {
                 isFollowed.value = true
             }
         })

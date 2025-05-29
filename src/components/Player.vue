@@ -68,10 +68,6 @@ async function unloveThisSong() {
     }
 }
 
-function isTrackInPlaylist(playlist) {
-  return playlist.playlist.some(song => song.id === currentTrack.value.id);
-}
-
 onMounted(() => {
     isPlaying.value = false
     if(!currentTrack.value) return;
@@ -107,6 +103,10 @@ onMounted(() => {
     }
 })
 
+function onUserPress(){
+    openMenu.value = false
+}
+
 const timeupdate = () => {
     if(!audio.value) return
     audio.value.addEventListener('timeupdate', function () {
@@ -138,6 +138,7 @@ watch(() => favSongList.value.songs, () => {
   }
 )
 watch(() => currentTrack.value, () => {
+    openMenu.value = false
     isLoved.value = false
     favSongList.value.songs.forEach(song => {
         if (song.id === currentTrack.value.id) {
@@ -185,9 +186,9 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                     <Icon icon="material-symbols:arrow-circle-down-outline-rounded" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
                 </a>
             </div>
-            <span v-if="openMenu" class="absolute bg-[#282828] w-[200px] z-20 left-[250px] bottom-[68px]  p-1">
-                <div  class="text-gray-200 font-semibold text-[14px]">
-                    <PlaylistOptionRow v-for="item in myPlaylistList" :key="item.id" :item="item"/>
+            <span v-if="openMenu" class="absolute bg-[#282828] z-20 left-[250px] bottom-[68px]  p-1">
+                <div  class="text-gray-200 font-semibold">
+                    <PlaylistOptionRow v-for="item in myPlaylistList" :key="item.id" :item="item" @user-press="onUserPress"/>
                 </div>
             </span>
         </div>

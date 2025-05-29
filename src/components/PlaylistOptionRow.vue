@@ -23,34 +23,44 @@ const props = defineProps({
 
 const { item } = toRefs(props)
 const { currentTrack } = storeToRefs(useSong)
-const listSong = ref([])
+const notHaveSong = ref(false);
+const thisPlaylistListSong = ref([])
+const emit = defineEmits(['userPress'])
 
 
 async function getListSong() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/playlist/show/${item.value.id}`, {
+        const res = await axios.get(`http://spotify_clone_api.test/api/library/list-playlist-song/${item.value.id}`, {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        listSong.value = res.data.data
+        if(res.data.code == 200){
+            thisPlaylistListSong.value = res.data.data
+            notHaveSong.value = true
+            thisPlaylistListSong.value.forEach(song => {
+                if (song.song_id === currentTrack.value.id) {
+                    notHaveSong.value = false
+                }
+            })
+        }
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
     }
 }
 
-async function addSong() {
-    // console.log(currentTrack.value)
-    // console.log(item.value)
+async function addSongToPlaylist() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/song/add-song-to-playlist?song_id=${currentTrack.value.id}&playlist_id=${item.value.playlist.id}`, {
+        const res = await axios.get(`http://spotify_clone_api.test/api/song/add-song-to-playlist?song_id=${currentTrack.value.id}&playlist_id=${item.value.id}`, {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             },
         });
-        if(res.data.code == 200) {
-            useActivity.fetchData();
+        if (res.data.code == 200) {
+            useActivity.fetchData(); 
+            getListSong();
+            emit('userPress');
         }
         console.log(res)
     } catch (e) {
@@ -59,17 +69,32 @@ async function addSong() {
     }
 }
 
+watch(() => currentTrack.value, () => {
+    getListSong();
+    notHaveSong.value = true
+    thisPlaylistListSong.value.forEach(song => {
+        if (song.song_id === currentTrack.value.id) {
+            notHaveSong.value = false
+        }
+    })
+}
+)
 
 
-
-
+onMounted(() => {
+    getListSong();
+})
 
 
 </script>
 <template>
-    <div v-if="true" class="flex hover:bg-[#3E3D3D] my-1 cursor-pointer" @click="addSong">
-        <div class="px-3 py-2">
-            {{ item.playlist.name }}
+    <div v-if="notHaveSong" class="flex hover:bg-[#3E3D3D] my-1 cursor-pointer justify-between text-nowrap text-xl"
+        @click="addSongToPlaylist">
+        <div class="px-3 py-2 text-xs">
+            {{ item.name }}
+        </div>
+        <div class="px-3 py-2 text-[10px]">
+            Thêm vào danh sách phát
         </div>
     </div>
 </template>

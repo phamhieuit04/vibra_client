@@ -1,86 +1,87 @@
 <script setup>
-	import { onMounted, ref, watch, toRefs, computed } from "vue";
-	import { useRouter } from 'vue-router';
-	import { Icon } from '@iconify/vue';
-	import axios from 'axios';
-	import { storeToRefs } from "pinia";
-	import { useAuthStore } from '@/stores/auth';
-	import { useViewStore } from "@/stores/view";
-	import { useSongStore } from "@/stores/song";
-	import { useModalStore } from "@/stores/modal";
-	import { useActivityStore } from "@/stores/activity";
-	import defaultImgage from '@/assets/default.jpg'
+import { onMounted, ref, watch, toRefs, computed } from "vue";
+import { useRouter } from 'vue-router';
+import { Icon } from '@iconify/vue';
+import axios from 'axios';
+import { storeToRefs } from "pinia";
+import { useAuthStore } from '@/stores/auth';
+import { useViewStore } from "@/stores/view";
+import { useSongStore } from "@/stores/song";
+import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
+import defaultImgage from '@/assets/default.jpg'
 
-	const useView = useViewStore();
-	const authStore = useAuthStore();
-	const useSong = useSongStore();
-	const useModal = useModalStore();
-	const useActivity = useActivityStore();
+const useView = useViewStore();
+const authStore = useAuthStore();
+const useSong = useSongStore();
+const useModal = useModalStore();
+const useActivity = useActivityStore();
 
-	const { followArtistList, followAlbumList, favSongList, myPlaylistList } = storeToRefs(useActivity)
-	const { openEditPlaylist } = storeToRefs(useModal)
+const { followArtistList, followAlbumList, favSongList, myPlaylistList } = storeToRefs(useActivity)
+const { openEditPlaylist } = storeToRefs(useModal)
 
-	const filter = ref('all');
-	const search = ref('');
-	const filteredPlaylist = computed(() => {
-		return myPlaylistList.value.filter(item =>
-			item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
-	})
-	const filteredAlbum = computed(() => {
-		return followAlbumList.value.filter(item =>
-			item.playlist.name.toLowerCase().includes(search.value.toLowerCase()));
-	})
-	const filteredArtist = computed(() => {
-		return followArtistList.value.filter(item =>
-			item.artist.name.toLowerCase().includes(search.value.toLowerCase()));
-	})
+const filter = ref('all');
+const search = ref('');
+const filteredPlaylist = computed(() => {
+	return myPlaylistList.value.filter(item =>
+		item.name.toLowerCase().includes(search.value.toLowerCase()));
+})
+const filteredAlbum = computed(() => {
+	return followAlbumList.value.filter(item =>
+		item.name.toLowerCase().includes(search.value.toLowerCase()));
+})
+const filteredArtist = computed(() => {
+	return followArtistList.value.filter(item =>
+		item.artist.name.toLowerCase().includes(search.value.toLowerCase()));
+})
 
-	const createPlaylist = async () => {
-		try {
-			const res = await axios.post(
-				'http://spotify_clone_api.test/api/library/store-playlist',
-				{},
-				{
-					headers: {
-						Authorization: 'Bearer ' + authStore.user.token,
-					},
-				}
-			);
-			alert('Tạo playlist thành công!');
-			useActivity.fetchData();
-		} catch (error) {
-			console.error('Lỗi khi tạo playlist:', error);
-			alert('Tạo playlist thất bại!');
-		}
-	};
-
-	const deletePlaylist = async (id) => {
-		try {
-			const res = await axios.get(
-				`http://spotify_clone_api.test/api/library/destroy-playlist/${id}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + authStore.user.token,
-					},
-				}
-			);
-			alert('Xóa playlist thành công!');
-			useActivity.fetchData();
-			useView.setComponent('HomePage');
-		} catch (error) {
-			console.error('Lỗi khi xóa playlist:', error);
-			alert('Xóa playlist thất bại!');
-		}
-	}
-
-	const editPlaylist = async (playlist) => {
-		useModal.setPlaylistEditData(playlist);
-		openEditPlaylist.value = true;
-	}
-
-	onMounted(() => {
+const createPlaylist = async () => {
+	try {
+		const res = await axios.post(
+			'http://spotify_clone_api.test/api/library/store-playlist',
+			{},
+			{
+				headers: {
+					Authorization: 'Bearer ' + authStore.user.token,
+				},
+			}
+		);
+		alert('Tạo playlist thành công!');
 		useActivity.fetchData();
-	})
+	} catch (error) {
+		console.error('Lỗi khi tạo playlist:', error);
+		alert('Tạo playlist thất bại!');
+	}
+};
+
+const deletePlaylist = async (id) => {
+	try {
+		const res = await axios.get(
+			`http://spotify_clone_api.test/api/library/destroy-playlist/${id}`,
+			{
+				headers: {
+					Authorization: 'Bearer ' + authStore.user.token,
+				},
+			}
+		);
+		alert('Xóa playlist thành công!');
+		useActivity.fetchData();
+		useView.setComponent('HomePage');
+	} catch (error) {
+		console.error('Lỗi khi xóa playlist:', error);
+		alert('Xóa playlist thất bại!');
+	}
+}
+
+const editPlaylist = async (playlist) => {
+	useModal.setPlaylistEditData(playlist);
+	openEditPlaylist.value = true;
+}
+
+
+onMounted(() => {
+	useActivity.fetchData();
+})
 </script>
 
 <template>
@@ -146,25 +147,24 @@
 				<div v-for="(item, index) in filteredPlaylist" :key="index"
 					v-if="filter == 'all' || filter == 'playlist'"
 					class="flex items-center gap-3 p-3 rounded cursor-pointer hover:bg-white/10 transition-all duration-200"
-					@click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
+					@click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);"
 					:class="{ 'bg-white/10': useView.selected === item }">
 					<div class="flex items-center justify-center w-10 h-10 rounded bg-white/10">
-						<img :src="item.playlist.thumbnail_path"
-							class="flex-shrink-0 rounded max-h-10 max-w-10 object-coverw-10"
+						<img :src="item.thumbnail_path" class="flex-shrink-0 rounded max-h-10 max-w-10 object-coverw-10"
 							@error="event => event.target.src = defaultImgage" />
 					</div>
 
 					<div>
 						<div class="text-[#FFE5D6] font-semibold leading-4 flex-1 break-normal md:break-all white">{{
-							item.playlist.name }}</div>
+							item.name }}</div>
 						<div class="text-[#FFE5D6]/50 text-s font-medium">
-							{{ item.playlist.type === 2 ? 'Danh sách phát • ' + item.playlist.total_song + " bài hát" :
-								'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát" }}
+							{{ item.type === 2 ? 'Danh sách phát • ' + item.total_song + " bài hát" :
+								'Album của nghệ sĩ • ' + item.total_song + " bài hát" }}
 						</div>
 					</div>
 					<div class="ml-auto">
 						<button class=" hover:bg-white/5 p-2 rounded text-[#FFE5D6]/50 transition-all duration-200"
-							@click.stop="editPlaylist(item.playlist); console.log(item.playlist);">
+							@click.stop="editPlaylist(item); console.log(item);">
 							<Icon icon="material-symbols:edit-square-rounded" class="text-xl " />
 						</button>
 						<button class=" hover:bg-white/5 p-1.5 rounded text-[#FFE5D6]/50 transition-all duration-200"
@@ -175,18 +175,18 @@
 				</div>
 				<div v-for="(item, index) in filteredAlbum" :key="index" v-if="filter == 'all' || filter == 'playlist'"
 					class="flex items-center gap-3 p-3 rounded cursor-pointer hover:bg-white/10 transition-all duration-200"
-					@click="useView.selectItem(item.playlist); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item.playlist);"
-					:class="{ 'bg-white/10': useView.selected === item.playlist }">
+					@click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);"
+					:class="{ 'bg-white/10': useView.selected === item }">
 					<div class="flex items-center justify-center w-10 h-10 rounded bg-white/10">
-						<img :src="item.playlist.thumbnail_path" class="flex-shrink-0 object-cover w-10 h-10 rounded"
+						<img :src="item.thumbnail_path" class="flex-shrink-0 object-cover w-10 h-10 rounded"
 							@error="event => event.target.src = defaultImgage" />
 					</div>
 
 					<div>
-						<div class="text-[#FFE5D6] font-semibold leading-4">{{ item.playlist.name }}</div>
+						<div class="text-[#FFE5D6] font-semibold leading-4">{{ item.name }}</div>
 						<div class="text-[#FFE5D6]/50 text-s font-medium">
-							{{ item.playlist.type === 2 ? 'Danh sách phát • ' + item.playlist.total_song + " bài hát" :
-								'Album của nghệ sĩ • ' + item.playlist.total_song + " bài hát" }}
+							{{ item.type === 2 ? 'Danh sách phát • ' + item.total_song + " bài hát" :
+								'Album của nghệ sĩ • ' + item.total_song + " bài hát" }}
 						</div>
 					</div>
 					<div class="ml-auto">

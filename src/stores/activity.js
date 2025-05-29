@@ -54,6 +54,7 @@ export const useActivityStore = defineStore("activity", {
             },
           }
         );
+        console.log(myPlaylistRes.data.data)
         this.setFollowArtistList(artistRes.data.data);
         this.setMyPlaylistList(myPlaylistRes.data.data);
         this.setFollowAlbumList(albumRes.data.data);

@@ -33,7 +33,6 @@ async function FetchAlbumData() {
         popularAlbum.value = res.data.data;
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
     }
 }
 async function FetchArtistData() {
@@ -46,7 +45,6 @@ async function FetchArtistData() {
         topArtist.value = res.data.data;
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
     }
 }
 async function FetchSongData() {
@@ -59,7 +57,6 @@ async function FetchSongData() {
         topSong.value = res.data.data;
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
     }
 }
 
