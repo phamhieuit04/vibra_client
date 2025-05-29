@@ -81,7 +81,7 @@ onMounted(() => {
 </script>
 <template>
     <li class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer"
-        @mouseenter="isHover = true" @mouseleave="isHover = false" @click="useSong.playThisSong(track)">
+        @mouseenter="isHover = true" @mouseleave="isHover = false" @click="useSong.playOrPauseThisSong(track)">
         <div class="flex items-center w-full py-1.5">
             <div v-if="isHover" class="w-[40px] ml-[14px] mr-[6px] cursor-pointer">
                 <Icon icon="material-symbols:play-arrow-rounded" v-if="!isPlaying" class="size-7 text-white" />

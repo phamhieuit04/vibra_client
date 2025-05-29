@@ -21,7 +21,7 @@ export const useSongStore = defineStore("song", {
     },
     currentWaitlist: [],
     prevList: [],
-    isShuffle: false,
+    isShuffle: true,
   }),
   actions: {
     playThisSong(track) {
@@ -68,7 +68,7 @@ export const useSongStore = defineStore("song", {
       this.fetchIndex();
     },
     addPlaylistToWaitlist(playlist) {
-      if(!playlist || playlist.length == 0) return;
+      if (!playlist || playlist.length == 0) return;
       for (let i = playlist.length - 1; i >= 0; i--) {
         this.currentWaitlist.unshift(playlist[i]);
       }
@@ -76,7 +76,7 @@ export const useSongStore = defineStore("song", {
     },
 
     addAndPlayThisPlaylist(playlist) {
-      if(!playlist || playlist.length == 0) return;
+      if (!playlist || playlist.length == 0) return;
       for (let i = playlist.length - 1; i > 0; i--) {
         this.currentWaitlist.unshift(playlist[i]);
       }
@@ -97,10 +97,17 @@ export const useSongStore = defineStore("song", {
 
     nextSongs() {
       if (this.currentWaitlist.length > 0) {
-        this.prevList.unshift(this.currentTrack);
-        const nextSong = this.currentWaitlist.shift();
-        this.playThisSong(nextSong);
-        this.fetchIndex();
+        if(this.isShuffle == false){
+          this.prevList.unshift(this.currentTrack);
+          const nextSong = this.currentWaitlist.shift();
+          this.playThisSong(nextSong);
+          this.fetchIndex();
+          console.log('chưa shuffle')
+        }
+        else{
+          const tmpTrack = this.currentWaitlist[Math.floor(Math.random() * this.currentWaitlist.length)];
+          this.playThisSongInWaitlist(tmpTrack)
+        }
       } else {
         this.playThisSong(this.currentTrack);
         this.fetchIndex();
@@ -137,17 +144,11 @@ export const useSongStore = defineStore("song", {
       }
     },
 
-    playThisSongInWaitlist(track){
+    playThisSongInWaitlist(track) {
+      this.prevList.unshift(this.currentTrack);
       this.playThisSong(track);
       this.deleteSongFromWaitlist(track);
     },
-
-
-
-
-
-
-
 
     setPlaylist(playlist) {
       this.currentPlaylist = playlist;
@@ -156,8 +157,6 @@ export const useSongStore = defineStore("song", {
     setVolume(range) {
       this.vol = range;
     },
-
-    
 
     resetState() {
       isPlaying = false;

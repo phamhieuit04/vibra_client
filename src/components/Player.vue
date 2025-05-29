@@ -19,7 +19,7 @@ const useSong = useSongStore();
 const useModal = useModalStore();
 const useActivity = useActivityStore();
 const { isFullscreen } = storeToRefs(useView)
-const { isPlaying, audio, currentPlaylist, currentTrack } = storeToRefs(useSong)
+const { isPlaying, audio, currentPlaylist, currentTrack, isShuffle } = storeToRefs(useSong)
 const { favSongList, myPlaylistList } = storeToRefs(useActivity)
 
 let isHover = ref(false)
@@ -29,7 +29,7 @@ let seeker = ref(null)
 let seekerContainer = ref(null)
 let range = ref(0)
 
-const isLoved = ref(false) 
+const isLoved = ref(false)
 
 const openMenu = ref(false)
 
@@ -41,7 +41,7 @@ async function loveThisSong() {
             }
         });
 
-        if(res.data.code == 200){
+        if (res.data.code == 200) {
             useActivity.fetchData();
             isLoved.value = !isLoved.value
         }
@@ -58,7 +58,7 @@ async function unloveThisSong() {
             }
         });
 
-        if(res.data.code == 200){
+        if (res.data.code == 200) {
             useActivity.fetchData();
             isLoved.value = !isLoved.value
         }
@@ -70,7 +70,7 @@ async function unloveThisSong() {
 
 onMounted(() => {
     isPlaying.value = false
-    if(!currentTrack.value) return;
+    if (!currentTrack.value) return;
 
     if (audio.value) {
         setTimeout(() => {
@@ -103,12 +103,12 @@ onMounted(() => {
     }
 })
 
-function onUserPress(){
+function onUserPress() {
     openMenu.value = false
 }
 
 const timeupdate = () => {
-    if(!audio.value) return
+    if (!audio.value) return
     audio.value.addEventListener('timeupdate', function () {
         var minutes = Math.floor(audio.value.currentTime / 60)
         var seconds = Math.floor(audio.value.currentTime - minutes * 60)
@@ -135,7 +135,7 @@ watch(() => favSongList.value.songs, () => {
             isLoved.value = true
         }
     })
-  }
+}
 )
 watch(() => currentTrack.value, () => {
     openMenu.value = false
@@ -145,17 +145,17 @@ watch(() => currentTrack.value, () => {
             isLoved.value = true
         }
     })
-  }
+}
 )
 
 watch(() => audio.value, () => {
-    if(!currentTrack.value) return;
+    if (!currentTrack.value) return;
     timeupdate()
     loadmetadata()
 })
 
 watch(() => isTrackTimeCurrent.value, (time) => {
-    if(!currentTrack.value) return;
+    if (!currentTrack.value) return;
     if (time && time == isTrackTimeTotal.value) {
         useSong.nextSongs();
     }
@@ -168,27 +168,35 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         class="fixed bottom-0 flex items-center justify-between w-full z-50 h-[90px] bg-[#181413] border-t border-t-[#272727]">
         <div class=" flex items-center w-1/4 ">
             <div class="flex items-center ml-4">
-                <img class="rounded-sm shadow-2xl object-cover" width="55" :src="currentTrack['thumbnail_path']" @error="event => event.target.src = defaultImgage"/>
+                <img class="rounded-sm shadow-2xl object-cover" width="55" :src="currentTrack['thumbnail_path']"
+                    @error="event => event.target.src = defaultImgage" />
                 <div class="ml-4">
-                    <div style="font-family: 'Montserrat', sans-serif;" class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
+                    <div style="font-family: 'Montserrat', sans-serif;"
+                        class="text-[17px] text-[#FFE5D6] font-bold hover:underline cursor-pointer">
                         {{ currentTrack ? currentTrack['name'] : 'Bài hát' }}
                     </div>
-                    <div style="font-family: 'Montserrat', sans-serif;" class="text-[13px] text-[#FFE5D6]/30 font-medium hover:text-white hover:underline cursor-pointer">
+                    <div style="font-family: 'Montserrat', sans-serif;"
+                        class="text-[13px] text-[#FFE5D6]/30 font-medium hover:text-white hover:underline cursor-pointer">
                         {{ currentTrack ? currentTrack.author.name : 'Tác giả' }}
                     </div>
                 </div>
             </div>
             <div class="flex items-center ml-8">
-                <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear" class="text-[#FFE5D6] text-[23px] cursor-pointer" />
-                <Icon v-else @click="unloveThisSong" icon="solar:heart-bold" class="text-[#FFE5D6] text-[23px] cursor-pointer"/>
-                <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
+                <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear"
+                    class="text-[#FFE5D6] text-[23px] cursor-pointer" />
+                <Icon v-else @click="unloveThisSong" icon="solar:heart-bold"
+                    class="text-[#FFE5D6] text-[23px] cursor-pointer" />
+                <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline"
+                    class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer" />
                 <a href="/paysuccess">
-                    <Icon icon="material-symbols:arrow-circle-down-outline-rounded" class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer"/>
+                    <Icon icon="material-symbols:arrow-circle-down-outline-rounded"
+                        class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer" />
                 </a>
             </div>
             <span v-if="openMenu" class="absolute bg-[#282828] z-20 left-[250px] bottom-[68px]  p-1">
-                <div  class="text-gray-200 font-semibold">
-                    <PlaylistOptionRow v-for="item in myPlaylistList" :key="item.id" :item="item" @user-press="onUserPress"/>
+                <div class="text-gray-200 font-semibold">
+                    <PlaylistOptionRow v-for="item in myPlaylistList" :key="item.id" :item="item"
+                        @user-press="onUserPress" />
                 </div>
             </span>
         </div>
@@ -196,16 +204,24 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         <div class="max-w-[35%] mx-auto w-2/4">
             <div class=" flex-col items-center justify-center">
                 <div class="flex items-center justify-center h-[30px]">
-                    <button class="mx-2" @click="useSong.prevSongs">
-                        <Icon icon="fa6-solid:backward-step" class=" text-[#FFE5D6] size-7"/>
+                    <button v-if="isShuffle" class="mx-2" @click="isShuffle = false">
+                        <Icon icon="mdi:shuffle" class=" text-[#FFE5D6] size-5" />
                     </button>
-                    <button class="p-1 rounded-full mx-3"
-                        @click="useSong.playOrPauseThisSong(currentTrack)">
-                        <Icon icon="material-symbols:play-circle-rounded" v-if="!isPlaying" class="size-12 text-white"/>
-                        <Icon icon="material-symbols:pause-circle" v-else class="size-12 text-white"/>
+                    <button v-else class="mx-2" @click="isShuffle = true">
+                        <Icon icon="mdi:shuffle-disabled" class=" text-[#FFE5D6] size-5" />
+                    </button>
+
+
+                    <button class="mx-2" @click="useSong.prevSongs">
+                        <Icon icon="fa6-solid:backward-step" class=" text-[#FFE5D6] size-7" />
+                    </button>
+                    <button class="p-1 rounded-full mx-3" @click="useSong.playOrPauseThisSong(currentTrack)">
+                        <Icon icon="material-symbols:play-circle-rounded" v-if="!isPlaying"
+                            class="size-12 text-white" />
+                        <Icon icon="material-symbols:pause-circle" v-else class="size-12 text-white" />
                     </button>
                     <button class="mx-2" @click="useSong.nextSongs();">
-                        <Icon icon="fa6-solid:forward-step" class=" text-[#FFE5D6] size-7"/>
+                        <Icon icon="fa6-solid:forward-step" class=" text-[#FFE5D6] size-7" />
                     </button>
                 </div>
             </div>
