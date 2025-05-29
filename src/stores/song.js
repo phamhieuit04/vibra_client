@@ -67,6 +67,7 @@ export const useSongStore = defineStore("song", {
       this.fetchIndex();
     },
     addPlaylistToWaitlist(playlist) {
+      if(!playlist || playlist.length == 0) return;
       for (let i = playlist.length - 1; i >= 0; i--) {
         this.currentWaitlist.unshift(playlist[i]);
       }
@@ -74,7 +75,7 @@ export const useSongStore = defineStore("song", {
     },
 
     addAndPlayThisPlaylist(playlist) {
-      console.log(playlist);
+      if(!playlist || playlist.length == 0) return;
       for (let i = playlist.length - 1; i > 0; i--) {
         this.currentWaitlist.unshift(playlist[i]);
       }
