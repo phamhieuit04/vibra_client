@@ -49,7 +49,7 @@ onMounted(() => {
             <div class="flex flex-wrap justify-center gap-12">
                 <div v-for="item in songByCateList" :key="item.id"
                     class="px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105"
-                    @click="useSong.playThisSong(item)" style="width: 14.75rem;">
+                    @click="useSong.playOrPauseThisSong(item)" style="width: 14.75rem;">
                     <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
                         <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path">
                     </div>

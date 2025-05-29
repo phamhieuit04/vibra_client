@@ -90,7 +90,7 @@ onMounted(() => {
                         </div>
                     </div>
 
-                    <div class="flex-1 ">
+                    <div class="flex-1 " v-if="listSongSearch.length > 0">
                         <h2 class="mb-1 text-2xl font-semibold ">Songs</h2>
                         <div class="pr-8 mt-3">
                             <div v-for="item, index in listSongSearch" :key="item.id"
@@ -117,7 +117,7 @@ onMounted(() => {
             </div>
 
 
-            <div class="text-[#FFE5D6] mb-8">
+            <div class="text-[#FFE5D6] mb-8" v-if="listArtistSearch.length > 0">
                 <h2 class="mb-1 text-2xl font-semibold">Artists</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
@@ -134,7 +134,7 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="text-[#FFE5D6] mb-8">
+            <div class="text-[#FFE5D6] mb-8" v-if="listAlbumSearch.length > 0">
                 <h2 class="mb-1 text-2xl font-semibold">Albums</h2>
                 <div class="w-full overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max ">

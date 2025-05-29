@@ -102,7 +102,7 @@ onMounted(() => {
 
 <template>
 	<div class="fixed top-0 bottom-0 left-0 w-full bg-[#BC4D15] z-0"></div>
-	<div class="w-[22.4%] h-[100%] fixed bottom-0 top-[64px] left-1.5 z-50 p-6 bg-[#1D1512] rounded-[24px]">
+	<div class="w-[22.4%] h-[83.4%] fixed top-[64px] left-1.5 z-50 p-6 bg-[#1D1512] rounded-[24px]">
 		<div class="flex items-center justify-between mb-4 mx-1">
 			<h2 class="text-[#FFE5D6] text-xl font-semibold">Thư viện</h2>
 			<div class="flex items-center gap-2">
@@ -138,7 +138,7 @@ onMounted(() => {
 		<input type="text" v-model="search" placeholder="Tìm kiếm"
 			class="w-full py-2 px-5 rounded-full  bg-[#1D1512] text-[#FFE5D6] my-2 transition-all duration-200 outline outline-2 outline-[#BC4D15] focus:outline-white" />
 
-		<div class="space-y-2 overflow-y-auto max-h-[calc(100vh-200px)]">
+		<div class=" overflow-y-auto h-[82%] scrollbar-none">
 
 			<TransitionGroup tag="div" enter-active-class="transform-gpu" enter-class="opacity-0 -translate-x-full"
 				enter-to-class="opacity-100 translate-x-0" leave-active-class="absolute transform-gpu"

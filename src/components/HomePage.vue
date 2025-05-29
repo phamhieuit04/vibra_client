@@ -120,7 +120,7 @@ onMounted(() => {
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topSong" :key="item.id"
                             class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105"
-                            @click="useSong.playThisSong(item);">
+                            @click="useSong.playOrPauseThisSong(item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
                                 <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt=""
                                     :class="{'animate-spin' : currentTrack.id == item.id && isPlaying}"

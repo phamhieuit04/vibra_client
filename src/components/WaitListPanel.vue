@@ -40,7 +40,7 @@ onMounted(() => {
 
                     <div class="flex">
                         <div class="rounded-full bg-zinc-700 w-12 h-12 ml-0">
-                            <img class="object-cover rounded-full" :src="currentTrack.thumbnail_path" alt=""
+                            <img class="object-cover rounded-full aspect-square" :src="currentTrack.thumbnail_path" alt=""
                                 :class="{ 'animate-spin': isPlaying }"
                                 style="animation-duration: 5s;" @error="event => event.target.src = defaultImgage">
                         </div>
