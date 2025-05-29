@@ -90,6 +90,10 @@ function onSongDel(trackId) {
     reloadKey.value++;
 }
 
+function onPlaylistSongDel(trackId){
+    FetchPlaylistData();
+}
+
 watch(() => playlistData.value, () => {
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
@@ -167,8 +171,8 @@ onMounted(() => {
         <div class="border-b border-b-[#A2A2A2] mt-2"></div>
         <div class="mb-4"></div>
         <ul class="w-full" :key="reloadKey">
-            <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistSong" :track="track"
-                :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel" />
+            <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistData" :track="track"
+                :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel" @deletePlaylistSong="onPlaylistSongDel" />
         </ul>
     </div>
 </template>
