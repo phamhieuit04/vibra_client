@@ -47,7 +47,12 @@ onMounted(() => {
             </div>
         </div>
         <div class=" mx-4 my-4 overflow-y-auto scrollbar-none h-full">
-            <h2 class="mb-1 text-2xl font-semibold">Bài hát tiếp theo</h2>
+            <div class="flex justify-between">
+                <h2 class="mb-1 text-2xl font-semibold">Bài hát tiếp theo</h2>
+                <button @click="currentWaitlist = []">
+                    Xóa tất cả
+                </button>
+            </div>
             <div class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer p-3" 
                 v-for="track, index in currentWaitlist" :key="track?.id"
                 @click="useSong.playThisSong(track)">
