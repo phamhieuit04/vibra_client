@@ -54,22 +54,38 @@ const createPlaylist = async () => {
 	}
 };
 
-const deletePlaylist = async (id) => {
-	try {
-		const res = await axios.get(
-			`http://spotify_clone_api.test/api/library/destroy-playlist/${id}`,
-			{
-				headers: {
-					Authorization: 'Bearer ' + authStore.user.token,
-				},
-			}
-		);
-		alert('Xóa playlist thành công!');
-		useActivity.fetchData();
-		useView.setComponent('HomePage');
-	} catch (error) {
-		console.error('Lỗi khi xóa playlist:', error);
-		alert('Xóa playlist thất bại!');
+const deletePlaylist = async (item) => {
+	if (item.type == 2) {
+		try {
+			const res = await axios.get(
+				`http://spotify_clone_api.test/api/library/destroy-playlist/${item.id}`,
+				{
+					headers: {
+						Authorization: 'Bearer ' + authStore.user.token,
+					},
+				}
+			);
+			alert('Xóa playlist thành công!');
+			useActivity.fetchData();
+			useView.setComponent('HomePage');
+		} catch (error) {
+			console.error('Lỗi khi xóa playlist:', error);
+			alert('Xóa playlist thất bại!');
+		}
+	} else {
+		try {
+			const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-playlist/${item.id}`, {
+				'headers': {
+					'Authorization': 'Bearer ' + authStore.user.token,
+				}
+			});
+			alert('Xóa playlist thành công!');
+			useActivity.fetchData();
+			useView.setComponent('HomePage');
+		} catch (e) {
+			console.log(e);
+			alert('Call API thất bại');
+		}
 	}
 }
 
@@ -168,7 +184,7 @@ onMounted(() => {
 							<Icon icon="material-symbols:edit-square-rounded" class="text-xl " />
 						</button>
 						<button class=" hover:bg-white/5 p-1.5 rounded text-[#FFE5D6]/50 transition-all duration-200"
-							@click.stop="deletePlaylist(item.playlist_id)">
+							@click.stop="deletePlaylist(item)">
 							<Icon icon="material-symbols:delete-rounded" class="text-2xl " />
 						</button>
 					</div>
@@ -191,7 +207,7 @@ onMounted(() => {
 					</div>
 					<div class="ml-auto">
 						<button class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50"
-							@click.stop="deletePlaylist(item.playlist_id)">
+							@click.stop="deletePlaylist(item)">
 							<Icon icon="material-symbols:delete-rounded" class="text-2xl" />
 						</button>
 					</div>
