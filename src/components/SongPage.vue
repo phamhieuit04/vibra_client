@@ -3,7 +3,7 @@ import { useSongStore } from "@/stores/song";
 import { useAuthStore } from '@/stores/auth';
 import { Icon } from '@iconify/vue';
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
 
@@ -11,35 +11,31 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore)
 
 const useSong = useSongStore();
-const { currentTrack } = storeToRefs(useSong);
+const { currentTrack, isPlaying } = storeToRefs(useSong);
 
 
 const lyric = ref(null);
 
-async function fetchLyricsText(url) {
-    // try {
-    //     const res = await axios.get('http://spotify_clone_api.test/uploads/billie/lyrics/Lost cause lyrics.txt', {
-    //         'headers': {
-    //             'Authorization': 'Bearer ' + user.value.token,
-    //         },
-    //     })
-    //     lyric.value = res.data
-    //     console.log(lyric.value)
-    // } catch (error) {
-    //     console.error('Lỗi khi load lyrics:', error)
-    // }
-    // try {
-    //     const res = await fetch('http://spotify_clone_api.test/uploads/billie/lyrics/Lost cause lyrics.txt')
-    //     lyric.value = await res.text()
-    // } catch (err) {
-    //     console.error('Không thể tải lời bài hát:', err)
-    // }
+const scrollArea = ref(null)
+
+function autoScroll() {
+  const el = scrollArea.value
+  const speed = 0.1
+  const interval = setInterval(() => {
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+      clearInterval(interval)
+    } else {
+      el.scrollTop += speed
+    }
+  }, 10)
 }
+watch(() => currentTrack.value, () => {
+    autoScroll()
+  }
+)
 
 onMounted(() => {
-    // fetchLyricsText(currentTrack.value.lyrics_path)
-    console.log(currentTrack.value)
-
+    autoScroll();
 })
 </script>
 
@@ -53,7 +49,7 @@ onMounted(() => {
         </div>
 
         <div class="w-1/2 flex pl-8 items-center justify-start mb-[90px]">
-            <div class="space-y-4 text-gray-300 leading-relaxed w-full h-[500px] overflow-y-auto scrollbar-none">
+            <div ref="scrollArea" class="space-y-4 text-gray-300 leading-relaxed w-full h-[500px] overflow-y-auto scrollbar-none">
                 <div v-for="lyricLine, index in currentTrack.list_lyric" :key="index">
                     <h1 class="text-white text-3xl">{{ lyricLine }}</h1>
                 </div>

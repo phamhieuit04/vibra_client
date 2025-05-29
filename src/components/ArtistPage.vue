@@ -22,8 +22,16 @@ const { artistData } = storeToRefs(useView);
 const { followArtistList } = storeToRefs(useActivity)
 
 const isFollowed = ref(false)
+const isMe = ref(false);
 const thisArtistListSong = ref([])
 const thisArtistListAlbum = ref([])
+
+function checkMe(){
+    isMe.value = false;
+    if(artistData.value.id === authStore.user.id){
+        isMe.value = true;
+    }
+}
 
 async function getArtistSong() {
     try {
@@ -81,9 +89,27 @@ async function unfollowThisArtist() {
     }
 }
 
+async function blockThisArtist() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/artist/block/${artistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        unfollowThisArtist();
+        useActivity.fetchData();
+        useView.setComponent('HomePage');
+        alert('Bạn đã hạn chế nghệ sĩ!!!')
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
 watch(() => artistData.value, () => {
     getArtistSong();
     getArtistAlbum();
+    checkMe();
     isFollowed.value = false
     followArtistList.value.forEach(artist => {
         if (artist.artist_id === artistData.value.id) {
@@ -96,6 +122,7 @@ watch(() => artistData.value, () => {
 onMounted(() => {
     getArtistSong();
     getArtistAlbum();
+    checkMe();
     followArtistList.value.forEach(artist => {
         if (artist.artist_id === artistData.value.id) {
             isFollowed.value = true
@@ -122,29 +149,42 @@ onMounted(() => {
 
         <div class="px-12">
             <div class="">
-                <div class="flex items-center mb-5 space-x-6">
-                    <button
-                        class="flex items-center justify-center w-14 h-14 rounded-full bg-[#BC4D15] hover:bg-black transition group">
-                        <Icon icon="mdi:play" class="text-black ml-0.5 text-5xl group-hover:text-[#BC4D15]"
-                            @click="useSong.addAndPlayThisPlaylist(thisArtistListSong)" />
-                    </button>
-                    <button @click.stop="useSong.addPlaylistToWaitlist(thisArtistListSong)"
-                        class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
-                        <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
-                    </button>
+                <div class="flex justify-between">
+                    <div class="flex items-center mb-5 space-x-6">
+                        <button
+                            class="flex items-center justify-center w-14 h-14 rounded-full bg-[#BC4D15] hover:bg-black transition group">
+                            <Icon icon="mdi:play" class="text-black ml-0.5 text-5xl group-hover:text-[#BC4D15]"
+                                @click="useSong.addAndPlayThisPlaylist(thisArtistListSong)" />
+                        </button>
+                        <button @click.stop="useSong.addPlaylistToWaitlist(thisArtistListSong)"
+                            class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                            <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
+                        </button>
 
-                    <button v-if="!isFollowed" @click="followThisArtist"
-                        class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
-                        Theo dõi
-                    </button>
-                    <button v-else @click="unfollowThisArtist"
-                        class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
-                        Hủy theo dõi
-                    </button>
+                        <div v-if="!isMe">
+                            <button v-if="!isFollowed" @click="followThisArtist"
+                                class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                                Theo dõi
+                            </button>
+                            <button v-else @click="unfollowThisArtist"
+                                class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                                Hủy theo dõi
+                            </button>
+                        </div>
 
-                    <button class="text-[#BC4D15] text-2xl hover:text-white transition">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
+
+                        <button class="text-[#BC4D15] text-2xl hover:text-white transition">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button v-if="!isMe" @click="blockThisArtist"
+                            class="border border-red-500 text-red-500 px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                            Hạn chế nghệ sĩ
+                        </button>
+                    </div>
+
+
                 </div>
 
 

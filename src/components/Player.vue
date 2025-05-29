@@ -223,6 +223,12 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                     <button class="mx-2" @click="useSong.nextSongs();">
                         <Icon icon="fa6-solid:forward-step" class=" text-[#FFE5D6] size-7" />
                     </button>
+
+                    <button class="mx-2" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
+                        <Icon icon="tabler:poo-filled" 
+                            class="text-[#FFE5D6]  transition duration-200 cursor-pointer size-5 hover:text-white" 
+                            :class="{'animate-bounce' : isPlaying}"/>
+                    </button>
                 </div>
             </div>
 
