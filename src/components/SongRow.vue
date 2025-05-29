@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const { track, playlist, index, isFav } = toRefs(props);
-const emit = defineEmits(['deleteFavSong'])
+const emit = defineEmits(['deleteFavSong', 'deletePlaylistSong'])
 
 async function unloveThisSong() {
     try {
@@ -40,10 +40,28 @@ async function unloveThisSong() {
             }
         });
 
-        if(res.data.code == 200){
+        if (res.data.code == 200) {
             useActivity.fetchData();
             emit('deleteFavSong', track.value.id)
         }
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
+async function removeFromPlaylist() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/song/destroy?song_id=${track.value.id}&playlist_id=${playlist.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            },
+        });
+        if (res.data.code == 200) {
+            useActivity.fetchData();
+            emit('deletePlaylistSong', track.value.id)
+        }
+        console.log(res)
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
@@ -62,14 +80,14 @@ onMounted(() => {
 
 </script>
 <template>
-    <li class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer" @mouseenter="isHover = true"
-        @mouseleave="isHover = false" @click="useSong.playThisSong(track)">
+    <li class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer"
+        @mouseenter="isHover = true" @mouseleave="isHover = false" @click="useSong.playThisSong(track)">
         <div class="flex items-center w-full py-1.5">
             <div v-if="isHover" class="w-[40px] ml-[14px] mr-[6px] cursor-pointer">
-                <Icon icon="material-symbols:play-arrow-rounded" v-if="!isPlaying" class="size-7 text-white"/>
+                <Icon icon="material-symbols:play-arrow-rounded" v-if="!isPlaying" class="size-7 text-white" />
                 <Icon icon="material-symbols:play-arrow-rounded"
-                    v-else-if="isPlaying && currentTrack.name !== track.name" class="size-7 text-white"/>
-                <Icon icon="material-symbols:pause-rounded" v-else class="size-7 text-white"/>
+                    v-else-if="isPlaying && currentTrack.name !== track.name" class="size-7 text-white" />
+                <Icon icon="material-symbols:pause-rounded" v-else class="size-7 text-white" />
             </div>
             <div v-else class="text-white font-semibold w-[40px] ml-5 p-1">
                 <span :class="{ 'text-green-500': currentTrack && currentTrack.name == track.name }">
@@ -88,10 +106,16 @@ onMounted(() => {
             <div v-if="isTrackTime" class="text-xs mx-5 text-gray-400">
                 {{ isTrackTime }}
             </div>
-            <button @click.stop="useSong.addSongToWaitlist(track);" class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+            <button @click.stop="useSong.addSongToWaitlist(track);"
+                class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                 <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
             </button>
-            <button v-if="!isFav" @click.stop="unloveThisSong" class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+            <button v-if="!isFav" @click.stop="unloveThisSong"
+                class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                <Icon icon="material-symbols:delete-rounded" class=" text-2xl" />
+            </button>
+            <button v-if="playlist.type === 2" @click.stop="removeFromPlaylist"
+                class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                 <Icon icon="material-symbols:delete-rounded" class=" text-2xl" />
             </button>
         </div>

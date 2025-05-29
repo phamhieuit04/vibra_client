@@ -154,7 +154,7 @@ onMounted(() => {
                     <div v-for="item in myPlaylistList" :key="item.id" class="flex-shrink-0 w-32 cursor-pointer"
                         @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                         <div class="w-full h-32 mb-2 rounded bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path">
+                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
                         </div>
                         <p class="font-medium">{{ item.name }}</p>
                     </div>
