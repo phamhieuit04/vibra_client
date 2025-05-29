@@ -9,12 +9,15 @@ import UserPage from "@/components/UserPage.vue";
 import SearchPage from "@/components/SearchPage.vue"
 import SongPage from "@/components/SongPage.vue";
 import ArtistPage from "@/components/ArtistPage.vue";
-import ProfileModal from "@/components/ProfileModal.vue";
-import PlaylistModal from "@/components/PlaylistModal.vue";
-import SongModal from "@/components/SongModal.vue";
 import SidePanel from "@/components/SidePanel.vue";
 import WaitListPanel from "@/components/WaitListPanel.vue";
 import CategoriesSongPage from "@/components/CategoriesSongPage.vue";
+
+import ProfileModal from "@/components/ProfileModal.vue";
+import PlaylistModal from "@/components/PlaylistModal.vue";
+import AlbumModal from "@/components/AlbumModal.vue";
+import SongModal from "@/components/SongModal.vue";
+
 
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
@@ -29,7 +32,7 @@ const useView = useViewStore()
 const { currentComponent, isFullscreen, showSidePanel, showWaitlistPanel } = storeToRefs(useView)
 
 const useModal = useModalStore()
-const { openEditProfile, openEditPlaylist, openUploadSong } = storeToRefs(useModal)
+const { openEditProfile, openEditPlaylist, openUploadSong, openEditAlbum } = storeToRefs(useModal)
 
 const player = ref(null)
 
@@ -66,6 +69,7 @@ onMounted(() => {
       <Player />
     </div>
 
+    <AlbumModal v-if="openEditAlbum"/>
     <SongModal v-if="openUploadSong" />
     <ProfileModal v-if="openEditProfile" />
     <PlaylistModal v-if="openEditPlaylist" />

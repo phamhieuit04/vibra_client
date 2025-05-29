@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useAuthStore } from "./auth";
-import { ref } from 'vue'
-
+import { ref } from "vue";
 
 export const useActivityStore = defineStore("activity", {
   state: () => ({
@@ -11,6 +10,7 @@ export const useActivityStore = defineStore("activity", {
     favSongList: [],
     myPlaylistList: [],
     myAlbumList: [],
+    mySongList: [],
 
     allCategories: [],
     searchKey: "",
@@ -54,7 +54,7 @@ export const useActivityStore = defineStore("activity", {
             },
           }
         );
-        console.log(myPlaylistRes.data.data)
+        console.log(myPlaylistRes.data.data);
         this.setFollowArtistList(artistRes.data.data);
         this.setMyPlaylistList(myPlaylistRes.data.data);
         this.setFollowAlbumList(albumRes.data.data);
@@ -85,11 +85,37 @@ export const useActivityStore = defineStore("activity", {
         alert("Call API thất bại");
       }
     },
-    
+
+    async fetchUserData() {
+      try {
+        const authStore = useAuthStore();
+        const res = await axios.get(
+          `http://spotify_clone_api.test/api/profile/list-album`,
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+          }
+        );
+        const res2 = await axios.get(
+          `http://spotify_clone_api.test/api/profile/list-song`,
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+          }
+        );
+        this.myAlbumList = res.data.data;
+        this.mySongList = res2.data.data;
+      } catch (e) {
+        console.log(e);
+        alert("Call API thất bại");
+      }
+    },
+
     changeSearchKey(searchKeyValue) {
       this.searchKey = searchKeyValue;
     },
-
 
     setFollowArtistList(listArtist) {
       this.followArtistList = listArtist;

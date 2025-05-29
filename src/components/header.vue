@@ -45,15 +45,15 @@ async function logout() {
 			},
 		});
 		
+		useSong.audio?.pause();
+		useSong.$reset();
+		useView.$reset();
+		router.push('/login');
 		setTimeout(() => {
 			if (res.data.code === 200) {
-				useSong.audio?.pause();
-				useSong.$reset();
-				useView.$reset();
-				router.push('/login');
 				authStore.$reset();
 			}
-		}, 2000)
+		}, 4000)
 	} catch (e) {
 		console.log(e);
 		alert('Call API thất bại');

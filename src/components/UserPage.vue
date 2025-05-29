@@ -19,39 +19,10 @@ const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
 const { currentComponent, isFullscreen } = storeToRefs(useView)
-const { openEditProfile, openUploadSong } = storeToRefs(useModal)
-const { myPlaylistList, followArtistList, myAlbumList } = storeToRefs(useActivity)
+const { openEditProfile, openUploadSong, openEditAlbum } = storeToRefs(useModal)
+const { myPlaylistList, followArtistList, myAlbumList, mySongList } = storeToRefs(useActivity)
 
-const mySongList = ref([])
 
-async function getMyAlbum() {
-    try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/profile/list-album`, {
-            'headers': {
-                'Authorization': 'Bearer ' + authStore.user.token,
-            }
-        });
-        myAlbumList.value = res.data.data
-        console.log(myAlbumList.value)
-    } catch (e) {
-        console.log(e);
-        alert('Call API thất bại');
-    }
-}
-
-async function getMySong() {
-    try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/profile/list-song`, {
-            'headers': {
-                'Authorization': 'Bearer ' + authStore.user.token,
-            }
-        });
-        mySongList.value = res.data.data
-    } catch (e) {
-        console.log(e);
-        alert('Call API thất bại');
-    }
-}
 
 async function createAlbum() {
     try {
@@ -60,10 +31,9 @@ async function createAlbum() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        console.log(res.data)
         if (res.data.code == 200) {
             alert('Tạo album thành công');
-            getMyAlbum();
+            useActivity.fetchUserData();
         }
     } catch (e) {
         console.log(e);
@@ -71,12 +41,20 @@ async function createAlbum() {
     }
 }
 
+function albumCheck(){
+    if(myAlbumList.value.length > 0){
+        openUploadSong.value = true
+    }
+    else{
+        alert('Vui lòng tạo một album để chứa bài hát!!');
+    }
+}
+
 
 
 
 onMounted(() => {
-    getMySong();
-    getMyAlbum();
+    useActivity.fetchUserData();
 })
 </script>
 
@@ -104,31 +82,40 @@ onMounted(() => {
                 <ul class="text-gray-200 font-semibold text-[14px]">
                     <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="openEditProfile = true">Chỉnh sửa hồ
                         sơ</li>
-                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="openUploadSong = true">Đăng tải bài
+                    <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="albumCheck">Đăng tải bài
                         hát</li>
                     <li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="createAlbum">Tạo một album</li>
                 </ul>
             </span>
 
-            <div class="mt-8 mb-3">
+            <div class="mt-8 mb-3" v-if="myAlbumList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Album của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 ">
+                    <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer"
+                        @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                         <div class="w-full h-48 mb-2 rounded bg-zinc-700">
                             <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path">
                         </div>
-                        <p class="font-medium text-lg">{{ item.name }}</p>
-                        <p class="text-sm text-zinc-400">Năm {{ new Date(item.created_at).getFullYear() }}</p>
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="font-medium text-lg">{{ item.name }}</p>
+                                <p class="text-sm text-zinc-400">Năm {{ new Date(item.created_at).getFullYear() }}</p>
+                            </div>
+                            <button class=" hover:bg-white/5 p-2 rounded text-[#FFE5D6]/50 transition-all duration-200"
+                                @click.stop="console.log(item); useModal.setPlaylistEditData(item); openEditAlbum = true">
+                                <Icon icon="material-symbols:edit-square-rounded" class="text-xl " />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8 mb-3">
+            <div class="mt-8 mb-3" v-if="mySongList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Danh sách bài hát của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in mySongList" :key="item.id" class="flex-shrink-0 cursor-pointer"
+                    <div v-for="item in mySongList" :key="item.id" class="flex-shrink-0 cursor-pointer relative"
                         @click="useSong.playThisSong(item)">
-                        <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
+                        <div class="  w-32 h-32 mb-5 rounded-full bg-zinc-700">
                             <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path">
                         </div>
                         <div class="flex justify-between">
@@ -148,20 +135,21 @@ onMounted(() => {
 
 
 
-            <div>
+            <div v-if="myPlaylistList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Playlist của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="item in myPlaylistList" :key="item.id" class="flex-shrink-0 w-32 cursor-pointer"
                         @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                         <div class="w-full h-32 mb-2 rounded bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
+                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path"
+                                @error="event => event.target.src = defaultImgage">
                         </div>
                         <p class="font-medium">{{ item.name }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8">
+            <div class="mt-8" v-if="followArtistList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Đang theo dõi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="item in followArtistList" :key="item.id" class="flex-shrink-0 cursor-pointer"

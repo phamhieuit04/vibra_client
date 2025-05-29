@@ -15,16 +15,22 @@ const { user } = storeToRefs(authStore)
 const useModal = useModalStore()
 const { openUploadSong } = storeToRefs(useModal)
 const useActivity = useActivityStore();
-const { allCategories } = storeToRefs(useActivity);
+const { allCategories, myAlbumList } = storeToRefs(useActivity);
 
 const previewImg = ref(null)
 const fileInput = ref(null)
 const songDescrip = ref(null);
 const songAvt = ref(null)
 
-const showDropdown = ref(false)
+
+const showCateDropdown = ref(false)
 const selectedCategoryId = ref(null)
 const selectedCategoryName = ref('')
+
+const showAlbumDropdown = ref(false)
+const selectedAlbumId = ref(null)
+const selectedAlbumName = ref('')
+
 
 const txtInput = ref(null)
 const selectedTxtFile = ref(null)
@@ -56,15 +62,25 @@ function onTxtChoosed(event) {
     }
 }
 
-function toggleDropdown() {
-    showDropdown.value = !showDropdown.value
+function toggleCateDropdown() {
+    showCateDropdown.value = !showCateDropdown.value
+}
+function toggleAlbumDropdown() {
+    showAlbumDropdown.value = !showAlbumDropdown.value
 }
 
 function selectCategory(cate) {
     selectedCategoryId.value = cate.id
     selectedCategoryName.value = cate.name
-    showDropdown.value = false
+    showCateDropdown.value = false
     console.log(selectedCategoryId.value)
+}
+function selectAlbum(album) {
+    selectedAlbumId.value = album.id
+    selectedAlbumName.value = album.name
+    showAlbumDropdown.value = false
+    console.log(album)
+    console.log(selectedAlbumId.value)
 }
 
 function onImgChoosed(event) {
@@ -81,13 +97,14 @@ function chooseImg() {
 
 
 const uploadSong = async () => {
-    if (!songAvt.value || !selectedTxtFile.value || !selectedSongFile.value) {
+    if (!songAvt.value || !selectedTxtFile.value || !selectedSongFile.value || !selectedAlbumId.value) {
         alert('Vui lòng điền đủ thông tin');
         return;
     }
     const formData = new FormData()
     formData.append('category-id', selectedCategoryId.value)
     formData.append('description', songDescrip.value)
+    formData.append('playlist-id', selectedAlbumId.value)
     if (songAvt.value && selectedTxtFile.value && selectedSongFile.value) {
         formData.append('song', selectedSongFile.value)
         formData.append('lyric', selectedTxtFile.value)
@@ -101,7 +118,7 @@ const uploadSong = async () => {
             },
         });
         if (res.data.code == 200) {
-            console.log(res)
+            useActivity.fetchUserData();
             alert('Chỉnh sửa thành công');
         }
     } catch (e) {
@@ -145,18 +162,43 @@ onMounted(() => {
                     <input v-model="songDescrip" class=" bg-zinc-800 float-end text-white rounded ml-6 mb-3 px-4 py-2"
                         placeholder="Mô tả bài hát" />
 
+
+
+
+
                     <div class="relative">
-                        <button @click="toggleDropdown"
+                        <button @click="toggleCateDropdown"
                             class="px-4 py-2 mb-3 w-52 float-end bg-gray-700 text-white rounded">
                             {{ selectedCategoryName || 'Chọn thể loại' }}
                         </button>
-                        <ul v-if="showDropdown" class="absolute z-10 mt-2 ml-5 bg-zinc-800 shadow-md rounded w-full">
+                        <ul v-if="showCateDropdown"
+                            class="absolute z-10 mt-2 ml-5 bg-zinc-800 shadow-md rounded w-full">
                             <li v-for="cate in allCategories" :key="cate.id" @click="selectCategory(cate)"
                                 class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
                                 {{ cate.name }}
                             </li>
                         </ul>
                     </div>
+
+
+                    <div class="relative">
+                        <button @click="toggleAlbumDropdown"
+                            class="px-4 py-2 mb-3 w-52 float-end bg-gray-700 text-white rounded">
+                            {{ selectedAlbumName || 'Chọn album' }}
+                        </button>
+                        <ul v-if="showAlbumDropdown"
+                            class="absolute z-10 mt-2 ml-5 top-20 bg-zinc-800 shadow-md rounded w-full">
+                            <li v-for="album in myAlbumList" :key="album.id" @click="selectAlbum(album)"
+                                class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                                {{ album.name }}
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+
+
 
                     <button @click="chooseTxt"
                         class="bg-zinc-800 float-end w-52 text-white rounded ml-4 mb-3 px-4 py-2">{{ selectedTxtFile ?

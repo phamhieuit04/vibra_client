@@ -90,7 +90,7 @@ function onSongDel(trackId) {
     reloadKey.value++;
 }
 
-function onPlaylistSongDel(trackId){
+function onPlaylistSongDel(trackId) {
     FetchPlaylistData();
 }
 
@@ -156,6 +156,8 @@ onMounted(() => {
                         Date(playlistData.created_at).getFullYear() : "" }}</div>
                     <Icon icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
                     <span class="flex text-[13px] mt-5">{{ playlistData.total_song }} bài hát</span>
+                    <Icon v-if="playlistData.type == 1" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
+                    <span v-if="playlistData.type == 1" class="flex text-[13px] mt-5">{{ playlistData.price }} vnd</span>
                 </div>
             </div>
         </div>
@@ -172,7 +174,8 @@ onMounted(() => {
         <div class="mb-4"></div>
         <ul class="w-full" :key="reloadKey">
             <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistData" :track="track"
-                :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel" @deletePlaylistSong="onPlaylistSongDel" />
+                :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel"
+                @deletePlaylistSong="onPlaylistSongDel" />
         </ul>
     </div>
 </template>

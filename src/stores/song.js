@@ -102,6 +102,7 @@ export const useSongStore = defineStore("song", {
         this.playThisSong(nextSong);
         this.fetchIndex();
       } else {
+        this.playThisSong(this.currentTrack);
         this.fetchIndex();
         return;
       }
