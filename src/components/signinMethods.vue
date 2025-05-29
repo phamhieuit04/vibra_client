@@ -18,10 +18,11 @@
 </template>
 
 <script>
-	import { Icon } from '@iconify/vue';
 	import axios from 'axios';
+	import { Icon } from '@iconify/vue';
 	import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 	import { getMessaging, getToken } from "firebase/messaging";
+	import { fcmKeyPair } from '@/services/firebase';
 	import { useAuthStore } from '@/stores/auth';
 
 	export default {
@@ -70,7 +71,7 @@
 				})
 			},
 			getDeviceToken() {
-				getToken(this.messaging, { vapidKey: 'BLbSr8HLur74Uzp071lTy_wW0fmj572jcrGf_JEuldrqSoQQLlyVXgoRWwxpTv5FeFM4PX1OQDChD_ztSclpxYs' })
+				getToken(this.messaging, { vapidKey: fcmKeyPair })
 					.then((currentToken) => {
 						if (currentToken) {
 							this.deviceToken = currentToken;
