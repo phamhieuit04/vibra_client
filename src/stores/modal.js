@@ -8,6 +8,7 @@ export const useModalStore = defineStore("modal", {
     openEditPlaylist: false,
     openUploadSong: false,
     openEditAlbum: false,
+    loading: false,
   }),
 
   actions: {

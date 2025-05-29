@@ -7,6 +7,7 @@ import defaultImgage from '@/assets/default.jpg'
 import { useAuthStore } from '@/stores/auth';
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
+import { useModalStore } from "@/stores/modal";
 import { useActivityStore } from "@/stores/activity";
 
 const useSong = useSongStore();
@@ -14,6 +15,7 @@ const useSong = useSongStore();
 let openMenu = ref(false);
 
 const useActivity = useActivityStore()
+const useModal = useModalStore();
 const useView = useViewStore()
 const authStore = useAuthStore();
 const router = useRouter();
@@ -45,15 +47,21 @@ async function logout() {
 			},
 		});
 		
-		useSong.audio?.pause();
+		if(useSong.isPlaying){
+			useSong.audio?.pause();
+		}
 		useSong.$reset();
 		useView.$reset();
-		router.push('/login');
+		useModal.loading = true;
 		setTimeout(() => {
 			if (res.data.code === 200) {
+				router.push('/login');
 				authStore.$reset();
 			}
-		}, 4000)
+		}, 2000)
+		setTimeout(() => {
+			useModal.loading = false
+		}, 3000)
 	} catch (e) {
 		console.log(e);
 		alert('Call API thất bại');
