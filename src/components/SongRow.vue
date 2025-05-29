@@ -63,7 +63,7 @@ onMounted(() => {
 </script>
 <template>
     <li class="flex items-center justify-between rounded-md hover:bg-[#2A2929] cursor-pointer" @mouseenter="isHover = true"
-        @mouseleave="isHover = false" @click="useSong.playOrPauseThisSong(playlist, track)">
+        @mouseleave="isHover = false" @click="useSong.playThisSong(track)">
         <div class="flex items-center w-full py-1.5">
             <div v-if="isHover" class="w-[40px] ml-[14px] mr-[6px] cursor-pointer">
                 <Icon icon="material-symbols:play-arrow-rounded" v-if="!isPlaying" class="size-7 text-white"/>
@@ -88,7 +88,10 @@ onMounted(() => {
             <div v-if="isTrackTime" class="text-xs mx-5 text-gray-400">
                 {{ isTrackTime }}
             </div>
-            <button v-if="!isFav" @click="unloveThisSong" class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+            <button @click.stop="useSong.addSongToWaitlist(track);" class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
+            </button>
+            <button v-if="!isFav" @click.stop="unloveThisSong" class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                 <Icon icon="material-symbols:delete-rounded" class=" text-2xl" />
             </button>
         </div>

@@ -34,6 +34,7 @@ function chooseImg() {
 
 const saveProfile = async () => {
   const formData = new FormData()
+  
   formData.append('name', playlistName.value)
   if (thumbnail.value) {
     formData.append('thumbnail', thumbnail.value)

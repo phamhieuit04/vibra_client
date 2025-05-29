@@ -13,6 +13,7 @@ import ProfileModal from "@/components/ProfileModal.vue";
 import PlaylistModal from "@/components/PlaylistModal.vue";
 import SongModal from "@/components/SongModal.vue";
 import SidePanel from "@/components/SidePanel.vue";
+import WaitListPanel from "@/components/WaitListPanel.vue";
 import CategoriesSongPage from "@/components/CategoriesSongPage.vue";
 
 import { useSongStore } from "@/stores/song";
@@ -25,7 +26,7 @@ const useSong = useSongStore()
 const { currentTrack } = storeToRefs(useSong)
 
 const useView = useViewStore()
-const { currentComponent, isFullscreen, showSidePanel } = storeToRefs(useView)
+const { currentComponent, isFullscreen, showSidePanel, showWaitlistPanel } = storeToRefs(useView)
 
 const useModal = useModalStore()
 const { openEditProfile, openEditPlaylist, openUploadSong } = storeToRefs(useModal)
@@ -51,13 +52,14 @@ onMounted(() => {
   <div class="bg-black">
     <Header />
     <Sidebar />
-    <div :class="['transition-all duration-300 fixed top-[64px] overflow-auto h-full bg-[#1D1512] rounded-[24px]',
+    <div :class="['transition-all duration-300 fixed top-[64px] h-[83.4%] bg-[#1D1512] rounded-[24px]',
       showSidePanel ? 'left-[23%] w-[57.4%]' : 'left-[23%] w-[76.6%]']">
       <component :is="components[currentComponent]" />
     </div>
     <div v-if="showSidePanel"
-      class="fixed top-[64px] left-[80.7%] w-[19%] overflow-auto h-full bg-[#1D1512] rounded-[24px]">
-      <SidePanel/>
+      class="fixed top-[64px] left-[80.7%] w-[19%] overflow-auto h-[83.4%] bg-[#1D1512] rounded-[24px]">
+      <WaitListPanel v-if="useView.sidePanelState == 'waitlist'"/>
+      <SidePanel v-else/>
     </div>
     <div ref="player">
       <SongPage v-if="isFullscreen" />

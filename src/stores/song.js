@@ -11,6 +11,7 @@ export const useSongStore = defineStore("song", {
     currentPlaylist: null,
     vol: 80,
     currentTrack: {
+      id: 0,
       name: "Bài hát chào người mới",
       thumbnail_path: defaultImgage,
       author: {
@@ -18,23 +19,11 @@ export const useSongStore = defineStore("song", {
       },
       song_path: defaultSong,
     },
+    currentWaitlist: [],
+    prevList: [],
   }),
   actions: {
-    setPlaylist(playlist) {
-      this.currentPlaylist = playlist;
-    },
-
-    setVolume(range) {
-      this.vol = range;
-    },
-
-    loadSingleSong(track) {
-      const playlistSong = [track];
-      this.loadSong(playlistSong, track);
-    },
-
-    loadSong(playlist, track) {
-      this.currentPlaylist = playlist;
+    playThisSong(track) {
       this.currentTrack = track;
 
       if (this.audio && this.audio.src) {
@@ -72,6 +61,70 @@ export const useSongStore = defineStore("song", {
       }, 200);
     },
 
+    addSongToWaitlist(track) {
+      track.index = this.currentWaitlist.length;
+      this.currentWaitlist.push(track);
+      this.fetchIndex();
+    },
+    addPlaylistToWaitlist(playlist) {
+      for (let i = playlist.length - 1; i >= 0; i--) {
+        this.currentWaitlist.unshift(playlist[i]);
+      }
+      this.fetchIndex();
+    },
+
+    addAndPlayThisPlaylist(playlist) {
+      console.log(playlist);
+      for (let i = playlist.length - 1; i > 0; i--) {
+        this.currentWaitlist.unshift(playlist[i]);
+      }
+      this.playThisSong(playlist[0]);
+      this.fetchIndex();
+    },
+
+    deleteSongFromWaitlist(track) {
+      console.log(track.index);
+      this.currentWaitlist.splice(track.index, 1);
+      this.fetchIndex();
+    },
+
+    fetchIndex() {
+      for (let i = 0; i < this.currentWaitlist.length; i++) {
+        this.currentWaitlist[i].index = i;
+      }
+    },
+
+    nextSongs() {
+      if (this.currentWaitlist.length > 0) {
+        this.prevList.unshift(this.currentTrack);
+        const nextSong = this.currentWaitlist.shift();
+        this.playThisSong(nextSong);
+        this.fetchIndex();
+      } else {
+        this.fetchIndex();
+        return;
+      }
+    },
+
+    prevSongs() {
+      if (this.prevList.length > 0) {
+        const prevSong = this.prevList.shift();
+        this.currentWaitlist.unshift(this.currentTrack);
+        this.playThisSong(prevSong);
+        this.fetchIndex();
+      } else {
+        return;
+      }
+    },
+
+    playOrPauseThisSong(track) {
+      if (!this.audio || !this.audio.src || this.currentTrack.id !== track.id) {
+        this.playThisSong(track);
+        return;
+      }
+      this.playOrPauseSong();
+    },
+
     playOrPauseSong() {
       if (this.audio.paused) {
         this.isPlaying = true;
@@ -82,39 +135,22 @@ export const useSongStore = defineStore("song", {
       }
     },
 
-    playOrPauseThisSong(playlist, track) {
-      if (!this.audio || !this.audio.src || this.currentTrack.id !== track.id) {
-        this.loadSong(playlist, track);
-        return;
-      }
-      this.playOrPauseSong();
+
+
+
+
+
+
+
+    setPlaylist(playlist) {
+      this.currentPlaylist = playlist;
     },
 
-    prevSong(currentTrack, playlist) {
-      if (playlist === null) return;
-      const currentIndex = playlist.findIndex(
-        (song) => song.id === currentTrack.id
-      );
-      if (currentIndex === 0) return;
-      let track = playlist[currentIndex - 1];
-      this.loadSong(playlist, track);
+    setVolume(range) {
+      this.vol = range;
     },
 
-    nextSong(currentTrack, playlist) {
-      if (playlist == null) return;
-      const currentIndex = playlist.findIndex(
-        (song) => song.id === currentTrack.id
-      );
-      if (currentIndex === playlist.length - 1) {
-        this.playFromFirst(playlist);
-      } else {
-        this.loadSong(playlist, playlist[currentIndex + 1]);
-      }
-    },
-
-    playFromFirst(playlist) {
-      this.loadSong(playlist, playlist[0]);
-    },
+    
 
     resetState() {
       isPlaying = false;

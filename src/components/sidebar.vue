@@ -17,7 +17,7 @@
 	const useModal = useModalStore();
 	const useActivity = useActivityStore();
 
-	const { followArtistList, followAlbumList, favSongList, myPlaylistList, userAction } = storeToRefs(useActivity)
+	const { followArtistList, followAlbumList, favSongList, myPlaylistList } = storeToRefs(useActivity)
 	const { openEditPlaylist } = storeToRefs(useModal)
 
 	const filter = ref('all');

@@ -42,10 +42,14 @@ onMounted(() => {
     <div class="absolute h-[4px] z-[-0] mt-[6px] inset-y-0 left-0 w-full bg-gray-500 rounded-full"></div>
   </div>
   <div class=" ml-4">
-    <div v-if="!isFullscreen">
-      <Icon icon="ri:video-line" v-if="!useView.showSidePanel" class="text-white size-6 cursor-pointer"
-        @click="useView.toggleSidePanel" />
-      <Icon icon="ri:video-fill" v-else class="text-white size-6 cursor-pointer" @click="useView.toggleSidePanel" />
+    <div v-if="!isFullscreen" class="flex">
+      <Icon icon="material-symbols:home-storage-outline" v-if="!useView.showSidePanel || useView.sidePanelState !== 'waitlist'" class="text-white mr-3 size-7 cursor-pointer"
+        @click="useView.showSidePanel = true; useView.sidePanelState = 'waitlist'" />
+      <Icon icon="material-symbols:home-storage" v-if="useView.showSidePanel && useView.sidePanelState == 'waitlist'" class="text-white mr-3 size-7 cursor-pointer" @click="useView.showSidePanel = false; useView.sidePanelState = ''" />
+
+      <Icon icon="ri:video-line" v-if="!useView.showSidePanel || useView.sidePanelState !== 'data'" class="text-white size-7 cursor-pointer"
+        @click="useView.showSidePanel = true; useView.sidePanelState = 'data'" />
+      <Icon icon="ri:video-fill" v-if="useView.showSidePanel && useView.sidePanelState == 'data'" class="text-white size-7 cursor-pointer" @click="useView.showSidePanel = false; useView.sidePanelState = ''" />
 
     </div>
   </div>

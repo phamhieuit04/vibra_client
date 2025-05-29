@@ -11,6 +11,7 @@ import { useModalStore } from "@/stores/modal";
 import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
 import PlayerFunc from "./PlayerFunc.vue";
+import PlaylistOptionRow from "./PlaylistOptionRow.vue";
 
 const useView = useViewStore();
 const authStore = useAuthStore();
@@ -29,6 +30,7 @@ let seekerContainer = ref(null)
 let range = ref(0)
 
 const isLoved = ref(false) 
+
 const openMenu = ref(false)
 
 async function loveThisSong() {
@@ -154,7 +156,7 @@ watch(() => audio.value, () => {
 watch(() => isTrackTimeCurrent.value, (time) => {
     if(!currentTrack.value) return;
     if (time && time == isTrackTimeTotal.value) {
-        useSong.nextSong(currentTrack.value, currentPlaylist.value)
+        useSong.nextSongs();
     }
 })
 
@@ -184,14 +186,8 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 </a>
             </div>
             <span v-if="openMenu" class="absolute bg-[#282828] w-[200px] z-20 left-[250px] bottom-[68px]  p-1">
-                <div v-for="item in myPlaylistList" :key="item.id" class="text-gray-200 font-semibold text-[14px]">
-                    <div class="flex hover:bg-[#3E3D3D] my-1">
-                        <div class="px-3 py-2  cursor-pointer">
-                            {{ item.playlist.name }}
-                        </div>
-                        <!-- <button v-if="true" class="text-white bg-white/10 p-1 rounded">{{ isTrackInPlaylist(playlist) ? 'Xóa' : 'Thêm' }}</button>
-                        <button v-else class="text-white bg-white/10 p-1 rounded">Xóa</button> -->
-                    </div>
+                <div  class="text-gray-200 font-semibold text-[14px]">
+                    <PlaylistOptionRow v-for="item in myPlaylistList" :key="item.id" :item="item"/>
                 </div>
             </span>
         </div>
@@ -199,15 +195,15 @@ watch(() => isTrackTimeCurrent.value, (time) => {
         <div class="max-w-[35%] mx-auto w-2/4">
             <div class=" flex-col items-center justify-center">
                 <div class="flex items-center justify-center h-[30px]">
-                    <button class="mx-2" @click="useSong.prevSong(currentTrack, currentPlaylist)">
+                    <button class="mx-2" @click="useSong.prevSongs">
                         <Icon icon="fa6-solid:backward-step" class=" text-[#FFE5D6] size-7"/>
                     </button>
                     <button class="p-1 rounded-full mx-3"
-                        @click="useSong.playOrPauseThisSong(currentPlaylist, currentTrack)">
+                        @click="useSong.playOrPauseThisSong(currentTrack)">
                         <Icon icon="material-symbols:play-circle-rounded" v-if="!isPlaying" class="size-12 text-white"/>
                         <Icon icon="material-symbols:pause-circle" v-else class="size-12 text-white"/>
                     </button>
-                    <button class="mx-2" @click="useSong.nextSong(currentTrack, currentPlaylist)">
+                    <button class="mx-2" @click="useSong.nextSongs();">
                         <Icon icon="fa6-solid:forward-step" class=" text-[#FFE5D6] size-7"/>
                     </button>
                 </div>

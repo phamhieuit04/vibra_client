@@ -6,6 +6,8 @@ export const useViewStore = defineStore("view", {
     page: null,
     isFullscreen: false,
     showSidePanel: false,
+    sidePanelState: '',
+    showWaitlistPanel: false,
     categoriesData: null,
 
     playlistData: null,
@@ -47,6 +49,10 @@ export const useViewStore = defineStore("view", {
 
     toggleSidePanel() {
       this.showSidePanel = !this.showSidePanel;
+    },
+
+    toggleWaitlistPanel(){
+      this.showWaitlistPanel = !this.showWaitlistPanel;
     },
 
     setFullscreenPage(page){

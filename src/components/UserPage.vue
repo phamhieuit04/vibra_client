@@ -127,11 +127,19 @@ onMounted(() => {
                 <h2 class="mb-4 text-lg font-semibold">Danh sách bài hát của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
                     <div v-for="item in mySongList" :key="item.id" class="flex-shrink-0 cursor-pointer"
-                        @click="useSong.loadSingleSong(item)">
+                        @click="useSong.playThisSong(item)">
                         <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
                             <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path">
                         </div>
-                        <p class="text-sm text-zinc-400">{{ item.name }}</p>
+                        <div class="flex justify-between">
+                            <div>
+                                <p class="font-medium ">{{ item.name }}</p>
+                            </div>
+                            <button @click.stop="useSong.addSongToWaitlist(item);"
+                                class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                                <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
+                            </button>
+                        </div>
 
                     </div>
 

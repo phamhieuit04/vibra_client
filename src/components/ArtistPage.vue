@@ -21,7 +21,7 @@ const useActivity = useActivityStore();
 const { artistData } = storeToRefs(useView);
 const { followArtistList } = storeToRefs(useActivity)
 
-const isFollowed = ref(false) 
+const isFollowed = ref(false)
 const thisArtistListSong = ref([])
 const thisArtistListAlbum = ref([])
 
@@ -105,18 +105,14 @@ onMounted(() => {
 </script>
 <template>
     <div
-        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style" >
+        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style">
 
         <div class="relative items-center h-96">
-            <img 
-                :src="artistData.avatar_path"
-                alt="" 
-                class="absolute z-0 object-cover w-full h-full"
-            />
+            <img :src="artistData.avatar_path" alt="" class="absolute z-0 object-cover w-full h-full" />
 
-            <div class="relative z-10 flex flex-col justify-end h-full p-16 space-y-2">             
+            <div class="relative z-10 flex flex-col justify-end h-full p-16 space-y-2">
                 <p class="flex text-lg font-semibold ">
-                    <Icon icon="mdi:check-decagram" class="mr-2 text-2xl text-blue-500" /> 
+                    <Icon icon="mdi:check-decagram" class="mr-2 text-2xl text-blue-500" />
                     Nghệ sĩ được xác minh
                 </p>
                 <h1 class="font-black text-8xl">{{ artistData.name }}</h1>
@@ -129,17 +125,20 @@ onMounted(() => {
                 <div class="flex items-center mb-5 space-x-6">
                     <button
                         class="flex items-center justify-center w-14 h-14 rounded-full bg-[#BC4D15] hover:bg-black transition group">
-                        <Icon 
-                            icon="mdi:play" 
-                            class="text-black ml-0.5 text-5xl group-hover:text-[#BC4D15]" 
-                            @click="useSong.playFromFirst(thisArtistListSong)"
-                        />
+                        <Icon icon="mdi:play" class="text-black ml-0.5 text-5xl group-hover:text-[#BC4D15]"
+                            @click="useSong.addAndPlayThisPlaylist(thisArtistListSong)" />
+                    </button>
+                    <button @click.stop="useSong.addPlaylistToWaitlist(thisArtistListSong)"
+                        class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                        <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
                     </button>
 
-                    <button v-if="!isFollowed" @click="followThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                    <button v-if="!isFollowed" @click="followThisArtist"
+                        class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
                         Theo dõi
                     </button>
-                    <button v-else @click="unfollowThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                    <button v-else @click="unfollowThisArtist"
+                        class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
                         Hủy theo dõi
                     </button>
 
@@ -152,33 +151,42 @@ onMounted(() => {
                 <div class="w-full">
                     <h2 class="text-2xl font-semibold pl-14 ">Phổ biến</h2>
                     <div class="px-12 ">
-                        <div v-for="item, index in thisArtistListSong" :key="item.id" @click="useSong.playOrPauseThisSong(thisArtistListSong, item)"
+                        <div v-for="item, index in thisArtistListSong" :key="item.id"
+                            @click="useSong.playThisSong(item)"
                             class="flex items-center justify-between hover:bg-[#2a1d18] py-2 pr-4 rounded-lg transition cursor-pointer ">
                             <div class="flex items-center space-x-4">
                                 <span class="w-5 text-right text-white">{{ ++index }}</span>
-                                    <img  class="object-cover w-16 h-16 rounded-md" :src="item.thumbnail_path" >
+                                <img class="object-cover w-16 h-16 rounded-md" :src="item.thumbnail_path">
                                 <span class="font-medium text-white">{{ item.name }}</span>
                             </div>
                             <div class="flex items-center space-x-8 text-sm text-white">
                                 <span>{{ item.total_played }} lượt nghe</span>
+                                <button @click.stop="useSong.addSongToWaitlist(item)"
+                                    class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                                    <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
+                                </button>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-          <div class="mt-8 ">
-            <h2 class="mb-3 text-2xl font-semibold pl-14">Giới thiệu về nghệ sĩ</h2>
-            <div class="">
-                <div class="w-full mb-3 rounded-3xl h-[30rem] flex flex-col justify-end p-12 relative overflow-hidden hover:scale-[102%] duration-200 ease-in-out cursor-pointer">
-                    <img class="absolute inset-0 object-cover w-full h-full rounded-3xl" :src="artistData.avatar_path" >
-                    <div class="relative z-10">
-                        <p class="text-2xl font-semibold text-white">{{ artistData.followers }} người theo dõi trên nền tảng</p>
-                        <p class="text-xl font-semibold text-white">{{ artistData.description }}</p>
+            <div class="mt-8 ">
+                <h2 class="mb-3 text-2xl font-semibold pl-14">Giới thiệu về nghệ sĩ</h2>
+                <div class="">
+                    <div
+                        class="w-full mb-3 rounded-3xl h-[30rem] flex flex-col justify-end p-12 relative overflow-hidden hover:scale-[102%] duration-200 ease-in-out cursor-pointer">
+                        <img class="absolute inset-0 object-cover w-full h-full rounded-3xl"
+                            :src="artistData.avatar_path">
+                        <div class="relative z-10">
+                            <p class="text-2xl font-semibold text-white">{{ artistData.followers }} người theo dõi trên
+                                nền tảng</p>
+                            <p class="text-xl font-semibold text-white">{{ artistData.description }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
             <div class="mt-8 ">
                 <div class="mb-2 space-y-2 font-semibold pl-14">
@@ -191,7 +199,7 @@ onMounted(() => {
                             class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 "
                             @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                             <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" >
+                                <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path">
                             </div>
                             <p class="text-xl font-semibold">{{ item.name }}</p>
                             <p class="text-sm ">Năm {{ new Date(item.created_at).getFullYear() }}</p>

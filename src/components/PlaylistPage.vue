@@ -20,19 +20,37 @@ const { followAlbumList } = storeToRefs(useActivity)
 const { playlistData } = storeToRefs(useView)
 const playlistSong = ref([])
 const reloadKey = ref(0);
-const isFollowed = ref(false) 
+const isFollowed = ref(false)
 
 async function FetchPlaylistData() {
-    try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/playlist/show/${playlistData.value.id}`, {
-            'headers': {
-                'Authorization': 'Bearer ' + authStore.user.token,
-            }
-        });
-        playlistSong.value = res.data.data
-    } catch (e) {
-        console.log(e);
-        alert('Call API thất bại');
+    if (playlistData.value.type == 1) {
+        try {
+            const res = await axios.get(`http://spotify_clone_api.test/api/playlist/show/${playlistData.value.id}`, {
+                'headers': {
+                    'Authorization': 'Bearer ' + authStore.user.token,
+                }
+            });
+            playlistSong.value = res.data.data
+        } catch (e) {
+            console.log(e);
+            alert('Call API thất bại');
+        }
+    } else {
+        try {
+            const res = await axios.get(`http://spotify_clone_api.test/api/library/list-playlist-song/${playlistData.value.id}`, {
+                'headers': {
+                    'Authorization': 'Bearer ' + authStore.user.token,
+                }
+            });
+            console.log(res.data.data)
+            const rawList = res.data.data;
+            const onlySongs = rawList.map((item) => item.song);
+            playlistSong.total_song = onlySongs.value
+            playlistSong.value = onlySongs
+        } catch (e) {
+            console.log(e);
+            alert('Call API thất bại');
+        }
     }
 }
 
@@ -68,19 +86,19 @@ async function removeFromLibrary() {
 function onSongDel(trackId) {
     playlistSong.value = playlistData.value.songs
     playlistSong.value = playlistSong.value.filter(t => t.id !== trackId);
+    playlistData.value.songs = playlistSong.value
     reloadKey.value++;
-    useSong.loadSong(playlistSong.value, useSong.currentTrack)
 }
 
 watch(() => playlistData.value, () => {
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
-        if (album.playlist_id === playlistData.value.id) {
-            isFollowed.value = true
-        }
-    })
-    console.log('playlist data thay đổi');
+            if (album.playlist_id === playlistData.value.id) {
+                isFollowed.value = true
+            }
+        })
+        console.log('playlist data thay đổi');
     } else {
         playlistSong.value = playlistData.value.songs
     }
@@ -92,40 +110,46 @@ onMounted(() => {
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
-        if (album.playlist_id === playlistData.value.id) {
-            isFollowed.value = true
-        }
-    })
-    console.log(followAlbumList.value);
-    console.log(playlistData.value)
+            if (album.playlist_id === playlistData.value.id) {
+                isFollowed.value = true
+            }
+        })
     } else {
         playlistSong.value = playlistData.value.songs
     }
 })
 </script>
 <template>
-    <div class="p-8">
-        <div class="py-15"></div>
+    <div class="p-8 overflow-y-auto h-[calc(100vh-12rem)] scrollbar-none">
 
-        <div class="relative flex items-center w-full h-full">
+        <div class="relative flex items-center w-full">
             <div class="w-48 h-48 bg-gray-500 rounded-xl aspect-square">
                 <img class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="playlistData.thumbnail_path"
                     @error="event => event.target.src = defaultImgage">
             </div>
             <div class="w-[100% - 192px] ml-5">
-                <div class="text-lg font-semibold text-white"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}</div>
-                <div class="flex-1 font-bold text-white break-normal whitespace-pre text-7xl wrap-normal md:break-all md:whitespace-normal">
+                <div class="text-lg font-semibold text-white"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}
+                </div>
+                <div
+                    class="flex-1 font-bold text-white break-normal whitespace-pre text-7xl wrap-normal md:break-all md:whitespace-normal">
                     {{ playlistData.name }}
                 </div>
 
                 <div class="text-gray-300 mt-[28px] flex">
-                    <Icon v-if="playlistData.type == 1 && !isFollowed" icon="material-symbols:add-circle-outline-rounded" class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" 
-                        @click="addToLibrary" />
-                    <Icon v-else-if="playlistData.type == 1" icon="material-symbols:check-circle" class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" 
-                        @click="removeFromLibrary" />
+                    <Icon v-if="playlistData.type == 1 && !isFollowed"
+                        icon="material-symbols:add-circle-outline-rounded"
+                        class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" @click="addToLibrary" />
+                    <Icon v-else-if="playlistData.type == 1" icon="material-symbols:check-circle"
+                        class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" @click="removeFromLibrary" />
+
+                    <button @click.stop="useSong.addPlaylistToWaitlist(playlistSong)"
+                        class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                        <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
+                    </button>
                     <div class="flex text-[13px] mt-5">{{ playlistData.author?.name }}</div>
                     <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
-                    <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new Date(playlistData.created_at).getFullYear() : "" }}</div>
+                    <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new
+                        Date(playlistData.created_at).getFullYear() : "" }}</div>
                     <Icon icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
                     <span class="flex text-[13px] mt-5">{{ playlistData.total_song }} bài hát</span>
                 </div>
@@ -143,8 +167,8 @@ onMounted(() => {
         <div class="border-b border-b-[#A2A2A2] mt-2"></div>
         <div class="mb-4"></div>
         <ul class="w-full" :key="reloadKey">
-            <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistSong" :track="track" :index="++index" :isFav="!playlistData.isFav"
-                @delete-fav-song="onSongDel" />
+            <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistSong" :track="track"
+                :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel" />
         </ul>
     </div>
 </template>

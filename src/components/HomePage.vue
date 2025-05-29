@@ -71,17 +71,20 @@ onMounted(() => {
 
 </script>
 <template>
-    <div class="py-8 space-y-10 text-white ">
-        <div class="px-8 overflow-auto scrollbar-style h-[calc(100vh-180px)]">
-
+    <div
+        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style">
+        <div class="px-8 py-8 overflow-auto scrollbar-style h-[calc(100vh-12rem)]">
             <div class="text-[#FFE5D6] mb-8">
                 <h2 class="mb-1 text-2xl font-semibold">Album phổ biến</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
-                        <div v-for="item in popularAlbum" :key="popularAlbum.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
-                            <div @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
+                        <div v-for="item in popularAlbum" :key="popularAlbum.id"
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
+                            <div
+                                @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                                 <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
-                                    <img class="object-cover rounded-xl w-48 h-48" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
+                                    <img class="object-cover rounded-xl w-48 h-48" :src="item.thumbnail_path" alt=""
+                                        @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.total_song }} bài hát</p>
@@ -95,10 +98,13 @@ onMounted(() => {
                 <h2 class="mb-1 text-2xl font-semibold">Nghệ sĩ với nhiều người theo dõi</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
-                        <div v-for="item in topArtist" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
-                            <div @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item);">
+                        <div v-for="item in topArtist" :key="item.id"
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
+                            <div
+                                @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item);">
                                 <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
-                                    <img class="rounded-full w-48 h-48 object-cover" :src="item.avatar_path" alt="" @error="event => event.target.src = defaultImgage">
+                                    <img class="rounded-full w-48 h-48 object-cover" :src="item.avatar_path" alt=""
+                                        @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.followers }} người theo dõi</p>
@@ -113,13 +119,23 @@ onMounted(() => {
                 <h2 class="mb-1 text-2xl font-semibold">Bài hát có nhiều lượt nghe</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
-                        <div v-for="item in topSong" :key="item.id" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105" 
-                            @click="useSong.playOrPauseThisSong(topSong, item);">
+                        <div v-for="item in topSong" :key="item.id"
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105"
+                            @click="useSong.playThisSong(item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
-                                <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt="" @error="event => event.target.src = defaultImgage">
+                                <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt=""
+                                    @error="event => event.target.src = defaultImgage">
                             </div>
-                            <p class="font-medium ">{{ item.name }}</p>
-                            <p class="text-sm ">{{ item.total_played }} lượt nghe</p>
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="font-medium ">{{ item.name }}</p>
+                                    <p class="text-sm ">{{ item.total_played }} lượt nghe</p>
+                                </div>
+                                <button @click.stop="useSong.addSongToWaitlist(item);"
+                                    class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                                    <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
