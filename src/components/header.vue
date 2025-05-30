@@ -99,7 +99,7 @@ onMounted(() => {
 					:style="{ backgroundColor: useView.currentColor }">
 				</div>
 			</div>
-			<div v-if="openColorMenu" class="absolute rounded-xl h-10 bg-black left-24 flex items-center transition-all duration-300">
+			<div v-if="openColorMenu" class="absolute rounded-xl h-10 bg-black left-24 flex items-center transition duration-500">
 				<div class="w-6 h-6 rounded-full mx-2 cursor-pointer hover:scale-110" 
 					v-for="color in colorList"
 					:style="{ backgroundColor: color }"
