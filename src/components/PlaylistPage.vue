@@ -42,7 +42,6 @@ async function FetchPlaylistData() {
                     'Authorization': 'Bearer ' + authStore.user.token,
                 }
             });
-            console.log(res.data.data)
             const rawList = res.data.data;
             const onlySongs = rawList.map((item) => item.song);
             playlistSong.total_song = onlySongs.value
@@ -83,6 +82,25 @@ async function removeFromLibrary() {
     }
 }
 
+async function downloadThisPlaylist() {
+    if (!playlistData.value.id) return
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/payment/create-bill?playlist_id=${playlistData.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        if (res.data) {
+            window.location.href = res.data.data;
+        } else {
+            alert('Không lấy được link thanh toán');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Gặp lỗi khi tạo link thanh toán');
+    }
+}
+
 function onSongDel(trackId) {
     playlistSong.value = playlistData.value.songs
     playlistSong.value = playlistSong.value.filter(t => t.id !== trackId);
@@ -95,6 +113,7 @@ function onPlaylistSongDel(trackId) {
 }
 
 watch(() => playlistData.value, () => {
+    console.log(playlistData.value)
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
@@ -111,6 +130,7 @@ watch(() => playlistData.value, () => {
 
 
 onMounted(() => {
+    console.log(playlistData.value)
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
@@ -150,6 +170,10 @@ onMounted(() => {
                         class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                         <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
                     </button>
+                    <button v-if="playlistData.type == 1" @click.stop="downloadThisPlaylist"
+                        class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                        <Icon icon="material-symbols:arrow-circle-down-outline-rounded" class=" text-5xl" />
+                    </button>
                     <div class="flex text-[13px] mt-5">{{ playlistData.author?.name }}</div>
                     <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
                     <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new
@@ -157,7 +181,8 @@ onMounted(() => {
                     <Icon icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
                     <span class="flex text-[13px] mt-5">{{ playlistData.total_song }} bài hát</span>
                     <Icon v-if="playlistData.type == 1" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
-                    <span v-if="playlistData.type == 1" class="flex text-[13px] mt-5">{{ playlistData.price }} vnd</span>
+                    <span v-if="playlistData.type == 1" class="flex text-[13px] mt-5">{{ playlistData.price }}
+                        vnd</span>
                 </div>
             </div>
         </div>

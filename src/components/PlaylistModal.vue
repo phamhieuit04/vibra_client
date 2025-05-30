@@ -33,8 +33,11 @@ function chooseImg() {
 
 
 const saveProfile = async () => {
+  if(!playlistName.value) {
+    alert('Vui lòng điền đầy đủ thông tin')
+    return
+  }
   const formData = new FormData()
-  
   formData.append('name', playlistName.value)
   if (thumbnail.value) {
     formData.append('thumbnail', thumbnail.value)

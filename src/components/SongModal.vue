@@ -20,6 +20,7 @@ const { allCategories, myAlbumList } = storeToRefs(useActivity);
 const previewImg = ref(null)
 const fileInput = ref(null)
 const songDescrip = ref(null);
+const songPrice = ref(null)
 const songAvt = ref(null)
 
 
@@ -97,14 +98,19 @@ function chooseImg() {
 
 
 const uploadSong = async () => {
-    if (!songAvt.value || !selectedTxtFile.value || !selectedSongFile.value || !selectedAlbumId.value) {
+    if (!songAvt.value || !selectedTxtFile.value || !selectedSongFile.value || !selectedAlbumId.value || !songPrice.value) {
         alert('Vui lòng điền đủ thông tin');
+        return;
+    }
+    if(songPrice.value < 500){
+        alert('Giá bài hát ít nhất là 500đ')
         return;
     }
     const formData = new FormData()
     formData.append('category-id', selectedCategoryId.value)
     formData.append('description', songDescrip.value)
     formData.append('playlist-id', selectedAlbumId.value)
+    formData.append('price', songPrice.value)
     if (songAvt.value && selectedTxtFile.value && selectedSongFile.value) {
         formData.append('song', selectedSongFile.value)
         formData.append('lyric', selectedTxtFile.value)
@@ -161,6 +167,8 @@ onMounted(() => {
 
                     <input v-model="songDescrip" class=" bg-zinc-800 float-end text-white rounded ml-6 mb-3 px-4 py-2"
                         placeholder="Mô tả bài hát" />
+                    <input v-model="songPrice" type="number" class=" bg-zinc-800 float-end text-white rounded ml-6 mb-3 px-4 py-2"
+                        placeholder="Giá bài hát" />
 
 
 

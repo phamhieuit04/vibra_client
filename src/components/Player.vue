@@ -68,6 +68,25 @@ async function unloveThisSong() {
     }
 }
 
+async function downloadThisSong() {
+    if(!currentTrack.value.id) return
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/payment/create-bill?song_id=${currentTrack.value.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        if (res.data) {
+            window.location.href = res.data.data;
+        } else {
+            alert('Không lấy được link thanh toán');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Gặp lỗi khi tạo link thanh toán');
+    }
+}
+
 onMounted(() => {
     isPlaying.value = false
     if (!currentTrack.value) return;
@@ -185,11 +204,11 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear"
                     class="text-[#FFE5D6] text-[23px] cursor-pointer hover:scale-110" />
                 <Icon v-else @click="unloveThisSong" icon="solar:heart-bold"
-                    class="text-[#FFE5D6] text-[23px] cursor-pointer hover:scale-110"  />
+                    class="text-[#FFE5D6] text-[23px] cursor-pointer hover:scale-110" />
                 <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline"
                     class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer hover:scale-110" />
-                <a href="/paysuccess">
-                    <Icon icon="material-symbols:arrow-circle-down-outline-rounded"
+                <a>
+                    <Icon @click="downloadThisSong" icon="material-symbols:arrow-circle-down-outline-rounded"
                         class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer hover:scale-110" />
                 </a>
             </div>
@@ -225,9 +244,9 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                     </button>
 
                     <button class="mx-2" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
-                        <Icon icon="tabler:poo-filled" 
-                            class="text-[#FFE5D6]  transition duration-200 cursor-pointer size-5 hover:text-white" 
-                            :class="{'animate-bounce' : isPlaying}"/>
+                        <Icon icon="tabler:poo-filled"
+                            class="text-[#FFE5D6]  transition duration-200 cursor-pointer size-5 hover:text-white"
+                            :class="{ 'animate-bounce': isPlaying }" />
                     </button>
                 </div>
             </div>

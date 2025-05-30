@@ -38,8 +38,15 @@ function chooseImg() {
 
 
 const saveProfile = async () => {
+    if (!albumName.value || !albumDescrip.value || !albumPrice.value) {
+        alert('Vui lòng điền đủ thông tin');
+        return;
+    }
+    if(albumPrice.value < 500){
+        alert('Giá album ít nhất là 500đ')
+        return;
+    }
     const formData = new FormData()
-
     formData.append('name', albumName.value)
     formData.append('description', albumDescrip.value)
     formData.append('price', albumPrice.value)
@@ -98,8 +105,8 @@ onMounted(() => {
                     <input v-model="albumDescrip" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
                         placeholder="Mô tả Album" />
 
-                    <input v-model="albumPrice" type="number" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
-                        placeholder="Giá" />
+                    <input v-model="albumPrice" type="number"
+                        class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2" placeholder="Giá" />
                 </div>
             </div>
 

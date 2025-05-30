@@ -31,7 +31,6 @@ function onImgChoosed(event) {
   if (file) {
     avatar.value = file
     previewImg.value = URL.createObjectURL(file)
-    console.log(avatar.value)
   }
 }
 function chooseImg() {
@@ -40,6 +39,10 @@ function chooseImg() {
 
 
 const saveProfile = async () => {
+  if (!profileName.value || !profileDescrip.value || !profileGender.value) {
+    alert('Vui lòng điền đủ thông tin');
+    return;
+  }
   const formData = new FormData()
   formData.append('name', profileName.value)
   formData.append('description', profileDescrip.value)
