@@ -61,8 +61,8 @@ async function addSongToPlaylist() {
             useActivity.fetchData(); 
             getListSong();
             emit('userPress');
+            useView.setComponent('HomePage');
         }
-        console.log(res)
     } catch (e) {
         console.log(e);
         alert('Call API thất bại');
