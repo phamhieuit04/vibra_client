@@ -101,7 +101,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="fixed top-0 bottom-0 left-0 w-full bg-[#BC4D15] z-0"></div>
+	<div class="fixed top-0 bottom-0 left-0 w-full z-0" :style="{ backgroundColor: useView.currentColor }"></div>
 	<div class="w-[22.4%] h-[83.4%] fixed top-[64px] left-1.5 z-50 p-6 bg-[#1D1512] rounded-[24px]">
 		<div class="flex items-center justify-between mb-4 mx-1">
 			<h2 class="text-[#FFE5D6] text-xl font-semibold">Thư viện</h2>
@@ -136,7 +136,8 @@ onMounted(() => {
 		</div>
 
 		<input type="text" v-model="search" placeholder="Tìm kiếm"
-			class="w-full py-2 px-5 rounded-full  bg-[#1D1512] text-[#FFE5D6] my-2 transition-all duration-200 outline outline-2 outline-[#BC4D15] focus:outline-white" />
+			class="w-full py-2 px-5 rounded-full  bg-[#1D1512] text-[#FFE5D6] my-2 transition-all duration-200 outline outline-2 outline-[#BC4D15] focus:outline-white" 
+			:style="{ outlineColor: useView.currentColor }"/>
 
 		<div class=" overflow-y-auto h-[82%] scrollbar-none">
 

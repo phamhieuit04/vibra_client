@@ -170,10 +170,3 @@ onMounted(() => {
         </div>
     </div>
 </template>
-
-<style>
-.scrollbar-style {
-    scrollbar-width: medium;
-    scrollbar-color: #BC4D15 transparent;
-}
-</style>

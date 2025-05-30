@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useViewStore = defineStore("view", {
   state: () => ({
     currentComponent: "HomePage",
+    currentColor: "#BC4D15",
     selected: null,
     page: null,
     isFullscreen: false,
@@ -64,6 +65,9 @@ export const useViewStore = defineStore("view", {
         this.isFullscreen = !!document.fullscreenElement;
       });
     },
+    setCurrentColor(color){
+      this.currentColor = color
+    }
     
   },
 });

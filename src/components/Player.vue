@@ -260,7 +260,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                     <input v-model="range" ref="seeker" type="range"
                         class="absolute rounded-full my-2 w-full h-0 z-40 appearance-none bg-opacity-100 focus:outline-none accent-white  cursor-pointer">
                     <div class=" pointer-events-none mt-[6px] absolute h-[4px] z-10 inset-y-0 left-0 w-3 "
-                        :style="`width: ${range}%;`" :class="isHover ? 'bg-[#BC4D15]' : 'bg-white'"></div>
+                        :style="`width: ${range}%;`" :class="isHover ? `bg-white` : 'bg-white'"></div>
                     <div class="absolute h-[4px] z-[-0] mt-[6px] inset-y-0 left-0 w-full bg-gray-500 rounded-full">
                     </div>
                 </div>

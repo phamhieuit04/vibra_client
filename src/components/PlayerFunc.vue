@@ -15,7 +15,6 @@ let volume = ref(null);
 
 
 watch(() => audio.value, (newVal, oldVal) => {
-  console.log('Vừa đổi bài hát!!!!!!!!!!!!!!!!!!!!!!!!!!');
   audio.value.volume = vol.value / 100;
 }
 )

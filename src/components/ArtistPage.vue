@@ -26,6 +26,8 @@ const isMe = ref(false);
 const thisArtistListSong = ref([])
 const thisArtistListAlbum = ref([])
 
+const bgColor = ref('#FFFFFF')
+
 function checkMe(){
     isMe.value = false;
     if(artistData.value.id === authStore.user.id){
@@ -152,8 +154,9 @@ onMounted(() => {
                 <div class="flex justify-between">
                     <div class="flex items-center mb-5 space-x-6">
                         <button
-                            class="flex items-center justify-center w-14 h-14 rounded-full bg-[#BC4D15] hover:bg-black transition group">
-                            <Icon icon="mdi:play" class="text-black ml-0.5 text-5xl group-hover:text-[#BC4D15]"
+                            class="flex items-center justify-center w-14 h-14 rounded-full  hover:bg-black transition group"
+                            :style="{ backgroundColor: useView.currentColor }">
+                            <Icon icon="mdi:play" class="text-black ml-0.5 text-5xl group-hover:text-white"
                                 @click="useSong.addAndPlayThisPlaylist(thisArtistListSong)" />
                         </button>
                         <button @click.stop="useSong.addPlaylistToWaitlist(thisArtistListSong)"
@@ -163,28 +166,23 @@ onMounted(() => {
 
                         <div v-if="!isMe">
                             <button v-if="!isFollowed" @click="followThisArtist"
-                                class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                                class="border px-4 py-2 rounded-full text-sm font-semibold  hover:text-black transition hover:scale-110"
+                                :style="{borderColor: useView.currentColor, color: useView.currentColor, '--scroll-color': useView.currentColor }">
                                 Theo dõi
                             </button>
                             <button v-else @click="unfollowThisArtist"
-                                class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                                class="border  px-4 py-2 rounded-full text-sm font-semibold hover:scale-110"
+                                :style="{borderColor: useView.currentColor, color: useView.currentColor }">
                                 Hủy theo dõi
                             </button>
                         </div>
-
-
-                        <button class="text-[#BC4D15] text-2xl hover:text-white transition">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
                     </div>
                     <div>
                         <button v-if="!isMe" @click="blockThisArtist"
-                            class="border border-red-500 text-red-500 px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                            class="border border-red-500 text-red-500 px-4 py-2 rounded-full text-sm font-semibold hover:bg-red-500 hover:text-black transition">
                             Hạn chế nghệ sĩ
                         </button>
                     </div>
-
-
                 </div>
 
 
@@ -256,6 +254,6 @@ onMounted(() => {
 <style>
 .scrollbar-style {
     scrollbar-width: medium;
-    scrollbar-color: #BC4D15 transparent;
+    scrollbar-color: #D3D3D3 transparent;
 }
 </style>
