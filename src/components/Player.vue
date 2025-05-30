@@ -91,10 +91,15 @@ onMounted(() => {
     isPlaying.value = false
     if (!currentTrack.value) return;
 
+    useSong.playThisSong(currentTrack.value)
+    
+
     if (audio.value) {
         setTimeout(() => {
             timeupdate()
             loadmetadata()
+            audio.value.pause();
+            isPlaying.value = false
         }, 300)
     }
     if (currentTrack.value) {
@@ -129,6 +134,7 @@ function onUserPress() {
 const timeupdate = () => {
     if (!audio.value) return
     audio.value.addEventListener('timeupdate', function () {
+        // useSong.setSongTime(audio.value.currentTime)
         var minutes = Math.floor(audio.value.currentTime / 60)
         var seconds = Math.floor(audio.value.currentTime - minutes * 60)
         isTrackTimeCurrent.value = minutes + ':' + seconds.toString().padStart(2, '0')

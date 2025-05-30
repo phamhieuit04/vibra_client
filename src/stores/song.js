@@ -9,6 +9,7 @@ export const useSongStore = defineStore("song", {
     isPlaying: false,
     audio: null,
     currentPlaylist: null,
+    songTime: 0,
     vol: 80,
     currentTrack: {
       id: 0,
@@ -156,6 +157,9 @@ export const useSongStore = defineStore("song", {
 
     setVolume(range) {
       this.vol = range;
+    },
+    setSongTime(time){
+      this.songTime = time
     },
 
     resetState() {
