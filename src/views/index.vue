@@ -56,12 +56,12 @@ onMounted(() => {
   <div class="bg-black">
     <Header />
     <Sidebar />
-    <div :class="['transition-all duration-300 fixed top-[64px] h-[83.4%] bg-[#1D1512] rounded-[24px]',
+    <div :class="['transition-all duration-300 fixed top-[64px] h-[83.4%] bg-[#1D1512] rounded-[24px] shadow-xl',
       showSidePanel ? 'left-[23%] w-[57.4%]' : 'left-[23%] w-[76.6%]']">
       <component :is="components[currentComponent]" />
     </div>
     <div v-if="showSidePanel"
-      class="fixed top-[64px] left-[80.7%] w-[19%] overflow-auto h-[83.4%] bg-[#1D1512] rounded-[24px]">
+      class="fixed top-[64px] left-[80.7%] w-[19%] overflow-auto scrollbar-none h-[83.4%] bg-[#1D1512] rounded-[24px]">
       <WaitListPanel v-if="useView.sidePanelState == 'waitlist'"/>
       <SidePanel v-else/>
     </div>

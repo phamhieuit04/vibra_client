@@ -39,10 +39,14 @@ onMounted(() => {
                 <div class="flex items-center justify-between w-full py-1.5">
 
                     <div class="flex">
-                        <div class="rounded-full bg-zinc-700 w-12 h-12 ml-0">
+                        <div class="rounded-full bg-zinc-700 w-12 h-12 ml-0 relative shadow-2xl hover:scale-105"
+                            @click="useSong.playOrPauseSong">
                             <img class="object-cover rounded-full aspect-square" :src="currentTrack.thumbnail_path" alt=""
                                 :class="{ 'animate-spin': isPlaying }"
                                 style="animation-duration: 5s;" @error="event => event.target.src = defaultImgage">
+                            <!-- <div class="bg-[#2A2929] rounded-full w-3 h-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+
+                            </div> -->
                         </div>
                         <div class="ml-5">
                             <div class="text-white font-semibold ">

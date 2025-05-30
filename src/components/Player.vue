@@ -183,14 +183,14 @@ watch(() => isTrackTimeCurrent.value, (time) => {
             </div>
             <div class="flex items-center ml-8">
                 <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear"
-                    class="text-[#FFE5D6] text-[23px] cursor-pointer" />
+                    class="text-[#FFE5D6] text-[23px] cursor-pointer hover:scale-110" />
                 <Icon v-else @click="unloveThisSong" icon="solar:heart-bold"
-                    class="text-[#FFE5D6] text-[23px] cursor-pointer" />
+                    class="text-[#FFE5D6] text-[23px] cursor-pointer hover:scale-110"  />
                 <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline"
-                    class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer" />
+                    class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer hover:scale-110" />
                 <a href="/paysuccess">
                     <Icon icon="material-symbols:arrow-circle-down-outline-rounded"
-                        class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer" />
+                        class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer hover:scale-110" />
                 </a>
             </div>
             <span v-if="openMenu" class="absolute bg-[#282828] z-20 left-[250px] bottom-[68px]  p-1">
