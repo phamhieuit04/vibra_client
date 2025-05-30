@@ -28,11 +28,10 @@ const colorList = ref([
   '#bfa5a0',
   '#a3b18a',
   '#9e9fa5',
-  '#8896ab',
-  '#a7adc6',
+  '#926F4F',
+  '#FEA7A0',
   '#c3a995',
-  '#bdb2ff',
-  '#d0b8ac',
+  '#44B78B',
 ])
 
 async function getAllCategories() {
