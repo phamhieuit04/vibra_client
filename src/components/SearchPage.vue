@@ -70,9 +70,10 @@ onMounted(() => {
                         <div class="bg-[#2a2a2a] hover:bg-[#333] transition rounded-lg p-4 cursor-pointer relative group"
                             @click="checkNull">
                             <button
-                                class="absolute bottom-6 right-6 flex items-center justify-center w-16 h-16 rounded-full bg-[#BC4D15] hover:bg-black transition-all 
-                                        opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
-                                <span class="text-black ml-0.5 text-4xl hover:text-[#BC4D15]">▶</span>
+                                class="absolute bottom-6 right-6 flex items-center justify-center w-16 h-16 rounded-full hover:bg-black transition-all 
+                                        opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0"
+                                        :style="{backgroundColor: useView.currentColor}">
+                                <span class="text-black ml-0.5 text-4xl">▶</span>
                             </button>
                             <div class="items-start space-y-3 mb-9">
                                 <div class="relative w-24 h-24 overflow-hidden rounded-md bg-zinc-700">

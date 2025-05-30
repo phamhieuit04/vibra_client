@@ -62,6 +62,20 @@ async function FetchSongData() {
     }
 }
 
+async function playThisAlbum(id) {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/playlist/show/${id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        useSong.addAndPlayThisPlaylist(res.data.data)
+    } catch (e) {
+        console.log(e);
+        alert('Call API thất bại');
+    }
+}
+
 onMounted(() => {
     FetchAlbumData();
     FetchArtistData();
@@ -78,13 +92,20 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in popularAlbum" :key="popularAlbum.id"
-                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 relative group">
                             <div
                                 @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
-                                <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700">
+                                <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700 ">
                                     <img class="object-cover rounded-xl w-48 h-48" :src="item.thumbnail_path" alt=""
                                         @error="event => event.target.src = defaultImgage">
                                 </div>
+                                <button
+                                    class="absolute bottom-16 right-1 hover:scale-105 flex items-center justify-center w-14 h-14 rounded-full hover:bg-black transition-all 
+                                        opacity-0 group-hover:opacity-100 transform translate-y-2 duration-300 group-hover:translate-y-0"
+                                    :style="{ backgroundColor: useView.currentColor }"
+                                    @click.stop="playThisAlbum(item.id)">
+                                    <span class="text-black ml-0.5 text-3xl">▶</span>
+                                </button>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.total_song }} bài hát</p>
                             </div>
@@ -123,9 +144,8 @@ onMounted(() => {
                             @click="useSong.playOrPauseThisSong(item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
                                 <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt=""
-                                    :class="{'animate-spin' : currentTrack.id == item.id && isPlaying}"
-                                    style="animation-duration: 5s;"
-                                    @error="event => event.target.src = defaultImgage">
+                                    :class="{ 'animate-spin': currentTrack.id == item.id && isPlaying }"
+                                    style="animation-duration: 5s;" @error="event => event.target.src = defaultImgage">
                             </div>
                             <div class="flex justify-between">
                                 <div>

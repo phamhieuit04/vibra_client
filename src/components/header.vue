@@ -25,7 +25,7 @@ const searchValue = ref('')
 const colorList = ref([
 '#BC4D15', '#645283', 
   '#a8bfc9',
-  '#bfa5a0',
+  '#CD5C5C',
   '#a3b18a',
   '#9e9fa5',
   '#926F4F',
