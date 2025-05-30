@@ -102,8 +102,8 @@ const uploadSong = async () => {
         alert('Vui lòng điền đủ thông tin');
         return;
     }
-    if(songPrice.value < 500){
-        alert('Giá bài hát ít nhất là 500đ')
+    if(songPrice.value < 2000){
+        alert('Giá bài hát ít nhất là 2000đ')
         return;
     }
     const formData = new FormData()

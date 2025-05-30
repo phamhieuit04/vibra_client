@@ -42,8 +42,8 @@ const saveProfile = async () => {
         alert('Vui lòng điền đủ thông tin');
         return;
     }
-    if(albumPrice.value < 500){
-        alert('Giá album ít nhất là 500đ')
+    if(albumPrice.value < 4000){
+        alert('Giá album ít nhất là 4000đ')
         return;
     }
     const formData = new FormData()
