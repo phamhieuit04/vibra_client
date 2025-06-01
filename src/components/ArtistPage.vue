@@ -188,7 +188,7 @@ onMounted(() => {
                 </div>
 
 
-                <div class="w-full">
+                <div class="w-full" v-if="thisArtistListSong.length > 0">
                     <h2 class="text-2xl font-semibold pl-14 ">Phổ biến</h2>
                     <div class="px-12 ">
                         <div v-for="item, index in thisArtistListSong" :key="item.id"
@@ -228,7 +228,7 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="mt-8 ">
+            <div class="mt-8 " v-if="thisArtistListAlbum.length > 0">
                 <div class="mb-2 space-y-2 font-semibold pl-14">
                     <h2 class="text-2xl ">Danh sách Album</h2>
                 </div>

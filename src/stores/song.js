@@ -24,6 +24,7 @@ export const useSongStore = defineStore("song", {
     currentWaitlist: [],
     prevList: [],
     isShuffle: true,
+    currentDownload: '',
   }),
   actions: {
     playThisSong(track) {
@@ -157,6 +158,10 @@ export const useSongStore = defineStore("song", {
 
     setPlaylist(playlist) {
       this.currentPlaylist = playlist;
+    },
+
+    setDownload(download){
+      this.currentDownload = download;
     },
 
     setVolume(range) {

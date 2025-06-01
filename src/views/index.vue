@@ -77,7 +77,7 @@ onMounted(() => {
     </div>
 
     <div class="z-[150] absolute right-4 top-4">
-      <Notify class="h-16 w-72 m-2" v-for="item in notifyList" :key="item.message" :index="item.index" :is-error="item.isError" :message="item.message" />
+      <Notify v-for="item in notifyList" :key="item.message" :index="item.index" :is-error="item.isError" :message="item.message" />
     </div>
 
     <Loading v-if="loading"/>

@@ -20,7 +20,7 @@ const useModal = useModalStore();
 const useActivity = useActivityStore();
 const { isFullscreen } = storeToRefs(useView)
 const { isPlaying, audio, currentPlaylist, currentTrack, isShuffle } = storeToRefs(useSong)
-const { favSongList, myPlaylistList } = storeToRefs(useActivity)
+const { favSongList, myPlaylistList, isPlaylist } = storeToRefs(useActivity)
 
 let isHover = ref(false)
 let isTrackTimeCurrent = ref(null)
@@ -216,7 +216,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
                 <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline"
                     class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer hover:scale-110" />
                 <a>
-                    <Icon @click="downloadThisSong" icon="material-symbols:arrow-circle-down-outline-rounded"
+                    <Icon @click="useSong.setDownload('song');downloadThisSong();" icon="material-symbols:arrow-circle-down-outline-rounded"
                         class="text-[#FFE5D6] text-[23px] ml-5 cursor-pointer hover:scale-110" />
                 </a>
             </div>

@@ -15,6 +15,9 @@ export const useActivityStore = defineStore("activity", {
     allCategories: [],
     searchKey: "",
 
+    downloadListSong: [],
+    isPlaylist: false,
+
     notifyList: [],
     notify: {
       index: 0,
@@ -88,7 +91,7 @@ export const useActivityStore = defineStore("activity", {
         this.setFavSongList(myFavSongList.value);
       } catch (e) {
         console.log(e);
-        alert("Call API thất bại");
+        this.addNotify(true, "Call Api thất bại!");
       }
     },
 
@@ -127,12 +130,6 @@ export const useActivityStore = defineStore("activity", {
       this.notifyList.splice(index, 1);
     },
 
-    // fetchIndex() {
-    //   for (let i = 0; i < this.notifyList.length; i++) {
-    //     this.notifyList[i].index = i;
-    //   }
-    // },
-
     changeSearchKey(searchKeyValue) {
       this.searchKey = searchKeyValue;
     },
@@ -155,5 +152,10 @@ export const useActivityStore = defineStore("activity", {
     setCategories(categoriesList) {
       this.allCategories = categoriesList;
     },
+    
+    setDownload(isPlaylist, listSong){
+      this.isPlaylist = isPlaylist
+      this.downloadListSong = listSong;
+    }
   },
 });

@@ -33,12 +33,14 @@ onMounted(() => {
 })
 </script>
 <template>
-    <div class="text-[#FFE5D6] bg-[#1D1512] rounded-xl p-4 shadow-[0_0_8px_#FFE5D6] flex items-center" v-if="!isError">
-        <Icon icon="teenyicons:tick-circle-solid" class=" text-green-400 text-xl mr-3" />
-        <h1>{{ message }}</h1>
-    </div>
-    <div class="text-[#FFE5D6] bg-[#1D1512] rounded-2xl p-4 shadow-[0_0_8px_#FFE5D6] flex items-center" v-else>
-        <Icon icon="material-symbols:error" class=" text-red-600 text-2xl mr-3" />
-        <h1>{{ message }}</h1>
+    <div class="h-16 w-auto m-2">
+        <div class="text-[#FFE5D6] bg-[#1D1512] rounded-xl p-4 shadow-[0_0_8px_#FFE5D6] flex items-center" v-if="!isError">
+            <Icon icon="teenyicons:tick-circle-solid" class=" text-green-400 text-xl mr-3" />
+            <h1>{{ message }}</h1>
+        </div>
+        <div class="text-[#FFE5D6] bg-[#1D1512] rounded-2xl p-4 shadow-[0_0_8px_#FFE5D6] flex items-center" v-else>
+            <Icon icon="material-symbols:error" class=" text-red-600 text-2xl mr-3" />
+            <h1>{{ message }}</h1>
+        </div>
     </div>
 </template>
