@@ -32,9 +32,10 @@ async function followThisArtist() {
         });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value
+        useActivity.addNotify(false, "Đã theo dõi nghệ sĩ!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 async function unfollowThisArtist() {
@@ -46,9 +47,10 @@ async function unfollowThisArtist() {
         });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value
+        useActivity.addNotify(false, "Đã bỏ theo dõi nghệ sĩ!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 

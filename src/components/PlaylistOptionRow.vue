@@ -46,7 +46,7 @@ async function getListSong() {
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -62,10 +62,11 @@ async function addSongToPlaylist() {
             getListSong();
             emit('userPress');
             useView.setComponent('HomePage');
+            useActivity.addNotify(false, "Đã thêm bài hát vào Playlist!")
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 

@@ -29,10 +29,9 @@ async function getCategoriesSong() {
             }
         });
         songByCateList.value = res.data.data
-        console.log(songByCateList.value)
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 

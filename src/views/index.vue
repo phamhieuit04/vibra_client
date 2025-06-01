@@ -12,6 +12,7 @@ import ArtistPage from "@/components/ArtistPage.vue";
 import SidePanel from "@/components/SidePanel.vue";
 import WaitListPanel from "@/components/WaitListPanel.vue";
 import CategoriesSongPage from "@/components/CategoriesSongPage.vue";
+import Notify from "@/components/Notify.vue";
 
 import ProfileModal from "@/components/ProfileModal.vue";
 import PlaylistModal from "@/components/PlaylistModal.vue";
@@ -25,6 +26,7 @@ import { useViewStore } from "@/stores/view";
 import { storeToRefs } from "pinia";
 import CategoriesPage from "@/components/CategoriesPage.vue";
 import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
 
 const useSong = useSongStore()
 const { currentTrack } = storeToRefs(useSong)
@@ -34,6 +36,9 @@ const { currentComponent, isFullscreen, showSidePanel, showWaitlistPanel } = sto
 
 const useModal = useModalStore()
 const { openEditProfile, openEditPlaylist, openUploadSong, openEditAlbum, loading } = storeToRefs(useModal)
+
+const useActivity = useActivityStore();
+const { notifyList } = storeToRefs(useActivity);
 
 const player = ref(null)
 
@@ -53,11 +58,12 @@ onMounted(() => {
 
 </script>
 <template>
-  <div class="bg-black">
+  <div class="bg-black relative">
     <Header />
     <Sidebar />
     <div :class="['transition-all duration-300 fixed top-[64px] h-[83.4%] bg-[#1D1512] rounded-[24px] shadow-xl',
-      showSidePanel ? 'left-[23%] w-[57.4%]' : 'left-[23%] w-[76.6%]']">
+      showSidePanel ? 'left-[23%] w-[57.4%]' : 'left-[23%] w-[76.6%]']"
+      >
       <component :is="components[currentComponent]" />
     </div>
     <div v-if="showSidePanel"
@@ -68,6 +74,10 @@ onMounted(() => {
     <div ref="player">
       <SongPage v-if="isFullscreen" />
       <Player />
+    </div>
+
+    <div class="z-[150] absolute right-4 top-4">
+      <Notify class="h-16 w-72 m-2" v-for="item in notifyList" :key="item.message" :index="item.index" :is-error="item.isError" :message="item.message" />
     </div>
 
     <Loading v-if="loading"/>

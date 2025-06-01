@@ -43,10 +43,11 @@ async function unloveThisSong() {
         if (res.data.code == 200) {
             useActivity.fetchData();
             emit('deleteFavSong', track.value.id)
+            useActivity.addNotify(false, "Đã bỏ yêu thích bài hát!")
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -60,11 +61,12 @@ async function removeFromPlaylist() {
         if (res.data.code == 200) {
             useActivity.fetchData();
             emit('deletePlaylistSong', track.value.id)
+            useActivity.addNotify(false, "Đã bỏ bài hát khỏi Playlist!")
         }
         console.log(res)
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 

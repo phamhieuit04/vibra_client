@@ -44,10 +44,11 @@ async function loveThisSong() {
         if (res.data.code == 200) {
             useActivity.fetchData();
             isLoved.value = !isLoved.value
+            useActivity.addNotify(false, "Đã thêm bài hát vào danh sách yêu thích!")
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 async function unloveThisSong() {
@@ -61,10 +62,11 @@ async function unloveThisSong() {
         if (res.data.code == 200) {
             useActivity.fetchData();
             isLoved.value = !isLoved.value
+            useActivity.addNotify(false, "Đã bỏ yêu thích bài hát!")
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -79,11 +81,11 @@ async function downloadThisSong() {
         if (res.data) {
             window.location.href = res.data.data;
         } else {
-            alert('Không lấy được link thanh toán');
+            useActivity.addNotify(true, "Không lấy được link thanh toán!")
         }
     } catch (err) {
         console.error(err);
-        alert('Gặp lỗi khi tạo link thanh toán');
+        useActivity.addNotify(true, "Không lấy được link thanh toán!")
     }
 }
 

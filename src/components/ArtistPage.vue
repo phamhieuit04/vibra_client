@@ -45,7 +45,7 @@ async function getArtistSong() {
         thisArtistListSong.value = res.data.data
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 async function getArtistAlbum() {
@@ -58,7 +58,7 @@ async function getArtistAlbum() {
         thisArtistListAlbum.value = res.data.data
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -71,9 +71,10 @@ async function followThisArtist() {
         });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value
+        useActivity.addNotify(false, "Bạn đã theo dõi nghệ sĩ!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 async function unfollowThisArtist() {
@@ -85,9 +86,10 @@ async function unfollowThisArtist() {
         });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value
+        useActivity.addNotify(false, "Bạn đã hủy theo dõi nghệ sĩ!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -101,10 +103,10 @@ async function blockThisArtist() {
         unfollowThisArtist();
         useActivity.fetchData();
         useView.setComponent('HomePage');
-        alert('Bạn đã hạn chế nghệ sĩ!!!')
+        useActivity.addNotify(false, "Bạn đã hạn chế nghệ sĩ!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 

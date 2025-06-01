@@ -99,11 +99,11 @@ function chooseImg() {
 
 const uploadSong = async () => {
     if (!songAvt.value || !selectedTxtFile.value || !selectedSongFile.value || !selectedAlbumId.value || !songPrice.value) {
-        alert('Vui lòng điền đủ thông tin');
+        useActivity.addNotify(true, "Vui lòng điền đủ thông tin!")
         return;
     }
     if(songPrice.value < 2000){
-        alert('Giá bài hát ít nhất là 2000đ')
+        useActivity.addNotify(true, "Giá bài hát tối thiểu là 2000đ!")
         return;
     }
     const formData = new FormData()
@@ -125,11 +125,11 @@ const uploadSong = async () => {
         });
         if (res.data.code == 200) {
             useActivity.fetchUserData();
-            alert('Chỉnh sửa thành công');
+            useActivity.addNotify(false, "Đăng tải bài hát thành công!")
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
     openUploadSong.value = false
 };
@@ -139,7 +139,7 @@ onMounted(() => {
 })
 </script>
 <template>
-    <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60">
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
         <div class="bg-zinc-900 text-white rounded-lg w-[400px] p-6 relative">
             <button class="absolute top-4 right-4 text-white hover:text-red-500" @click="openUploadSong = false">
                 ✕

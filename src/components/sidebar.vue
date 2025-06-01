@@ -46,11 +46,11 @@ const createPlaylist = async () => {
 				},
 			}
 		);
-		alert('Tạo playlist thành công!');
 		useActivity.fetchData();
+		useActivity.addNotify(false, "Tạo playlist thành công!!")
 	} catch (error) {
 		console.error('Lỗi khi tạo playlist:', error);
-		alert('Tạo playlist thất bại!');
+		useActivity.addNotify(true, "Tạo playlist thất bại!!")
 	}
 };
 
@@ -65,12 +65,12 @@ const deletePlaylist = async (item) => {
 					},
 				}
 			);
-			alert('Xóa playlist thành công!');
 			useActivity.fetchData();
+			useActivity.addNotify(false, "Xóa playlist thành công!!")
 			useView.setComponent('HomePage');
 		} catch (error) {
 			console.error('Lỗi khi xóa playlist:', error);
-			alert('Xóa playlist thất bại!');
+			useActivity.addNotify(true, "Xóa playlist thất bại!!")
 		}
 	} else {
 		try {
@@ -79,12 +79,12 @@ const deletePlaylist = async (item) => {
 					'Authorization': 'Bearer ' + authStore.user.token,
 				}
 			});
-			alert('Xóa playlist thành công!');
 			useActivity.fetchData();
+			useActivity.addNotify(false, "Xóa playlist thành công!!")
 			useView.setComponent('HomePage');
 		} catch (e) {
 			console.log(e);
-			alert('Call API thất bại');
+			useActivity.addNotify(true, "Xóa playlist thất bại!!")
 		}
 	}
 }

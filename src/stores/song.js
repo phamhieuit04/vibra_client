@@ -3,6 +3,7 @@ import defaultImgage from "@/assets/default.jpg";
 import defaultSong from "@/assets/DefaultSong.mp3";
 import axios from "axios";
 import { useAuthStore } from "./auth";
+import { useActivityStore } from "./activity";
 
 export const useSongStore = defineStore("song", {
   state: () => ({
@@ -67,6 +68,7 @@ export const useSongStore = defineStore("song", {
       track.index = this.currentWaitlist.length;
       this.currentWaitlist.push(track);
       this.fetchIndex();
+      useActivityStore().addNotify(false, "Đã thêm bài hát vào hàng chờ!")
     },
     addPlaylistToWaitlist(playlist) {
       if (!playlist || playlist.length == 0) return;
@@ -74,6 +76,7 @@ export const useSongStore = defineStore("song", {
         this.currentWaitlist.unshift(playlist[i]);
       }
       this.fetchIndex();
+      useActivityStore().addNotify(false, "Đã thêm danh sách phát này vào hàng chờ!")
     },
 
     addAndPlayThisPlaylist(playlist) {
@@ -83,6 +86,7 @@ export const useSongStore = defineStore("song", {
       }
       this.playThisSong(playlist[0]);
       this.fetchIndex();
+      useActivityStore().addNotify(false, "Đã thêm danh sách phát này vào hàng chờ!")
     },
 
     deleteSongFromWaitlist(track) {

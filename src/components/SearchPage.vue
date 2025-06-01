@@ -38,7 +38,6 @@ async function FetchSearchData() {
             }
         });
         if (res.data.code == 200) {
-            console.log(res.data.data)
             listAlbumSearch.value = res.data.data.albums;
             listArtistSearch.value = res.data.data.artists;
             listSongSearch.value = res.data.data.songs

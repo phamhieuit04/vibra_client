@@ -32,12 +32,12 @@ async function createAlbum() {
             }
         });
         if (res.data.code == 200) {
-            alert('Tạo album thành công');
+            useActivity.addNotify(false, "Tạo Album thành công!")
             useActivity.fetchUserData();
         }
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -46,7 +46,7 @@ function albumCheck(){
         openUploadSong.value = true
     }
     else{
-        alert('Vui lòng tạo một album để chứa bài hát!!');
+        useActivity.addNotify(true, "Vui lòng tạo ít nhất một Album để chứa bài hát!")
     }
 }
 
@@ -91,7 +91,7 @@ onMounted(() => {
             <div class="mt-8 mb-3" v-if="myAlbumList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Album của tôi</h2>
                 <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer"
+                    <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer "
                         @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                         <div class="w-full h-48 mb-2 rounded bg-zinc-700">
                             <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path">

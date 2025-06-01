@@ -72,7 +72,7 @@ async function playThisAlbum(id) {
         useSong.addAndPlayThisPlaylist(res.data.data)
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -85,14 +85,14 @@ onMounted(() => {
 </script>
 <template>
     <div
-        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-[calc(100vh-12rem)] overflow-y-auto scrollbar-style">
+        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-full overflow-y-auto scrollbar-style">
         <div class="px-8 py-8 overflow-auto scrollbar-style h-[calc(100vh-12rem)]">
             <div class="text-[#FFE5D6] mb-8">
                 <h2 class="mb-1 text-2xl font-semibold">Album phổ biến</h2>
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in popularAlbum" :key="popularAlbum.id"
-                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 relative group">
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 relative group  hover:brightness-105">
                             <div
                                 @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                                 <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700 ">
@@ -100,7 +100,7 @@ onMounted(() => {
                                         @error="event => event.target.src = defaultImgage">
                                 </div>
                                 <button
-                                    class="absolute bottom-16 right-1 hover:scale-105 flex items-center justify-center w-14 h-14 rounded-full hover:bg-black transition-all 
+                                    class="absolute bottom-16 right-1 hover:scale-105 hover:brightness-110 flex items-center justify-center w-14 h-14 rounded-full hover:bg-black transition-all 
                                         opacity-0 group-hover:opacity-100 transform translate-y-2 duration-300 group-hover:translate-y-0"
                                     :style="{ backgroundColor: useView.currentColor }"
                                     @click.stop="playThisAlbum(item.id)">
@@ -119,7 +119,7 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topArtist" :key="item.id"
-                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 ">
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 hover:brightness-105">
                             <div
                                 @click="useView.selectItem(item); useView.setComponent('ArtistPage'); useView.setArtistData(item);">
                                 <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700">
@@ -140,7 +140,7 @@ onMounted(() => {
                 <div class="flex space-x-4 overflow-x-auto scrollbar-style">
                     <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in topSong" :key="item.id"
-                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105"
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105  hover:brightness-105"
                             @click="useSong.playOrPauseThisSong(item);">
                             <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700">
                                 <img class="object-cover rounded-full w-40 h-40" :src="item.thumbnail_path" alt=""

@@ -33,7 +33,7 @@ async function FetchPlaylistData() {
             playlistSong.value = res.data.data
         } catch (e) {
             console.log(e);
-            alert('Call API thất bại');
+            useActivity.addNotify(true, "Call Api thất bại!")
         }
     } else {
         try {
@@ -48,7 +48,7 @@ async function FetchPlaylistData() {
             playlistSong.value = onlySongs
         } catch (e) {
             console.log(e);
-            alert('Call API thất bại');
+            useActivity.addNotify(true, "Call Api thất bại!")
         }
     }
 }
@@ -62,9 +62,10 @@ async function addToLibrary() {
         });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value
+        useActivity.addNotify(false, "Đã thêm vào thư viện!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 async function removeFromLibrary() {
@@ -76,9 +77,10 @@ async function removeFromLibrary() {
         });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value
+        useActivity.addNotify(false, "Đã xóa khỏi thư viện!")
     } catch (e) {
         console.log(e);
-        alert('Call API thất bại');
+        useActivity.addNotify(true, "Call Api thất bại!")
     }
 }
 
@@ -93,11 +95,11 @@ async function downloadThisPlaylist() {
         if (res.data) {
             window.location.href = res.data.data;
         } else {
-            alert('Không lấy được link thanh toán');
+            useActivity.addNotify(true, "Không lấy được link thanh toán!")
         }
     } catch (err) {
         console.error(err);
-        alert('Gặp lỗi khi tạo link thanh toán');
+        useActivity.addNotify(true, "Không lấy được link thanh toán!")
     }
 }
 

@@ -14,6 +14,13 @@ export const useActivityStore = defineStore("activity", {
 
     allCategories: [],
     searchKey: "",
+
+    notifyList: [],
+    notify: {
+      index: 0,
+      isError: false,
+      message: '',
+    },
   }),
 
   actions: {
@@ -54,7 +61,6 @@ export const useActivityStore = defineStore("activity", {
             },
           }
         );
-        console.log(myPlaylistRes.data.data);
         this.setFollowArtistList(artistRes.data.data);
         this.setMyPlaylistList(myPlaylistRes.data.data);
         this.setFollowAlbumList(albumRes.data.data);
@@ -112,6 +118,20 @@ export const useActivityStore = defineStore("activity", {
         alert("Call API thất bại");
       }
     },
+
+    addNotify(isError, message) {
+      this.notifyList.push({isError, message});
+    },
+
+    removeNotify(index) {
+      this.notifyList.splice(index, 1);
+    },
+
+    // fetchIndex() {
+    //   for (let i = 0; i < this.notifyList.length; i++) {
+    //     this.notifyList[i].index = i;
+    //   }
+    // },
 
     changeSearchKey(searchKeyValue) {
       this.searchKey = searchKeyValue;

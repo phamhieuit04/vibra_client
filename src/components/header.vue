@@ -47,7 +47,7 @@ async function getAllCategories() {
 		}
 	} catch (e) {
 		console.log(e);
-		alert('Call API thất bại');
+		useActivity.addNotify(true, "Call Api thất bại!")
 	}
 }
 
@@ -76,7 +76,7 @@ async function logout() {
 		}, 3000)
 	} catch (e) {
 		console.log(e);
-		alert('Call API thất bại');
+		useActivity.addNotify(true, "Call Api thất bại!")
 	}
 }
 
