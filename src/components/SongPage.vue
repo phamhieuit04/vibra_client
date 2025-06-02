@@ -49,7 +49,7 @@ onMounted(() => {
         </div>
 
         <div class="w-1/2 flex pl-8 items-center justify-start mb-[90px]">
-            <div ref="scrollArea" class="space-y-4 text-gray-300 leading-relaxed w-full h-[500px] overflow-y-auto scrollbar-none">
+            <div ref="scrollArea" class="space-y-4 text-gray-300 leading-relaxed w-[70%] h-[500px] overflow-y-auto scrollbar-none">
                 <div v-for="lyricLine, index in currentTrack.list_lyric" :key="index">
                     <h1 class="text-white text-3xl">{{ lyricLine }}</h1>
                 </div>

@@ -23,7 +23,7 @@ const signup = async () => {
 		});
 		if (res.data.code == 200) {
 			alert('Đăng Kí Thành Công!!!');
-			router.push('/login');
+			router.push('/verify');
 		}
 		if (res.data.code == 500) {
 			alert('Địa chỉ Email tồn tại');

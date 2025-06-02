@@ -55,6 +55,7 @@ function albumCheck(){
 
 onMounted(() => {
     useActivity.fetchUserData();
+    console.log(authStore.user)
 })
 </script>
 

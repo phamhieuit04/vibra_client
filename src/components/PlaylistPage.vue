@@ -115,7 +115,6 @@ function onPlaylistSongDel(trackId) {
 }
 
 watch(() => playlistData.value, () => {
-    console.log(playlistData.value)
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
@@ -123,16 +122,14 @@ watch(() => playlistData.value, () => {
                 isFollowed.value = true
             }
         })
-        console.log('playlist data thay đổi');
     } else {
         playlistSong.value = playlistData.value.songs
     }
-}
-)
+})
+
 
 
 onMounted(() => {
-    console.log(playlistData.value)
     if (!playlistData.value.isFav) {
         FetchPlaylistData();
         followAlbumList.value.forEach(album => {
@@ -172,7 +169,8 @@ onMounted(() => {
                         class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                         <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
                     </button>
-                    <button v-if="playlistData.type == 1" @click.stop="useSong.setDownload('playlist'); useSong.setPlaylist(playlistSong); downloadThisPlaylist()"
+                    <button v-if="playlistData.type == 1"
+                        @click.stop="useSong.setDownload('playlist'); useSong.setPlaylist(playlistSong); downloadThisPlaylist()"
                         class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                         <Icon icon="material-symbols:arrow-circle-down-outline-rounded" class=" text-5xl" />
                     </button>

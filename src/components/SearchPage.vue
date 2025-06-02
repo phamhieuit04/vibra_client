@@ -46,11 +46,9 @@ async function FetchSearchData() {
         console.log(e);
     }
 }
-
 watch(() => searchKey.value, () => {
     FetchSearchData();
-}
-)
+})
 
 
 onMounted(() => {

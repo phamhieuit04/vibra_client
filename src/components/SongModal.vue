@@ -74,14 +74,11 @@ function selectCategory(cate) {
     selectedCategoryId.value = cate.id
     selectedCategoryName.value = cate.name
     showCateDropdown.value = false
-    console.log(selectedCategoryId.value)
 }
 function selectAlbum(album) {
     selectedAlbumId.value = album.id
     selectedAlbumName.value = album.name
     showAlbumDropdown.value = false
-    console.log(album)
-    console.log(selectedAlbumId.value)
 }
 
 function onImgChoosed(event) {

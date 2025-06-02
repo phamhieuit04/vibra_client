@@ -55,37 +55,21 @@ const createPlaylist = async () => {
 };
 
 const deletePlaylist = async (item) => {
-	if (item.type == 2) {
-		try {
-			const res = await axios.get(
-				`http://spotify_clone_api.test/api/library/destroy-playlist/${item.id}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + authStore.user.token,
-					},
-				}
-			);
-			useActivity.fetchData();
-			useActivity.addNotify(false, "Xóa playlist thành công!!")
-			useView.setComponent('HomePage');
-		} catch (error) {
-			console.error('Lỗi khi xóa playlist:', error);
-			useActivity.addNotify(true, "Xóa playlist thất bại!!")
-		}
-	} else {
-		try {
-			const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-playlist/${item.id}`, {
-				'headers': {
-					'Authorization': 'Bearer ' + authStore.user.token,
-				}
-			});
-			useActivity.fetchData();
-			useActivity.addNotify(false, "Xóa playlist thành công!!")
-			useView.setComponent('HomePage');
-		} catch (e) {
-			console.log(e);
-			useActivity.addNotify(true, "Xóa playlist thất bại!!")
-		}
+	try {
+		const res = await axios.get(
+			`http://spotify_clone_api.test/api/library/destroy-playlist/${item.id}`,
+			{
+				headers: {
+					Authorization: 'Bearer ' + authStore.user.token,
+				},
+			}
+		);
+		useActivity.fetchData();
+		useActivity.addNotify(false, "Xóa playlist thành công!!")
+		useView.setComponent('HomePage');
+	} catch (error) {
+		console.error('Lỗi khi xóa playlist:', error);
+		useActivity.addNotify(true, "Xóa playlist thất bại!!")
 	}
 }
 
@@ -136,8 +120,8 @@ onMounted(() => {
 		</div>
 
 		<input type="text" v-model="search" placeholder="Tìm kiếm"
-			class="w-full py-2 px-5 rounded-full  bg-[#1D1512] text-[#FFE5D6] my-2 transition-all duration-200 outline outline-2 outline-[#BC4D15] focus:outline-white" 
-			:style="{ outlineColor: useView.currentColor }"/>
+			class="w-full py-2 px-5 rounded-full  bg-[#1D1512] text-[#FFE5D6] my-2 transition-all duration-200 outline outline-2 outline-[#BC4D15] focus:outline-white"
+			:style="{ outlineColor: useView.currentColor }" />
 
 		<div class=" overflow-y-auto h-[82%] scrollbar-none">
 

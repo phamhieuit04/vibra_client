@@ -108,7 +108,6 @@ export const useSongStore = defineStore("song", {
           const nextSong = this.currentWaitlist.shift();
           this.playThisSong(nextSong);
           this.fetchIndex();
-          console.log('chưa shuffle')
         }
         else{
           const tmpTrack = this.currentWaitlist[Math.floor(Math.random() * this.currentWaitlist.length)];
