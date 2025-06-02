@@ -44,8 +44,8 @@ onMounted(() => {
 <template>
     <div class="py-14 space-y-4 text-[#FFFF]">
         <h2 class="px-6 text-2xl font-semibold">Danh sách nhạc thể loại {{ categoriesData.name }}</h2>
-        <div class="px-6 w-full h-[calc(100vh-270px)] overflow-y-auto scrollbar-style pt-4">
-            <div class="flex flex-wrap justify-center gap-12">
+        <div class="px-16 w-full h-[calc(100vh-270px)] overflow-y-auto scrollbar-style pt-4">
+            <div class="flex flex-wrap justify-start gap-12 ">
                 <div v-for="item in songByCateList" :key="item.id"
                     class="px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105"
                     @click="useSong.playOrPauseThisSong(item)" style="width: 14.75rem;">
@@ -57,7 +57,7 @@ onMounted(() => {
                         <p class="text-sm text-zinc-400">{{ item.total_played }} lượt nghe</p>
                         <button @click.stop="useSong.addSongToWaitlist(item);"
                             class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4 absolute">
-                            <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
+                            <Icon icon="material-symbols:home-storage-outline" class="text-2xl " />
                         </button>
                     </div>
                 </div>

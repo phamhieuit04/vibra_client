@@ -36,7 +36,7 @@ onMounted(() => {
                     <div class="relative w-full h-48 p-5 mb-2 rounded-xl bg-zinc-700">
                         <p class="text-xl font-semibold">{{ item.name }}</p>
                         <img :src="item.thumbnail_path"
-                            class="absolute w-20 h-20 right-2 bottom-2 rotate-12" />
+                            class="absolute w-32 h-32 right-4 bottom-4 rotate-12" />
 
                     </div>
                 </div>
