@@ -1,191 +1,191 @@
 <script setup>
-	import { onMounted, ref, watch, toRefs, computed } from "vue";
-	import { useRouter } from 'vue-router';
-	import { Icon } from '@iconify/vue';
-	import axios from 'axios';
-	import { storeToRefs } from "pinia";
-	import { useAuthStore } from '@/stores/auth';
-	import { useViewStore } from "@/stores/view";
-	import { useSongStore } from "@/stores/song";
-	import { useModalStore } from "@/stores/modal";
-	import { useActivityStore } from "@/stores/activity";
-	import defaultImgage from '@/assets/default.jpg'
-	import PlayerFunc from "./PlayerFunc.vue";
-	import PlaylistOptionRow from "./PlaylistOptionRow.vue";
+import { onMounted, ref, watch, toRefs, computed } from "vue";
+import { useRouter } from 'vue-router';
+import { Icon } from '@iconify/vue';
+import axios from 'axios';
+import { storeToRefs } from "pinia";
+import { useAuthStore } from '@/stores/auth';
+import { useViewStore } from "@/stores/view";
+import { useSongStore } from "@/stores/song";
+import { useModalStore } from "@/stores/modal";
+import { useActivityStore } from "@/stores/activity";
+import defaultImgage from '@/assets/default.jpg'
+import PlayerFunc from "./PlayerFunc.vue";
+import PlaylistOptionRow from "./PlaylistOptionRow.vue";
 
-	const useView = useViewStore();
-	const authStore = useAuthStore();
-	const useSong = useSongStore();
-	const useModal = useModalStore();
-	const useActivity = useActivityStore();
-	const { isFullscreen } = storeToRefs(useView)
-	const { isPlaying, audio, currentPlaylist, currentTrack, isShuffle } = storeToRefs(useSong)
-	const { favSongList, myPlaylistList, isPlaylist } = storeToRefs(useActivity)
+const useView = useViewStore();
+const authStore = useAuthStore();
+const useSong = useSongStore();
+const useModal = useModalStore();
+const useActivity = useActivityStore();
+const { isFullscreen } = storeToRefs(useView)
+const { isPlaying, audio, currentPlaylist, currentTrack, isShuffle } = storeToRefs(useSong)
+const { favSongList, myPlaylistList, isPlaylist } = storeToRefs(useActivity)
 
-	let isHover = ref(false)
-	let isTrackTimeCurrent = ref(null)
-	let isTrackTimeTotal = ref(null)
-	let seeker = ref(null)
-	let seekerContainer = ref(null)
-	let range = ref(0)
+let isHover = ref(false)
+let isTrackTimeCurrent = ref(null)
+let isTrackTimeTotal = ref(null)
+let seeker = ref(null)
+let seekerContainer = ref(null)
+let range = ref(0)
 
-	const isLoved = ref(false)
+const isLoved = ref(false)
 
-	const openMenu = ref(false)
+const openMenu = ref(false)
 
-	async function loveThisSong() {
-		try {
-			const res = await axios.get(`http://spotify_clone_api.test/api/song/store/${currentTrack.value.id}`, {
-				'headers': {
-					'Authorization': 'Bearer ' + authStore.user.token,
-				}
-			});
-
-			if (res.data.code == 200) {
-				useActivity.fetchData();
-				isLoved.value = !isLoved.value
-				useActivity.addNotify(false, "Đã thêm bài hát vào danh sách yêu thích!")
+async function loveThisSong() {
+	try {
+		const res = await axios.get(`http://spotify_clone_api.test/api/song/store/${currentTrack.value.id}`, {
+			'headers': {
+				'Authorization': 'Bearer ' + authStore.user.token,
 			}
-		} catch (e) {
-			console.log(e);
-			useActivity.addNotify(true, "Call Api thất bại!")
+		});
+
+		if (res.data.code == 200) {
+			useActivity.fetchData();
+			isLoved.value = !isLoved.value
+			useActivity.addNotify(false, "Đã thêm bài hát vào danh sách yêu thích!")
 		}
+	} catch (e) {
+		console.log(e);
+		useActivity.addNotify(true, "Call Api thất bại!")
 	}
-	async function unloveThisSong() {
-		try {
-			const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-favorite-song/${currentTrack.value.id}`, {
-				'headers': {
-					'Authorization': 'Bearer ' + authStore.user.token,
-				}
-			});
-
-			if (res.data.code == 200) {
-				useActivity.fetchData();
-				isLoved.value = !isLoved.value
-				useActivity.addNotify(false, "Đã bỏ yêu thích bài hát!")
+}
+async function unloveThisSong() {
+	try {
+		const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-favorite-song/${currentTrack.value.id}`, {
+			'headers': {
+				'Authorization': 'Bearer ' + authStore.user.token,
 			}
-		} catch (e) {
-			console.log(e);
-			useActivity.addNotify(true, "Call Api thất bại!")
+		});
+
+		if (res.data.code == 200) {
+			useActivity.fetchData();
+			isLoved.value = !isLoved.value
+			useActivity.addNotify(false, "Đã bỏ yêu thích bài hát!")
 		}
+	} catch (e) {
+		console.log(e);
+		useActivity.addNotify(true, "Call Api thất bại!")
 	}
+}
 
-	async function downloadThisSong() {
-		if (!currentTrack.value.id) return
-		try {
-			const res = await axios.get(`http://spotify_clone_api.test/api/payment/create-bill?song_id=${currentTrack.value.id}`, {
-				'headers': {
-					'Authorization': 'Bearer ' + authStore.user.token,
-				}
-			});
-			if (res.data.code == 200) {
-				window.location.href = res.data.data;
-			} else {
-				useActivity.addNotify(true, "Không lấy được link thanh toán!")
+async function downloadThisSong() {
+	if (!currentTrack.value.id) return
+	try {
+		const res = await axios.get(`http://spotify_clone_api.test/api/payment/create-bill?song_id=${currentTrack.value.id}`, {
+			'headers': {
+				'Authorization': 'Bearer ' + authStore.user.token,
 			}
-		} catch (err) {
-			console.error(err);
+		});
+		if (res.data.code == 200) {
+			window.location.href = res.data.data.checkout_url;
+		} else {
 			useActivity.addNotify(true, "Không lấy được link thanh toán!")
 		}
+	} catch (err) {
+		console.error(err);
+		useActivity.addNotify(true, "Không lấy được link thanh toán!")
 	}
+}
 
-	onMounted(() => {
-		isPlaying.value = false
-		if (!currentTrack.value) return;
+onMounted(() => {
+	isPlaying.value = false
+	if (!currentTrack.value) return;
 
-		useSong.playThisSong(currentTrack.value)
+	useSong.playThisSong(currentTrack.value)
 
 
-		if (audio.value) {
-			setTimeout(() => {
-				timeupdate()
-				loadmetadata()
-				audio.value.pause();
-				isPlaying.value = false
-			}, 300)
-		}
-		if (currentTrack.value) {
-			seeker.value.addEventListener('change', function () {
-				const time = audio.value.duration * (seeker.value.value / 100)
-				audio.value.currentTime = time
-			})
+	if (audio.value) {
+		setTimeout(() => {
+			timeupdate()
+			loadmetadata()
+			audio.value.pause();
+			isPlaying.value = false
+		}, 300)
+	}
+	if (currentTrack.value) {
+		seeker.value.addEventListener('change', function () {
+			const time = audio.value.duration * (seeker.value.value / 100)
+			audio.value.currentTime = time
+		})
 
-			seeker.value.addEventListener('mousedown', function () {
-				audio.value.pause()
-				isPlaying.value = false
-			})
+		seeker.value.addEventListener('mousedown', function () {
+			audio.value.pause()
+			isPlaying.value = false
+		})
 
-			seeker.value.addEventListener('mouseup', function () {
-				audio.value.play()
-				isPlaying.value = true
-			})
+		seeker.value.addEventListener('mouseup', function () {
+			audio.value.play()
+			isPlaying.value = true
+		})
 
-			seekerContainer.value.addEventListener('click', function (e) {
-				const clickPosition = (e.pageX - seekerContainer.value.offsetLeft) / seekerContainer.value.offsetWidth;
-				const time = audio.value.duration * clickPosition;
-				audio.value.currentTime = time;
-				seeker.value.value = (100 / audio.value.duration) * audio.value.currentTime;
-			})
-		}
+		seekerContainer.value.addEventListener('click', function (e) {
+			const clickPosition = (e.pageX - seekerContainer.value.offsetLeft) / seekerContainer.value.offsetWidth;
+			const time = audio.value.duration * clickPosition;
+			audio.value.currentTime = time;
+			seeker.value.value = (100 / audio.value.duration) * audio.value.currentTime;
+		})
+	}
+})
+
+function onUserPress() {
+	openMenu.value = false
+}
+
+const timeupdate = () => {
+	if (!audio.value) return
+	audio.value.addEventListener('timeupdate', function () {
+		var minutes = Math.floor(audio.value.currentTime / 60)
+		var seconds = Math.floor(audio.value.currentTime - minutes * 60)
+		isTrackTimeCurrent.value = minutes + ':' + seconds.toString().padStart(2, '0')
+		const value = (100 / audio.value.duration) * audio.value.currentTime
+		range.value = value
+		seeker.value.value = value
 	})
+}
 
-	function onUserPress() {
-		openMenu.value = false
-	}
-
-	const timeupdate = () => {
-		if (!audio.value) return
-		audio.value.addEventListener('timeupdate', function () {
-			var minutes = Math.floor(audio.value.currentTime / 60)
-			var seconds = Math.floor(audio.value.currentTime - minutes * 60)
-			isTrackTimeCurrent.value = minutes + ':' + seconds.toString().padStart(2, '0')
-			const value = (100 / audio.value.duration) * audio.value.currentTime
-			range.value = value
-			seeker.value.value = value
-		})
-	}
-
-	const loadmetadata = () => {
-		audio.value.addEventListener('loadedmetadata', function () {
-			const duration = audio.value.duration;
-			const minutes = Math.floor(duration / 60);
-			const seconds = Math.floor(duration % 60);
-			isTrackTimeTotal.value = minutes + ':' + seconds.toString().padStart(2, '0');
-		})
-	}
-
-	watch(() => favSongList.value.songs, () => {
-		isLoved.value = false
-		favSongList.value.songs.forEach(song => {
-			if (song.id === currentTrack.value.id) {
-				isLoved.value = true
-			}
-		})
-	}
-	)
-	watch(() => currentTrack.value, () => {
-		openMenu.value = false
-		isLoved.value = false
-		favSongList.value.songs.forEach(song => {
-			if (song.id === currentTrack.value.id) {
-				isLoved.value = true
-			}
-		})
-	}
-	)
-
-	watch(() => audio.value, () => {
-		if (!currentTrack.value) return;
-		timeupdate()
-		loadmetadata()
+const loadmetadata = () => {
+	audio.value.addEventListener('loadedmetadata', function () {
+		const duration = audio.value.duration;
+		const minutes = Math.floor(duration / 60);
+		const seconds = Math.floor(duration % 60);
+		isTrackTimeTotal.value = minutes + ':' + seconds.toString().padStart(2, '0');
 	})
+}
 
-	watch(() => isTrackTimeCurrent.value, (time) => {
-		if (!currentTrack.value) return;
-		if (time && time == isTrackTimeTotal.value) {
-			useSong.nextSongs();
+watch(() => favSongList.value.songs, () => {
+	isLoved.value = false
+	favSongList.value.songs.forEach(song => {
+		if (song.id === currentTrack.value.id) {
+			isLoved.value = true
 		}
 	})
+}
+)
+watch(() => currentTrack.value, () => {
+	openMenu.value = false
+	isLoved.value = false
+	favSongList.value.songs.forEach(song => {
+		if (song.id === currentTrack.value.id) {
+			isLoved.value = true
+		}
+	})
+}
+)
+
+watch(() => audio.value, () => {
+	if (!currentTrack.value) return;
+	timeupdate()
+	loadmetadata()
+})
+
+watch(() => isTrackTimeCurrent.value, (time) => {
+	if (!currentTrack.value) return;
+	if (time && time == isTrackTimeTotal.value) {
+		useSong.nextSongs();
+	}
+})
 
 </script>
 
