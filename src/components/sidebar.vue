@@ -150,8 +150,8 @@ onMounted(() => {
 					class="flex items-center gap-3 p-3 rounded cursor-pointer hover:bg-white/10 transition-all duration-200"
 					@click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);"
 					:class="{ 'bg-white/10': useView.selected === item }">
-					<div class="flex items-center justify-center w-10 h-10 rounded bg-white/10">
-						<img :src="item.thumbnail_path" class="flex-shrink-0 rounded max-h-10 max-w-10 object-coverw-10"
+					<div class="flex w-10 h-10 rounded bg-white/10">
+						<img :src="item.thumbnail_path" class="flex-shrink-0 rounded object-cover w-10"
 							@error="event => event.target.src = defaultImgage" />
 					</div>
 
@@ -178,7 +178,7 @@ onMounted(() => {
 					class="flex items-center gap-3 p-3 rounded cursor-pointer hover:bg-white/10 transition-all duration-200"
 					@click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);"
 					:class="{ 'bg-white/10': useView.selected === item }">
-					<div class="flex items-center justify-center w-10 h-10 rounded bg-white/10">
+					<div class="flex w-10 h-10 rounded bg-white/10">
 						<img :src="item.thumbnail_path" class="flex-shrink-0 object-cover w-10 h-10 rounded"
 							@error="event => event.target.src = defaultImgage" />
 					</div>

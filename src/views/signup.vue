@@ -6,7 +6,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 const router = useRouter();
-
+const authStore = useAuthStore();
 const email = ref('')
 const password = ref('')
 const rePassword = ref('')
@@ -23,6 +23,7 @@ const signup = async () => {
 		});
 		if (res.data.code == 200) {
 			alert('Đăng Kí Thành Công!!!');
+			authStore.setUser(res.data.data)
 			router.push('/verify');
 		}
 		if (res.data.code == 500) {

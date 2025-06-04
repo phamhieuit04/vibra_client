@@ -26,7 +26,6 @@ const props = defineProps({
 const { index, isError, message } = toRefs(props);
 
 onMounted(() => {
-    console.log(useActivity.notifyList);
     setTimeout(() => {
         useActivity.removeNotify(0);
     }, 3000)

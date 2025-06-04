@@ -12,7 +12,6 @@ import { useActivityStore } from "@/stores/activity";
 
 const useSong = useSongStore();
 
-let openMenu = ref(false);
 let openColorMenu = ref(false);
 
 const useActivity = useActivityStore()
@@ -23,15 +22,15 @@ const router = useRouter();
 
 const searchValue = ref('')
 const colorList = ref([
-'#BC4D15', '#645283', 
-  '#a8bfc9',
-  '#CD5C5C',
-  '#a3b18a',
-  '#9e9fa5',
-  '#926F4F',
-  '#FEA7A0',
-  '#c3a995',
-  '#44B78B',
+	'#BC4D15', '#645283',
+	'#a8bfc9',
+	'#CD5C5C',
+	'#a3b18a',
+	'#9e9fa5',
+	'#926F4F',
+	'#FEA7A0',
+	'#c3a995',
+	'#44B78B',
 ])
 
 async function getAllCategories() {
@@ -82,14 +81,17 @@ async function logout() {
 
 onMounted(() => {
 	getAllCategories();
+	if (useView.currentColor == null) {
+		useView.currentColor = '#BC4D15';
+	}
 })
 </script>
 
 
 <template>
 	<div class="w-[100%] h-[64px] fixed right-0 z-20 bg-[#BC4D15] flex items-center justify-between"
-			:style="{ backgroundColor: useView.currentColor }">
-		<div class="flex items-center gap-4 ml-8 relative" >
+		:style="{ backgroundColor: useView.currentColor }">
+		<div class="flex items-center gap-4 ml-8 relative">
 			<Icon icon="tabler:poo-filled" @click="useView.setComponent('HomePage'); useView.selectItem(this)"
 				class="text-white transition duration-200 cursor-pointer size-10 hover:text-black text-[64px]" />
 			<div class="rounded-full bg-black w-8 h-8 ml-0 relative shadow-2xl hover:scale-105 cursor-pointer">
@@ -98,11 +100,10 @@ onMounted(() => {
 					:style="{ backgroundColor: useView.currentColor }">
 				</div>
 			</div>
-			<div v-if="openColorMenu" class="absolute rounded-xl h-10 bg-black left-24 flex items-center transition duration-500">
-				<div class="w-6 h-6 rounded-full mx-2 cursor-pointer hover:scale-110" 
-					v-for="color in colorList"
-					:style="{ backgroundColor: color }"
-					@click="useView.setCurrentColor(color)">
+			<div v-if="openColorMenu"
+				class="absolute rounded-xl h-10 bg-black left-24 flex items-center transition duration-500">
+				<div class="w-6 h-6 rounded-full mx-2 cursor-pointer hover:scale-110" v-for="color in colorList"
+					:style="{ backgroundColor: color }" @click="useView.setCurrentColor(color)">
 
 				</div>
 			</div>
@@ -137,26 +138,21 @@ onMounted(() => {
 
 
 		<!-- Right Controls -->
-		<div class="flex items-center gap-4">
-			<div class="text-white">
-				EM CHÀO ĐẠI CA
-			</div>
-			<div class="w-8 h-8 mr-[10px] rounded-full flex items-center justify-center text-white font-bold">
-				<button @click="openMenu = !openMenu" type="button" class=" cursor-pointer">
-					<div class="flex items-center">
-						<img class="object-cover rounded-full aspect-square" width="30"
+		<div class="flex items-center gap-3">
+			<div class=" h-[44px] rounded-full flex items-center justify-center text-white font-bold">
+				<button @click="useView.setComponent('UserPage'); useView.selectItem(this)" type="button" class=" cursor-pointer hover:scale-105">
+					<div class="flex items-center bg-gray-500 p-[2px] rounded-full h-[43px]"  width="44">
+						<img class="object-cover rounded-full aspect-square" width="42"
 							:src="authStore.user.avatar_path ? authStore.user.avatar_path : defaultImgage"
 							@error="event => event.target.src = defaultImgage" alt="">
 					</div>
 				</button>
-				<span v-if="openMenu" class="fixed bg-[#282828] w-[200px] z-50 top-[64px] right-1 p-1">
-					<ul class="text-gray-200 font-semibold text-[14px]">
-						<li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer"
-							@click="useView.setComponent('UserPage'); useView.selectItem(this)">Hồ sơ</li>
-						<li class="px-3 py-2 hover:bg-[#3E3D3D] cursor-pointer" @click="logout();">Đăng xuất</li>
-					</ul>
-				</span>
 			</div>
+			<button @click="logout();" type="button" class=" cursor-pointer w-28 bg-[#1D1512] mr-[10px] rounded-full h-9 hover:brightness-125 hover:scale-105">
+				<div class=" brightness-125" :style="{color: useView.currentColor}">
+					Đăng xuất
+				</div>
+			</button>
 		</div>
 	</div>
 </template>
