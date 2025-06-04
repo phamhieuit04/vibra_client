@@ -93,7 +93,7 @@ async function downloadThisPlaylist() {
             }
         });
         if (res.data) {
-            window.location.href = res.data.data;
+            window.location.href = res.data.data.checkout_url;
         } else {
             useActivity.addNotify(true, "Không lấy được link thanh toán!")
         }
