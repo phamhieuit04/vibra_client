@@ -80,16 +80,16 @@ onMounted(() => {
 </script>
 <template>
     <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
-        <div class="bg-[#1D1512] text-white rounded-lg w-[550px] p-6 relative">
+        <div class="bg-[#1D1512] text-white rounded-lg w-[700px] p-6 relative">
             <button class="absolute text-white top-4 right-4 hover:text-red-500" @click="openEditAlbum = false">
                 ✕
             </button>
 
-            <h2 class="text-2xl font-bold mb-6" :style="{color: useView.currentColor}">Chỉnh sửa Album</h2>
+            <h2 class="mb-6 text-2xl font-bold" :style="{color: useView.currentColor}">Chỉnh sửa Album</h2>
 
-            <div class="flex items-center gap-1 mb-3">
+            <div class="flex gap-1 mb-3">
                 <div
-                    class="relative flex items-center justify-center w-48 cursor-pointer rounded-xl h-44 bg-zinc-700 shrink-0 group">
+                    class="relative flex items-center justify-center w-64 h-64 cursor-pointer rounded-xl bg-zinc-700 shrink-0 group">
                     <img class="object-cover w-full h-full rounded-xl "
                         :src="previewImg ? previewImg : playlistEditData.thumbnail_path"
                         @error="event => event.target.src = defaultImgage" alt="">
@@ -104,8 +104,8 @@ onMounted(() => {
                     <input v-model="albumName" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
                         placeholder="Tên Album" />
 
-                    <input v-model="albumDescrip" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
-                        placeholder="Mô tả Album" />
+                    <textarea v-model="albumDescrip" rows="5" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
+                        placeholder="Mô tả Album..."></textarea>
 
                     <input v-model="albumPrice" type="number"
                         class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full" placeholder="Giá" />

@@ -175,6 +175,7 @@ export const useActivityStore = defineStore("activity", {
     
     setDownload(bill){
       this.downloadBill = bill
-    }
+    },
   },
+  persist: true,
 });

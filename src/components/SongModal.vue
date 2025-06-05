@@ -149,14 +149,14 @@ onMounted(() => {
 </script>
 <template>
     <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
-        <div class="bg-[#1D1512] text-white rounded-lg w-fit max-w-2xl p-6 relative">
+        <div class="bg-[#1D1512] text-white rounded-lg w-[900px] p-6 relative">
             <button class="absolute text-white top-4 right-4 hover:text-red-500" @click="openUploadSong = false">
                 ✕
             </button>
 
             <h2 class="mb-6 text-2xl font-bold" :style="{color: useView.currentColor}">Đăng tải bài hát</h2>
 
-            <div class="flex max-w-2xl gap-1 mb-3">
+            <div class="flex gap-1 mb-3">
                 <div
                     class="relative flex items-center justify-center cursor-pointer w-80 h-80 rounded-xl bg-zinc-700 shrink-0 group">
                     <img class="object-cover w-full h-full rounded-xl " :src="previewImg ? previewImg : defaultImgage"
@@ -174,53 +174,51 @@ onMounted(() => {
                             selectedSongFile.name : 'Chọn file Nhạc' }}</button>
                     <input type="file" ref="songInput" accept="audio/*" @change="onSongChoosed" class="hidden" />
 
-                    <input v-model="songDescrip" class="px-4 py-3 mb-3  text-white rounded-lg bg-[#25211F] w-full"
-                        placeholder="Mô tả bài hát" />
+                    <textarea v-model="songDescrip" rows="5" class="px-4 py-3 mb-3  text-white rounded-lg bg-[#25211F] w-full"
+                        placeholder="Mô tả bài hát..."></textarea>
                     <input v-model="songPrice" type="number" class="px-4 py-3 mb-3  text-white rounded-lg bg-[#25211F] w-full"
                         placeholder="Giá bài hát" />
 
 
 
+ 
+                    <div class="grid grid-cols-3 gap-4 mb-3">
+                        <div class="relative">
+                            <button @click="toggleCateDropdown"
+                                class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full">
+                                {{ selectedCategoryName || 'Chọn thể loại' }}
+                            </button>
+                            <ul v-if="showCateDropdown"
+                                class="absolute z-10 w-full mt-1 ml-5 rounded-lg shadow-md bg-[#25211F] border border-gray-400 overflow-auto scrollbar-style max-h-72">
+                                <li v-for="cate in allCategories" :key="cate.id" @click="selectCategory(cate)"
+                                    class="px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-500">
+                                    {{ cate.name }}
+                                </li>
+                            </ul>
+                        </div>
 
 
-                    <div class="relative">
-                        <button @click="toggleCateDropdown"
-                            class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full">
-                            {{ selectedCategoryName || 'Chọn thể loại' }}
-                        </button>
-                        <ul v-if="showCateDropdown"
-                            class="absolute z-10 w-full mt-2 ml-5 rounded-lg shadow-md bg-[#25211F] border border-gray-400 overflow-auto scrollbar-style max-h-96">
-                            <li v-for="cate in allCategories" :key="cate.id" @click="selectCategory(cate)"
-                                class="px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-500">
-                                {{ cate.name }}
-                            </li>
-                        </ul>
+                        <div class="relative">
+                            <button @click="toggleAlbumDropdown"
+                                class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full">
+                                {{ selectedAlbumName || 'Chọn album' }}
+                            </button>
+                            <ul v-if="showAlbumDropdown"
+                                class="absolute z-10 w-full mt-1 ml-5 rounded-lg shadow-md  bg-[#25211F] border border-gray-400 overflow-auto scrollbar-style max-h-72">
+                                <li v-for="album in myAlbumList" :key="album.id" @click="selectAlbum(album)"
+                                    class="px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-500">
+                                    {{ album.name }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <button @click="chooseTxt"
+                            class="px-4 py-3 mb-3  text-white rounded-lg bg-[#25211F] w-full">{{ selectedTxtFile ?
+                                selectedTxtFile.name : 'Chọn file Lyric' }}</button>
+                        <input type="file" ref="txtInput" accept=".txt" @change="onTxtChoosed" class="hidden" />
+
                     </div>
-
-
-                    <div class="relative">
-                        <button @click="toggleAlbumDropdown"
-                            class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full">
-                            {{ selectedAlbumName || 'Chọn album' }}
-                        </button>
-                        <ul v-if="showAlbumDropdown"
-                            class="absolute z-10 w-full mt-2 ml-5 rounded-lg shadow-md top-20 bg-[#25211F] border border-gray-400 overflow-auto scrollbar-style max-h-80">
-                            <li v-for="album in myAlbumList" :key="album.id" @click="selectAlbum(album)"
-                                class="px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-500">
-                                {{ album.name }}
-                            </li>
-                        </ul>
-                    </div>
-
-
-
-
-
-
-                    <button @click="chooseTxt"
-                        class="px-4 py-3 mb-3  text-white rounded-lg bg-[#25211F] w-full">{{ selectedTxtFile ?
-                            selectedTxtFile.name : 'Chọn file Lyric' }}</button>
-                    <input type="file" ref="txtInput" accept=".txt" @change="onTxtChoosed" class="hidden" />
+                    
 
                     <div class="flex justify-end mt-4 space-x-4 ">
                         <button class="py-2 font-semibold text-white transition bg-gray-600 rounded-3xl px-7 hover:bg-gray-500"

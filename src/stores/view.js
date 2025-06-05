@@ -67,7 +67,7 @@ export const useViewStore = defineStore("view", {
     },
     setCurrentColor(color){
       this.currentColor = color
-    }
-    
+    },
   },
+  persist: true,
 });

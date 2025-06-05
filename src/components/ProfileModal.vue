@@ -81,7 +81,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
-    <div class="bg-[#1D1512] text-white rounded-lg w-[550px] p-6 relative">
+    <div class="bg-[#1D1512] text-white rounded-lg w-[700px] p-6 relative">
       <button class="absolute text-white top-4 right-4 hover:text-red-500" @click="openEditProfile = false">
         ✕
       </button>
@@ -90,7 +90,7 @@ onMounted(() => {
 
       <div class="flex gap-1 mb-3 r">
         <div
-          class="relative flex items-center justify-center w-56 h-56 cursor-pointer rounded-xl bg-zinc-700 shrink-0 group">
+          class="relative flex items-center justify-center cursor-pointer w-80 h-80 rounded-xl bg-zinc-700 shrink-0 group">
           <img class="object-cover w-full h-full rounded-xl " :src="previewImg ? previewImg : user.avatar_path"
             @error="event => event.target.src = defaultImgage" alt="">
           <div
@@ -101,17 +101,17 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex-1 ml-2">
-          <input v-model="profileName" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full float-end"
+          <input v-model="profileName" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
             placeholder="Tên hồ sơ" />
-          <input v-model="profileDescrip" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full float-end"
-            placeholder="Mô tả bản thân" />
-          <select class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full float-end" v-model="profileGender">
+          <textarea v-model="profileDescrip" rows="5" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
+            placeholder="Mô tả bản thân..."></textarea>
+          <select class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full " v-model="profileGender">
             <option disabled value="-- Chọn giới tính --">-- Chọn giới tính --</option>
             <option value="Nam">Nam</option>
             <option value="Nữ">Nữ</option>
             <option value="Giới tính khác">Khác</option>
           </select>
-          <input type="date" v-model="profileBirth" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full float-end"
+          <input type="date" v-model="profileBirth" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full "
             placeholder="Ngày sinh" />
         </div>
       </div>
@@ -121,7 +121,7 @@ onMounted(() => {
           @click="openEditProfile = false">
           Hủy
         </button>
-        <button class="py-2 ml-4 text-white transition rounded-3xl px-7 hover:brightness-125 font-semibold" :style="{backgroundColor: useView.currentColor}" @click="saveProfile">
+        <button class="py-2 ml-4 font-semibold text-white transition rounded-3xl px-7 hover:brightness-125" :style="{backgroundColor: useView.currentColor}" @click="saveProfile">
           Lưu
         </button>
       </div>
