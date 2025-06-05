@@ -18,11 +18,14 @@ const useModal = useModalStore();
 const useActivity = useActivityStore();
 const router = useRouter();
 
+
 const { currentTrack, isPlaying } = storeToRefs(useSong)
+
 
 const popularAlbum = ref([]);
 const topArtist = ref([]);
 const topSong = ref([]);
+const isLoading = ref(true)
 
 
 async function FetchAlbumData() {
@@ -76,16 +79,20 @@ async function playThisAlbum(id) {
     }
 }
 
+async function handleLoading() {
+    await FetchAlbumData();
+    await FetchArtistData();
+    await FetchSongData();
+    isLoading.value = false
+}
+
 onMounted(() => {
-    FetchAlbumData();
-    FetchArtistData();
-    FetchSongData();
+    handleLoading();
 })
 
 </script>
 <template>
-    <div
-        class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-full overflow-y-auto scrollbar-style">
+    <div class="text-[#FFFF] space-y-6 rounded-[24px] bg-[#1D1512] w-full h-full overflow-y-auto scrollbar-style">
         <div class="px-8 py-8 overflow-auto scrollbar-style h-[calc(100vh-12rem)]">
             <div class="text-[#FFE5D6] mb-8">
                 <h2 class="mb-1 text-2xl font-semibold">Album phổ biến</h2>
@@ -110,6 +117,15 @@ onMounted(() => {
                                 <p class="text-sm ">{{ item.total_song }} bài hát</p>
                             </div>
                         </div>
+
+                        <div v-if="isLoading"
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 relative group  hover:brightness-105">
+                            <div>
+                                <div class="w-48 h-48 mb-2 rounded-xl bg-zinc-700 "></div>
+                                <div class="w-28 h-5 my-2 bg-zinc-700 rounded"></div>
+                                <div class="w-24 h-5 my-2 bg-zinc-700 rounded"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,6 +144,15 @@ onMounted(() => {
                                 </div>
                                 <p class="font-medium ">{{ item.name }}</p>
                                 <p class="text-sm ">{{ item.followers }} người theo dõi</p>
+                            </div>
+                        </div>
+
+                        <div v-if="isLoading"
+                            class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105 hover:brightness-105">
+                            <div>
+                                <div class="w-48 h-48 mb-2 rounded-full bg-zinc-700"></div>
+                                <div class="w-24 h-5 my-2 bg-zinc-700 rounded"></div>
+                                <div class="w-28 h-5 my-2 bg-zinc-700 rounded"></div>
                             </div>
                         </div>
                     </div>
@@ -156,6 +181,16 @@ onMounted(() => {
                                     class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
                                     <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
                                 </button>
+                            </div>
+                        </div>
+
+                        <div v-if="isLoading" class="cursor-pointer flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg hover:scale-105  hover:brightness-105" >
+                            <div class="w-40 h-40 mb-2 rounded-full bg-zinc-700"></div>
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="w-24 h-5 my-2 bg-zinc-700 rounded"></div>
+                                    <div class="w-28 h-5 my-2 bg-zinc-700 rounded"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
