@@ -3,7 +3,6 @@ import { onMounted, ref, watch, toRefs, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useViewStore } from "@/stores/view";
 import { useActivityStore } from "@/stores/activity";
-import { vAutoAnimate } from "@formkit/auto-animate/vue";
 
 const useView = useViewStore();
 const useActivity = useActivityStore();
