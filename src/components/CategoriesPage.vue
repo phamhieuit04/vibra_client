@@ -25,7 +25,7 @@ function updateMouse(e) {
             <h2 class="mb-5 text-2xl font-semibold">Thể loại</h2>
             <div class="relative flex flex-wrap gap-3 p-2 px-3" @mousemove="updateMouse" ref="listWrapper">
                 <div class="absolute inset-0 z-0 pointer-events-none rounded-xl" :style="{
-                    background: `radial-gradient(200px circle at ${x}px ${y}px, #15ca82, transparent)`
+                    background: `radial-gradient(200px circle at ${x}px ${y}px, ${useView.currentColor}, transparent)`
                 }"></div>
                 <div v-for="item in allCategories" :key="item.id"
                     class="relative hover:scale-105  z-10 p-8 m-1 duration-200 ease-in-out rounded-xl cursor-pointer w-[320px] h-48 bg-zinc-700"

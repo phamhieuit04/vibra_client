@@ -48,7 +48,6 @@ function onSongChoosed(event) {
     const file = event.target.files[0]
     if (file) {
         selectedSongFile.value = file
-        console.log('File nhạc đã chọn:', file)
     }
 }
 
@@ -92,6 +91,17 @@ function chooseImg() {
     fileInput.value?.click()
 }
 
+async function songNotify(artistId, songId) {
+	try {
+		const res = await axios.get(`http://spotify_clone_api.test/api/firebase/notify-new-song?artist_id=${artistId}&song_id=${songId}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+	} catch (e) {
+		console.log(e);
+	}
+}
 
 const uploadSong = async () => {
     if (!songAvt.value || !selectedTxtFile.value || !selectedSongFile.value || !selectedAlbumId.value || !songPrice.value) {
@@ -124,6 +134,7 @@ const uploadSong = async () => {
             useActivity.fetchUserData();
             useActivity.addNotify(false, "Đăng tải bài hát thành công!")
             useActivity.syncGdrive('songs', res.data.data.id);
+            songNotify(user.value.id, res.data.data.id);
         }
     } catch (e) {
         console.log(e);

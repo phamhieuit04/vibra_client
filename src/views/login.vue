@@ -14,6 +14,8 @@ const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
 
+
+
 const login = async () => {
 	if (email.value == '' || password == '') {
 		alert('Vui lòng nhập đầy đủ thông tin!')
@@ -34,6 +36,7 @@ const login = async () => {
 			}
 			else {
 				router.push('/');
+				sendGreeting();
 			}
 			isLoading.value = false;
 		}
@@ -44,6 +47,18 @@ const login = async () => {
 	} catch (e) {
 		console.log(e);
 		alert('Call API thất bại');
+	}
+}
+
+async function sendGreeting() {
+	try {
+		const res = await axios.get(`http://spotify_clone_api.test/api/email/send-greeting`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        }); 
+	} catch (e) {
+		console.log(e);
 	}
 }
 
