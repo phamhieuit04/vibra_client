@@ -82,6 +82,7 @@ async function logout() {
 
 onMounted(() => {
 	getAllCategories();
+	useView.setComponent('HomePage')
 	if (useView.currentColor == null) {
 		useView.currentColor = '#BC4D15';
 	}
