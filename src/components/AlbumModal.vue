@@ -7,10 +7,12 @@ import { storeToRefs } from "pinia";
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
 import { useActivityStore } from "@/stores/activity";
+import { useViewStore } from "@/stores/view";
 
 
 const authStore = useAuthStore();
 const useModal = useModalStore()
+const useView = useViewStore();
 const { openEditAlbum, playlistEditData } = storeToRefs(useModal)
 const useActivity = useActivityStore();
 
@@ -78,49 +80,50 @@ onMounted(() => {
 </script>
 <template>
     <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
-        <div class="bg-zinc-900 text-white rounded-lg w-[400px] p-6 relative">
-            <button class="absolute top-4 right-4 text-white hover:text-red-500" @click="openEditAlbum = false">
+        <div class="bg-[#1D1512] text-white rounded-lg w-[550px] p-6 relative">
+            <button class="absolute text-white top-4 right-4 hover:text-red-500" @click="openEditAlbum = false">
                 ✕
             </button>
 
-            <h2 class="text-xl font-bold mb-6">Chỉnh sửa Album</h2>
+            <h2 class="text-2xl font-bold mb-6" :style="{color: useView.currentColor}">Chỉnh sửa Album</h2>
 
-            <div class="flex items-center mb-3">
+            <div class="flex items-center gap-1 mb-3">
                 <div
-                    class="bg-zinc-700 relative rounded-full w-24 h-24 flex items-center justify-center shrink-0 group cursor-pointer">
-                    <img class="rounded-full w-full h-full object-cover "
+                    class="relative flex items-center justify-center w-48 cursor-pointer rounded-xl h-44 bg-zinc-700 shrink-0 group">
+                    <img class="object-cover w-full h-full rounded-xl "
                         :src="previewImg ? previewImg : playlistEditData.thumbnail_path"
                         @error="event => event.target.src = defaultImgage" alt="">
-                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition"
+                    <div class="absolute inset-0 flex items-center justify-center transition bg-black bg-opacity-50 opacity-0 rounded-xl group-hover:opacity-100"
                         @click="chooseImg">
                         <Icon icon="material-symbols:edit-rounded text-black " />
                         <input type="file" accept="image/*" ref="fileInput" style="display: none"
                             @change="onImgChoosed" />
                     </div>
                 </div>
-                <div class="ml-6">
-                    <input v-model="albumName" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
+                <div class="flex-1 ml-2">
+                    <input v-model="albumName" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
                         placeholder="Tên Album" />
 
-                    <input v-model="albumDescrip" class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2"
+                    <input v-model="albumDescrip" class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full"
                         placeholder="Mô tả Album" />
 
                     <input v-model="albumPrice" type="number"
-                        class=" bg-zinc-800 float-end text-white rounded mb-3 px-4 py-2" placeholder="Giá" />
+                        class="px-4 py-3 mb-3 text-white rounded-lg bg-[#25211F] w-full" placeholder="Giá" />
                 </div>
             </div>
 
             <div class=" float-end">
-                <button class="bg-gray-500 text-black px-4 py-2 rounded hover:bg-gray-400 transition"
+                <button class="py-2 font-semibold text-white transition bg-gray-600 px-7 rounded-3xl hover:bg-gray-500"
                     @click="openEditAlbum = false">
                     Hủy
                 </button>
-                <button class="ml-4 bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition"
+                <button class="px-7 py-2 ml-4 font-semibold text-white transition bg-[#BC4D15] rounded-3xl hover:brightness-125"
+                    :style="{backgroundColor: useView.currentColor}"
                     @click="saveProfile">
                     Lưu
                 </button>
             </div>
-            <p class="text-xs text-gray-400 mt-16">
+            <p class="mt-16 text-xs text-gray-400">
                 Bằng cách tiếp tục, bạn đồng ý cho phép TÔI truy cập vào hình ảnh
                 bạn đã chọn để tải lên. Vui lòng đảm bảo bạn có quyền tải lên hình ảnh.
             </p>
