@@ -22,6 +22,24 @@ const { currentComponent, isFullscreen } = storeToRefs(useView)
 const { openEditProfile, openUploadSong, openEditAlbum } = storeToRefs(useModal)
 const { myPlaylistList, followArtistList, myAlbumList, mySongList } = storeToRefs(useActivity)
 
+const bills = ref([])
+
+async function getBills() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/profile/payment-history`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        console.log(res.data.data)
+        if (res.data.code == 200) {
+            bills.value = res.data.data
+        }
+    } catch (e) {
+        console.log(e);
+        useActivity.addNotify(true, "Call Api thất bại!")
+    }
+}
 
 
 async function createAlbum() {
@@ -54,6 +72,7 @@ function albumCheck(){
 
 
 onMounted(() => {
+    getBills();
     useActivity.fetchUserData();
     console.log(authStore.user)
 })
@@ -168,7 +187,7 @@ onMounted(() => {
 
             <div>
                 <h2 class="mt-8 text-lg font-semibold mb-4">Lịch sử thanh toán</h2>
-                <div class="max-h-[39.5rem] overflow-y-auto border border-gray-700 rounded-lg scrollbar-style">
+                <div class="max-h-[30rem] overflow-y-auto border border-gray-700 rounded-lg scrollbar-style">
                     
                     <table class="min-w-full bg-[#1a1a1a]">
                         <thead class="sticky top-0 bg-[#2a2a2a]">
@@ -176,46 +195,31 @@ onMounted(() => {
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Mã giao dịch</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Ngày thanh toán</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Số tiền</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Tên</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Gói dịch vụ</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Phương thức</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Trạng thái</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Hành động</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             <tr
-                                v-for="payment in [
-                                    { id: 1, date: '2025-06-01', amount: '500.000 VNĐ', plan: 'Gói Pro', method: 'Chuyển khoản', status: 'Thành công' },
-                                    { id: 2, date: '2025-05-28', amount: '250.000 VNĐ', plan: 'Gói Basic', method: 'Thẻ tín dụng', status: 'Đang xử lý' },
-                                    { id: 3, date: '2025-05-25', amount: '750.000 VNĐ', plan: 'Gói Premium', method: 'Ví điện tử', status: 'Thất bại' },
-                                    { id: 4, date: '2025-05-20', amount: '500.000 VNĐ', plan: 'Gói Pro', method: 'Chuyển khoản', status: 'Thành công' }
-                                    
-                                ]"
-                                :key="payment.id"
+                                v-for="item in bills"
+                                :key="item.id"
                                 class="border-t border-gray-700 hover:bg-[#2a2a2a] transition-colors"
                             >
-                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.id }}</td>
-                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.date }}</td>
-                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.amount }}</td>
-                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.plan }}</td>
-                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.method }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ item.id }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{  new Date(item.created_at).toLocaleDateString('vi-VN') }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ item.playlist_id ? item.playlist.price : item.song.price }} vnd</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ item.playlist_id ? item.playlist.name : item.song.name }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ item.playlist_id ? 'Album' : 'Bài hát' }}</td>
                                 <td
                                     class="px-4 py-3 font-medium"
                                     :class="{
-                                    'text-green-500': payment.status === 'Thành công',
-                                    'text-yellow-500': payment.status === 'Đang xử lý',
-                                    'text-red-500': payment.status === 'Thất bại',
+                                    'text-green-500': item.status == 2,
+                                    'text-yellow-500': item.status == 1,
                                     }"
                                 >
-                                {{ payment.status }}
-                                </td>
-                                
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <div class="flex gap-4">
-                                        <button class="text-sm text-blue-400 transition-colors hover:text-blue-200">Xem chi tiết</button>
-                                        <button class="text-sm text-blue-400 transition-colors hover:text-blue-200">Tải hóa đơn</button>
-                                    </div>
+                                {{ item.status == 1 ? 'Thanh toán thất bại' : 'Thanh toán thành công' }}
                                 </td>
                             </tr>
                         </tbody>

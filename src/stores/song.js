@@ -29,6 +29,7 @@ export const useSongStore = defineStore("song", {
   actions: {
     playThisSong(track) {
       this.currentTrack = track;
+      console.log(this.currentTrack)
 
       if (this.audio && this.audio.src) {
         this.audio.pause();
