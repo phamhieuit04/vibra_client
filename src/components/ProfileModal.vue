@@ -65,8 +65,8 @@ const saveProfile = async () => {
     });
     fetchUser.data.data.token = user.value.token;
     authStore.setUser(fetchUser.data.data);
-    console.log(res)
     useActivity.addNotify(false, "Chỉnh sửa thông tin thành công!")
+    useActivity.syncGdrive('avatars', user.value.id)
   } catch (e) {
     console.log(e);
     useActivity.addNotify(true, "Call Api thất bại!")

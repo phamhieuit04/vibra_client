@@ -118,9 +118,28 @@ export const useActivityStore = defineStore("activity", {
         this.mySongList = res2.data.data;
       } catch (e) {
         console.log(e);
-        alert("Call API thất bại");
+        this.addNotify(true, "Call Api thất bại!");
       }
     },
+
+    async syncGdrive(type, id) {
+      try {
+        const authStore = useAuthStore();
+        const res = await axios.get(
+          `http://spotify_clone_api.test/api/google-drive/sync-files?type=${type}&id=${id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + authStore.user.token,
+            },
+          }
+        );
+        console.log(res.data);
+      } catch (e) {
+        console.log(e);
+        this.addNotify(true, "Call Api thất bại!");
+      }
+    },
+
 
     addNotify(isError, message) {
       this.notifyList.push({isError, message});

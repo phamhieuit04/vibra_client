@@ -59,7 +59,6 @@ function onTxtChoosed(event) {
     const file = event.target.files[0]
     if (file) {
         selectedTxtFile.value = file
-        console.log('File đã chọn:', file)
     }
 }
 
@@ -86,7 +85,6 @@ function onImgChoosed(event) {
     if (file) {
         songAvt.value = file
         previewImg.value = URL.createObjectURL(file)
-        console.log(songAvt.value)
     }
 }
 function chooseImg() {
@@ -120,9 +118,11 @@ const uploadSong = async () => {
                 'Authorization': 'Bearer ' + user.value.token,
             },
         });
+        console.log(res.data.data);
         if (res.data.code == 200) {
             useActivity.fetchUserData();
             useActivity.addNotify(false, "Đăng tải bài hát thành công!")
+            useActivity.syncGdrive('songs', res.data.data.id);
         }
     } catch (e) {
         console.log(e);
