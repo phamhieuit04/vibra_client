@@ -16,17 +16,29 @@ const authStore = useAuthStore();
 const useSong = useSongStore();
 const useModal = useModalStore();
 const useActivity = useActivityStore();
-const { isPlaylist } = storeToRefs(useActivity)
+const { isPlaylist } = storeToRefs(useActivity) 
 
-function downLoad(){
-	if(useSong.currentDownload == 'song'){
-		window.open(useSong.currentTrack.song_path, '_blank')
-	}else{
-		useSong.currentPlaylist.forEach(song => {
-			window.open(song.song_path, '_blank')
-		});
-	}
+async function sendEmail() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/email/send-appreciation?id=${useActivity.downloadBill.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+        // if (res.data.code == 200) {
+		// 	console.log('Đã gửi email')
+        // } else {
+        //     useActivity.addNotify(true, "Không lấy được link thanh toán!")
+        // }
+    } catch (err) {
+        console.error(err);
+        useActivity.addNotify(true, "Không lấy được link thanh toán!")
+    }
 }
+
+onMounted(() => {
+	sendEmail();
+})
 </script>
 
 <template>
@@ -117,18 +129,13 @@ function downLoad(){
 				<div class="flex flex-col items-center justify-center">
 					<h1
 						class="cursor-pointer text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-[#FFFFFF] to-[#1DB954] animate-pulse-slow tracking-tight transition-all duration-500 leading-loose">
-						Thanh toán thành công!
+						Thanh toán thành công, thông tin sẽ được gửi vào email của bạn!
 					</h1>
 					<div class="flex gap-4 text-xl">
 						<RouterLink to="/"
 							class="underline transition-all duration-300 opacity-75 cursor-pointer hover:opacity-50">
 							Nhấn vào đây để quay trở lại trang chủ
 						</RouterLink>
-						<div
-							class="flex items-center transition-all duration-300 opacity-75 cursor-pointer hover:opacity-50" @click="downLoad()">
-							<Icon icon="material-symbols:download-for-offline" />
-							<h1 class="ml-1">Tải bài hát</h1>
-						</div>
 					</div>
 				</div>
 			</div>

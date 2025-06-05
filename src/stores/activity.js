@@ -16,6 +16,7 @@ export const useActivityStore = defineStore("activity", {
     searchKey: "",
 
     downloadListSong: [],
+    downloadBill: null,
     isPlaylist: false,
 
     notifyList: [],
@@ -172,9 +173,8 @@ export const useActivityStore = defineStore("activity", {
       this.allCategories = categoriesList;
     },
     
-    setDownload(isPlaylist, listSong){
-      this.isPlaylist = isPlaylist
-      this.downloadListSong = listSong;
+    setDownload(bill){
+      this.downloadBill = bill
     }
   },
 });

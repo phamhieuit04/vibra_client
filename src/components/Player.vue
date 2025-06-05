@@ -80,6 +80,7 @@ async function downloadThisSong() {
 			}
 		});
 		if (res.data.code == 200) {
+			useActivity.setDownload(res.data.data); 
 			window.location.href = res.data.data.checkout_url;
 		} else {
 			useActivity.addNotify(true, "Không lấy được link thanh toán!")
