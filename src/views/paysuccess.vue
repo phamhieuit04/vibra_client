@@ -25,19 +25,25 @@ async function sendEmail() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        // if (res.data.code == 200) {
-		// 	console.log('Đã gửi email')
-        // } else {
-        //     useActivity.addNotify(true, "Không lấy được link thanh toán!")
-        // }
     } catch (err) {
         console.error(err);
-        useActivity.addNotify(true, "Không lấy được link thanh toán!")
+    }
+}
+async function updateBill() {
+    try {
+        const res = await axios.get(`http://spotify_clone_api.test/api/payment/update-status/${useActivity.downloadBill.id}`, {
+            'headers': {
+                'Authorization': 'Bearer ' + authStore.user.token,
+            }
+        });
+    } catch (err) {
+        console.error(err);
     }
 }
 
 onMounted(() => {
 	sendEmail();
+	updateBill();
 })
 </script>
 
