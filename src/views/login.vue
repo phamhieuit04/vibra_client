@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+import MyLogo from '@/assets/MyLogo.svg'
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -14,23 +15,29 @@ const password = ref('')
 const isLoading = ref(false)
 
 const login = async () => {
-	if(email.value == '' || password == ''){
+	if (email.value == '' || password == '') {
 		alert('Vui lòng nhập đầy đủ thông tin!')
 		return
 	}
 	try {
+		isLoading.value = true;
 		const res = await axios.post('http://spotify_clone_api.test/api/login', {
 			'email': email.value,
 			'password': password.value
 		});
-		isLoading.value = true;
 		if (res.data.code == 200) {
 			authStore.setIsLoggedIn(true);
 			authStore.setUser(res.data.data);
-			router.push('/');
+			if (authStore.user.email_verified_at == null) {
+				console.log('Chưa verify')
+				router.push('/verify');
+			}
+			else {
+				router.push('/');
+			}
 			isLoading.value = false;
 		}
-		if(res.data.code == 204){
+		if (res.data.code == 204) {
 			alert('Saiii!!!!!!!!');
 			isLoading.value = false
 		}
@@ -43,13 +50,14 @@ const login = async () => {
 </script>
 <template>
 	<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60" v-if="isLoading">
-        <Icon icon="svg-spinners:180-ring" class="text-[200px] text-[#BC4D15]" />
-    </div>
+		<Icon icon="svg-spinners:180-ring" class="text-[200px] text-[#BC4D15]" />
+	</div>
 	<div class="h-screen bg-gradient-to-b from-[#292929] to-black from-10% to-80% flex items-center justify-center">
 		<div class="w-[734px] h-[740px] bg-[#121212] rounded-2xl flex items-center py-8 px-24 flex-col">
 			<!-- Start Spotify logo -->
 			<RouterLink to="/">
-				<Icon icon="mdi:spotify" class="text-white transition cursor-pointer size-14 hover:text-green-500 " />
+				<img :src="MyLogo" alt=""
+					class="text-[#FFE5D6]  transition duration-400 h-[200px] w-[200px] my-[-60px] hover:text-white invert">
 			</RouterLink>
 			<!-- End Sportfy logo -->
 
@@ -72,7 +80,7 @@ const login = async () => {
 				<input type="password" placeholder="Password" v-model="password"
 					class="p-3 text-white bg-transparent border border-gray-500 rounded-md placeholder:text-sm">
 				<button type="submit"
-					class="p-4 mt-6 font-bold text-black bg-green-500 rounded-full hover:scale-105 transition ease-in  hover:bg-[#3be477]">Continue</button>
+					class="p-4 mt-6 font-bold text-black bg-[#BC4D15] rounded-full hover:scale-105 transition ease-in  hover:bg-[#b36b47]">Continue</button>
 			</form>
 			<!-- End login form -->
 
@@ -80,7 +88,7 @@ const login = async () => {
 			<div class="flex flex-row items-center">
 				<p class="text-[#aeaeae]">Bạn chưa có tài khoản?</p>
 				<RouterLink to="/signup"
-					class="pl-4 font-semibold text-white underline transition underline-offset-2 hover:text-green-500">
+					class="pl-4 font-semibold text-white underline transition underline-offset-2 hover:text-[#BC4D15]">
 					Đăng ký</RouterLink>
 			</div>
 			<!-- End sign up link -->

@@ -5,6 +5,9 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+import MyLogo from '@/assets/MyLogo.svg'
+
+
 const router = useRouter();
 const authStore = useAuthStore();
 const email = ref('')
@@ -41,7 +44,8 @@ const signup = async () => {
 		<div class="flex flex-col items-center w-96">
 			<!-- Start signup header -->
 			<RouterLink to="/">
-				<Icon icon="mdi:spotify" class="text-white transition cursor-pointer size-14 hover:text-green-500 " />
+				<img :src="MyLogo" alt=""
+					class="text-[#FFE5D6]  transition duration-400 h-[200px] w-[200px] my-[-60px] hover:text-white invert">
 			</RouterLink>
 			<h1 class="text-5xl font-bold text-center text-white">Đăng ký</h1>
 			<!-- End signup header -->
@@ -58,7 +62,8 @@ const signup = async () => {
 				<input type="password" placeholder="Nhập lại mật khẩu" v-model="rePassword"
 					class="p-3 text-white bg-transparent border border-gray-500 rounded-md placeholder:text-sm">
 				<button type="submit"
-					class="p-4 mt-6 font-bold text-black bg-green-500 rounded-full hover:scale-105 transition ease-in  hover:bg-[#3be477]">Đăng Ký</button>
+					class="p-4 mt-6 font-bold text-black bg-[#BC4D15] rounded-full hover:scale-105 transition ease-in  hover:bg-[#b36b47]">Đăng
+					Ký</button>
 			</form>
 			<!-- End signup form -->
 
@@ -80,7 +85,7 @@ const signup = async () => {
 			<div class="flex flex-row items-center">
 				<p class="text-[#aeaeae]">Bạn đã có tài khoản?</p>
 				<RouterLink to="/login"
-					class="pl-4 font-semibold text-white underline transition underline-offset-2 hover:text-green-500"
+					class="pl-4 font-semibold text-white underline transition underline-offset-2 hover:text-[#BC4D15]"
 					href="#">Đăng nhập</RouterLink>
 			</div>
 			<!-- End login link -->

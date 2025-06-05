@@ -24,10 +24,12 @@
 	import { getMessaging, getToken } from "firebase/messaging";
 	import { fcmKeyPair } from '@/services/firebase';
 	import { useAuthStore } from '@/stores/auth';
+	import { ref } from 'vue';
 
 	export default {
 		setup() {
 			const authStore = useAuthStore();
+			const isLoading = ref(false);
 
 			return { authStore };
 		},
@@ -54,6 +56,7 @@
 					})
 			},
 			async callAuthAPI(authRes) {
+				this.isLoading = true
 				await axios.get('http://spotify_clone_api.test/api/firebase/auth', {
 					params: {
 						'email': authRes.user.email,
@@ -64,6 +67,7 @@
 						this.authStore.setIsLoggedIn(true);
 						this.authStore.setUser(apiRes.data.data);
 						this.$router.push('/');
+						this.isLoading = false
 					}
 				}).catch((apiError) => {
 					console.log(apiError);
