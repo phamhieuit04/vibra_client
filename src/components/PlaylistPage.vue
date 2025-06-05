@@ -22,6 +22,7 @@ const { playlistData } = storeToRefs(useView)
 const playlistSong = ref([])
 const reloadKey = ref(0);
 const isFollowed = ref(false)
+const isLoading = ref(true)
 
 async function FetchPlaylistData() {
     if (playlistData.value.type == 1) {
@@ -93,7 +94,8 @@ async function downloadThisPlaylist() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
-        if (res.data) {
+        console.log(res)
+        if (res.data.code == 200) {
             window.location.href = res.data.data.checkout_url;
         } else {
             useActivity.addNotify(true, "Không lấy được link thanh toán!")
@@ -115,9 +117,10 @@ function onPlaylistSongDel(trackId) {
     FetchPlaylistData();
 }
 
-watch(() => playlistData.value, () => {
+watch(() => playlistData.value, async () => {
+    isLoading.value = true
     if (!playlistData.value.isFav) {
-        FetchPlaylistData();
+        await FetchPlaylistData();
         followAlbumList.value.forEach(album => {
             if (album.id === playlistData.value.id) {
                 isFollowed.value = true
@@ -126,13 +129,15 @@ watch(() => playlistData.value, () => {
     } else {
         playlistSong.value = playlistData.value.songs
     }
+    isLoading.value = false
 })
 
 
 
-onMounted(() => {
+onMounted(async () => {
+    isLoading.value = true
     if (!playlistData.value.isFav) {
-        FetchPlaylistData();
+        await FetchPlaylistData();
         followAlbumList.value.forEach(album => {
             if (album.id === playlistData.value.id) {
                 isFollowed.value = true
@@ -141,6 +146,7 @@ onMounted(() => {
     } else {
         playlistSong.value = playlistData.value.songs
     }
+    isLoading.value = false
 })
 </script>
 <template>
@@ -148,9 +154,10 @@ onMounted(() => {
 
         <div class="relative flex items-center w-full">
             <div class="w-48 h-48 bg-gray-500 rounded-xl aspect-square">
-                <img v-if="playlistData.isFav" class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="FavCover">
-                <img v-else class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="playlistData.thumbnail_path"
-                    @error="event => event.target.src = defaultImgage">
+                <img v-if="playlistData.isFav" class="object-cover max-w-48 max-h-48 rounded-xl aspect-square"
+                    :src="FavCover">
+                <img v-else class="object-cover max-w-48 max-h-48 rounded-xl aspect-square"
+                    :src="playlistData.thumbnail_path" @error="event => event.target.src = defaultImgage">
             </div>
             <div class="w-[100% - 192px] ml-5">
                 <div class="text-lg font-semibold text-white"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}
@@ -203,6 +210,24 @@ onMounted(() => {
             <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistData" :track="track"
                 :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel"
                 @deletePlaylistSong="onPlaylistSongDel" />
+
+
+            <li v-if="isLoading" class="flex items-center justify-between rounded-md cursor-pointer h-14 my-2">
+                <div class="flex items-center w-full py-1.5">
+                    <div class="w-[40px] h-10 bg-[#2A2929] ml-[14px] mr-[10px] cursor-pointer rounded"> 
+                    </div>
+                    <div>
+                        <div  class=" h-5 text-white font-semibold bg-[#2A2929] w-24 mt-1  rounded"></div>
+                        <div class=" h-5 font-semibold text-gray-400 bg-[#2A2929] w-20 my-1 rounded" ></div>
+                    </div>
+                </div>
+                <div class="flex items-center">  
+                    <div class="mx-4 bg-[#2A2929] w-10 h-4 rounded"></div>  
+                    <div class="mx-3 bg-[#2A2929] w-4 h-4 rounded"></div>  
+                    <div class="mx-4 bg-[#2A2929] w-4 h-4 rounded"></div>  
+
+                </div>
+            </li>
         </ul>
     </div>
 </template>
