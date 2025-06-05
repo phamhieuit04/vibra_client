@@ -10,6 +10,7 @@ import { useSongStore } from "@/stores/song";
 import { useModalStore } from "@/stores/modal";
 import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
+import MyLogo from '@/assets/MyLogo.svg'
 import PlayerFunc from "./PlayerFunc.vue";
 import PlaylistOptionRow from "./PlaylistOptionRow.vue";
 
@@ -251,11 +252,13 @@ watch(() => isTrackTimeCurrent.value, (time) => {
 						<Icon icon="fa6-solid:forward-step" class=" text-[#FFE5D6] size-7" />
 					</button>
 
-					<button class="mx-2" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
+					<!-- <button class="mx-2" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
 						<Icon icon="tabler:poo-filled"
 							class="text-[#FFE5D6]  transition duration-200 cursor-pointer size-5 hover:text-white"
 							:class="{ 'animate-bounce': isPlaying }" />
-					</button>
+					</button> -->
+					<img :src="MyLogo" alt="" 
+						class="text-[#FFE5D6]  transition duration-400 h-[80px] w-[80px] mx-[-18px] hover:text-white invert" >
 				</div>
 			</div>
 

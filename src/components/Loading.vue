@@ -5,7 +5,6 @@ const useView = useViewStore();
 </script>
 <template>
     <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60">
-        <Icon icon="svg-spinners:180-ring" class="text-[200px]"
-            :style="{color: useView.currentColor}"/>
+        <Icon icon="svg-spinners:180-ring" class="text-[200px] text-[#BC4D15]" />
     </div>
 </template>

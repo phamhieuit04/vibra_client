@@ -10,6 +10,7 @@ import { useSongStore } from "@/stores/song";
 import { useModalStore } from "@/stores/modal";
 import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
+import FavCover from '@/assets/FavCover.jpg';
 
 const useView = useViewStore();
 const authStore = useAuthStore();
@@ -135,7 +136,7 @@ onMounted(() => {
 					:class="{ 'bg-white/10': useView.selected === favSongList }">
 					<div class="flex items-center justify-center w-10 h-10 rounded bg-white/10">
 						<img class="flex-shrink-0 object-cover rounded max-h-10 max-w-10 w-fixed"
-							:src="favSongList.thumbnail_path" @error="event => event.target.src = defaultImgage" />
+							:src="FavCover" @error="event => event.target.src = defaultImgage" />
 					</div>
 
 					<div class="flex-1 min-w-0">

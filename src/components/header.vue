@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg'
+import LogoText from '@/assets/LogoText.svg'
 import { useAuthStore } from '@/stores/auth';
 import { useSongStore } from "@/stores/song";
 import { useViewStore } from "@/stores/view";
@@ -91,9 +92,11 @@ onMounted(() => {
 <template>
 	<div class="w-[100%] h-[64px] fixed right-0 z-20 bg-[#BC4D15] flex items-center justify-between"
 		:style="{ backgroundColor: useView.currentColor }">
-		<div class="flex items-center gap-4 ml-8 relative">
-			<Icon icon="tabler:poo-filled" @click="useView.setComponent('HomePage'); useView.selectItem(this)"
-				class="text-white transition duration-200 cursor-pointer size-10 hover:text-black text-[64px]" />
+		<div class="flex items-center gap-3 ml-8 relative">
+			<img class="text-white transition duration-200 cursor-pointer size-20 hover:text-black text-[64px]" 
+				:src="LogoText" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
+			<!-- <Icon icon="tabler:poo-filled" @click="useView.setComponent('HomePage'); useView.selectItem(this)"
+				class="text-white transition duration-200 cursor-pointer size-10 hover:text-black text-[64px]" /> -->
 			<div class="rounded-full bg-black w-8 h-8 ml-0 relative shadow-2xl hover:scale-105 cursor-pointer">
 				<div @click="openColorMenu = !openColorMenu"
 					class=" bg-gray-400 rounded-full w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -101,7 +104,7 @@ onMounted(() => {
 				</div>
 			</div>
 			<div v-if="openColorMenu"
-				class="absolute rounded-xl h-10 bg-black left-24 flex items-center transition duration-500">
+				class="absolute rounded-xl h-10 bg-black left-[140px] flex items-center transition duration-500">
 				<div class="w-6 h-6 rounded-full mx-2 cursor-pointer hover:scale-110" v-for="color in colorList"
 					:style="{ backgroundColor: color }" @click="useView.setCurrentColor(color)">
 

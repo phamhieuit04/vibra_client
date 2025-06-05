@@ -11,6 +11,7 @@ const router = useRouter();
 
 const email = ref('')
 const password = ref('')
+const isLoading = ref(false)
 
 const login = async () => {
 	if(email.value == '' || password == ''){
@@ -22,13 +23,16 @@ const login = async () => {
 			'email': email.value,
 			'password': password.value
 		});
+		isLoading.value = true;
 		if (res.data.code == 200) {
 			authStore.setIsLoggedIn(true);
 			authStore.setUser(res.data.data);
 			router.push('/');
+			isLoading.value = false;
 		}
 		if(res.data.code == 204){
 			alert('Saiii!!!!!!!!');
+			isLoading.value = false
 		}
 	} catch (e) {
 		console.log(e);
@@ -38,6 +42,9 @@ const login = async () => {
 
 </script>
 <template>
+	<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60" v-if="isLoading">
+        <Icon icon="svg-spinners:180-ring" class="text-[200px] text-[#BC4D15]" />
+    </div>
 	<div class="h-screen bg-gradient-to-b from-[#292929] to-black from-10% to-80% flex items-center justify-center">
 		<div class="w-[734px] h-[740px] bg-[#121212] rounded-2xl flex items-center py-8 px-24 flex-col">
 			<!-- Start Spotify logo -->

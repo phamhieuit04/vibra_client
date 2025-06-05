@@ -95,7 +95,7 @@ onMounted(() => {
                     <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer "
                         @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
                         <div class="w-full h-48 mb-2 rounded bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path">
+                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
                         </div>
                         <div class="flex justify-between">
                             <div>
@@ -117,7 +117,7 @@ onMounted(() => {
                     <div v-for="item in mySongList" :key="item.id" class="flex-shrink-0 cursor-pointer relative"
                         @click="useSong.playThisSong(item)">
                         <div class="  w-32 h-32 mb-5 rounded-full bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path">
+                            <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
                         </div>
                         <div class="flex justify-between">
                             <div>
@@ -156,12 +156,71 @@ onMounted(() => {
                     <div v-for="item in followArtistList" :key="item.id" class="flex-shrink-0 cursor-pointer"
                         @click="useView.selectItem(item.artist); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);">
                         <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-full" :src="item.artist.avatar_path">
+                            <img class="object-cover w-full h-full rounded-full" :src="item.artist.avatar_path" @error="event => event.target.src = defaultImgage">
                         </div>
                         <p class="text-sm text-zinc-400">{{ item.artist.name }}</p>
 
                     </div>
 
+                </div>
+            </div>
+
+
+            <div>
+                <h2 class="mt-8 text-lg font-semibold mb-4">Lịch sử thanh toán</h2>
+                <div class="max-h-[39.5rem] overflow-y-auto border border-gray-700 rounded-lg scrollbar-style">
+                    
+                    <table class="min-w-full bg-[#1a1a1a]">
+                        <thead class="sticky top-0 bg-[#2a2a2a]">
+                            <tr>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Mã giao dịch</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Ngày thanh toán</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Số tiền</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Gói dịch vụ</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Phương thức</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Trạng thái</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-left text-[#FFE5D6]">Hành động</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr
+                                v-for="payment in [
+                                    { id: 1, date: '2025-06-01', amount: '500.000 VNĐ', plan: 'Gói Pro', method: 'Chuyển khoản', status: 'Thành công' },
+                                    { id: 2, date: '2025-05-28', amount: '250.000 VNĐ', plan: 'Gói Basic', method: 'Thẻ tín dụng', status: 'Đang xử lý' },
+                                    { id: 3, date: '2025-05-25', amount: '750.000 VNĐ', plan: 'Gói Premium', method: 'Ví điện tử', status: 'Thất bại' },
+                                    { id: 4, date: '2025-05-20', amount: '500.000 VNĐ', plan: 'Gói Pro', method: 'Chuyển khoản', status: 'Thành công' }
+                                    
+                                ]"
+                                :key="payment.id"
+                                class="border-t border-gray-700 hover:bg-[#2a2a2a] transition-colors"
+                            >
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.id }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.date }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.amount }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.plan }}</td>
+                                <td class="px-4 py-3 text-[#B0B0B0]">{{ payment.method }}</td>
+                                <td
+                                    class="px-4 py-3 font-medium"
+                                    :class="{
+                                    'text-green-500': payment.status === 'Thành công',
+                                    'text-yellow-500': payment.status === 'Đang xử lý',
+                                    'text-red-500': payment.status === 'Thất bại',
+                                    }"
+                                >
+                                {{ payment.status }}
+                                </td>
+                                
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <div class="flex gap-4">
+                                        <button class="text-sm text-blue-400 transition-colors hover:text-blue-200">Xem chi tiết</button>
+                                        <button class="text-sm text-blue-400 transition-colors hover:text-blue-200">Tải hóa đơn</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
                 </div>
             </div>
 

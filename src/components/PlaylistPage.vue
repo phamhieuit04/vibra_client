@@ -8,6 +8,7 @@ import { storeToRefs } from "pinia";
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 import defaultImgage from '@/assets/default.jpg'
+import FavCover from '@/assets/FavCover.jpg';
 import { useActivityStore } from '@/stores/activity';
 
 const authStore = useAuthStore();
@@ -147,7 +148,8 @@ onMounted(() => {
 
         <div class="relative flex items-center w-full">
             <div class="w-48 h-48 bg-gray-500 rounded-xl aspect-square">
-                <img class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="playlistData.thumbnail_path"
+                <img v-if="playlistData.isFav" class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="FavCover">
+                <img v-else class="object-cover max-w-48 max-h-48 rounded-xl aspect-square" :src="playlistData.thumbnail_path"
                     @error="event => event.target.src = defaultImgage">
             </div>
             <div class="w-[100% - 192px] ml-5">
