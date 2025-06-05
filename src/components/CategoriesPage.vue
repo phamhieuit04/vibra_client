@@ -1,47 +1,40 @@
 <script setup>
 import { onMounted, ref, watch, toRefs, computed } from "vue";
-import { useRouter } from 'vue-router';
-import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from "pinia";
-import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from "@/stores/view";
-import { useSongStore } from "@/stores/song";
-import { useModalStore } from "@/stores/modal";
-import defaultImgage from '@/assets/default.jpg'
 import { useActivityStore } from "@/stores/activity";
+import { vAutoAnimate } from "@formkit/auto-animate/vue";
 
 const useView = useViewStore();
-const authStore = useAuthStore();
-const useSong = useSongStore();
-const useModal = useModalStore();
 const useActivity = useActivityStore();
 const { allCategories } = storeToRefs(useActivity)
 
+const x = ref(0)
+const y = ref(0)
+const listWrapper = ref(null)
 
-onMounted(() => {
-
-})
+function updateMouse(e) {
+    const rect = listWrapper.value.getBoundingClientRect()
+    x.value = e.clientX - rect.left
+    y.value = e.clientY - rect.top
+}
 </script>
+
 <template>
     <div class="py-14 space-y-10 text-[#FFFF]">
-        <div class="  px-6 w-full h-[calc(100vh-230px)] overflow-y-auto scrollbar-style ">
-            <h2 class="mb-5 text-2xl font-semibold ">Thể loại</h2>
-            <div class="flex flex-wrap gap-3 ">
+        <div class="px-6 w-full h-[calc(100vh-230px)] overflow-y-auto scrollbar-style">
+            <h2 class="mb-5 text-2xl font-semibold">Thể loại</h2>
+            <div class="relative flex flex-wrap gap-3 p-2 px-3" @mousemove="updateMouse" ref="listWrapper">
+                <div class="absolute inset-0 z-0 pointer-events-none rounded-xl" :style="{
+                    background: `radial-gradient(200px circle at ${x}px ${y}px, #15ca82, transparent)`
+                }"></div>
                 <div v-for="item in allCategories" :key="item.id"
-                    class="px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105"             
-                    style="width: 21.25rem;"
+                    class="relative hover:scale-105  z-10 p-8 m-1 duration-200 ease-in-out rounded-xl cursor-pointer w-[320px] h-48 bg-zinc-700"
                     @click="useView.selectItem(item); useView.setComponent('CategoriesSongPage'); useView.setCategoriesData(item);">
-
-                    <div class="relative w-full h-48 p-5 mb-2 rounded-xl bg-zinc-700">
-                        <p class="text-xl font-semibold">{{ item.name }}</p>
-                        <img :src="item.thumbnail_path"
-                            class="absolute w-32 h-32 right-4 bottom-4 rotate-12" />
-
-                    </div>
+                    <p class="text-xl font-semibold">{{ item.name }}</p>
+                    <img :src="item.thumbnail_path" class="absolute w-32 h-32 right-6 bottom-6 rotate-12" />
                 </div>
             </div>
         </div>
     </div>
-    
 </template>
