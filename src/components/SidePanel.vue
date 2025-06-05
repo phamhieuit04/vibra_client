@@ -96,9 +96,10 @@ onMounted(() => {
             <div>
                 <h3 class="text-2xl font-semibold">{{ currentTrack.name }}</h3>
                 <p class="text-sm text-zinc-400">{{ currentTrack.author.followers }} người theo dõi</p>
-                <p class="mt-2 text-sm">{{ currentTrack.author.description }} ...</p>
-                <h2 class="mt-3 mb-2 text-sm font-semibold ">Về bài hát bạn đang nghe </h2>
-                <p class="mt-2 text-sm">{{ currentTrack.description }} ...</p>
+                <h2 class="mt-2 mb-1 text-sm font-semibold ">Album {{ currentTrack.playlist.name }} </h2>
+                <p class="mt-1 text-sm">{{ currentTrack.playlist.description }}</p>
+                <h2 class="mt-5 mb-2 text-sm font-semibold ">Về bài hát bạn đang nghe </h2>
+                <p class="mt-2 text-sm">{{ currentTrack.description }}</p>
             </div>
         </div>
     </div>

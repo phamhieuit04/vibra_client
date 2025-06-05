@@ -185,7 +185,7 @@ onMounted(() => {
             </div>
 
 
-            <div>
+            <div v-if="bills.length > 0">
                 <h2 class="mt-8 text-lg font-semibold mb-4">Lịch sử thanh toán</h2>
                 <div class="max-h-[30rem] overflow-y-auto border border-gray-700 rounded-lg scrollbar-style">
                     
