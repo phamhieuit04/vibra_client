@@ -66,6 +66,7 @@ const saveProfile = async () => {
             useActivity.fetchData();
             useActivity.fetchUserData();
             useActivity.addNotify(false, "Chỉnh sửa thành công!")
+            useActivity.syncGdrive('thumbnails', playlistEditData.value.id)
         }
     } catch (e) {
         console.log(e);
