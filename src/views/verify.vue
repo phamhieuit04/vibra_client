@@ -37,23 +37,23 @@ async function sendVerify() {
 	}
 }
 
-async function verifyHandle() {
-	try {
-		isLoading.value = true
-		const res = await axios.get(`http://spotify_clone_api.test/api/email/verify/${authStore.user.id}/${hash.value}`);
+// async function verifyHandle() {
+// 	try {
+// 		isLoading.value = true
+// 		const res = await axios.get(`http://spotify_clone_api.test/api/email/verify/${authStore.user.id}/${hash.value}`);
 
-		console.log(res)
-		if (res.data.data) {
-			state.value = 'success';
-		}else{
-			state.value = 'fail';
-		}
-		isLoading.value = false
-	} catch (e) {
-		console.log(e);
-		isLoading.value = false
-	}
-}
+// 		console.log(res)
+// 		if (res.data.data) {
+// 			state.value = 'success';
+// 		}else{
+// 			state.value = 'fail';
+// 		}
+// 		isLoading.value = false
+// 	} catch (e) {
+// 		console.log(e);
+// 		isLoading.value = false
+// 	}
+// }
 
 onMounted(() => {
 	sendVerify();
@@ -65,11 +65,11 @@ onMounted(() => {
 	</div>
 	<div class="container flex flex-col items-center justify-center h-screen gap-6 mx-auto text-white"
 		v-if="state == 'verify'">
-		<h1 class="text-5xl text-center">Chúng tôi vừa gửi tới email của bạn một mã xác thực, vui lòng nhập vào ô dưới đây!</h1>
-		<input type="text" class="text-4xl text-black" v-model="hash">
-		<button class="text-3xl text-[#BC4D15] underline hover:opacity-75" @click="verifyHandle">
+		<h1 class="text-5xl text-center">Chúng tôi vừa gửi tới email của bạn một mã xác thực, vui lòng kiểm tra email để xác thực tài khoản hiện tại!</h1>
+		<!-- <input type="text" class="text-4xl text-black" v-model="hash"> -->
+		<RouterLink to="/login" class="text-3xl text-[#BC4D15] underline hover:opacity-75">
 			Xác nhận
-		</button>
+		</RouterLink>
 	</div>
 	<div class="container flex flex-col items-center justify-center h-screen gap-6 mx-auto text-white"
 		v-if="state == 'success'">
@@ -78,7 +78,7 @@ onMounted(() => {
 			Nhấn vào đây để tiến hành đăng nhập
 		</RouterLink>
 	</div>
-	<div class="container flex flex-col items-center justify-center h-screen gap-6 mx-auto text-white"
+	<!-- <div class="container flex flex-col items-center justify-center h-screen gap-6 mx-auto text-white"
 		v-if="state == 'fail'">
 		<h1 class="text-8xl">Xác thực thất bại!</h1>
 		<button @click="state = 'verify'; sendVerify();" class="text-3xl text-[#BC4D15] underline hover:opacity-75">
@@ -88,5 +88,5 @@ onMounted(() => {
 		<RouterLink to="/signup" class="text-3xl text-[#BC4D15] underline hover:opacity-75">
 			Tạo tài khoản mới
 		</RouterLink>
-	</div>
+	</div> -->
 </template>
