@@ -23,7 +23,7 @@ const songByCateList = ref([])
 
 async function getCategoriesSong() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/artist/get-artist-songs/${categoriesData.value.id}`, {
+        const res = await axios.get(`http://spotify_clone_api.test/api/category/show/${categoriesData.value.id}`, {
             'headers': {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
