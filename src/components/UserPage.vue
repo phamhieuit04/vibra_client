@@ -93,7 +93,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="relative px-10 overflow-auto scrollbar-style h-[calc(100vh-450px)]">
+        <div class="relative px-10 overflow-y-auto scrollbar-style h-[calc(100vh-450px)]">
             <button class="p-2 mb-5 text-3xl rounded-full text-zinc-400 hover:bg-zinc-600 hover:text-white"
                 @click="openMenu = !openMenu">
                 <Icon icon="ph:dots-three-outline-fill" />
@@ -110,46 +110,48 @@ onMounted(() => {
 
             <div class="mt-8 mb-3" v-if="myAlbumList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Album của tôi</h2>
-                <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 cursor-pointer "
-                        @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
-                        <div class="w-full h-48 mb-2 rounded bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
-                        </div>
-                        <div class="flex justify-between">
-                            <div>
-                                <p class="font-medium text-lg">{{ item.name }}</p>
-                                <p class="text-sm text-zinc-400">Năm {{ new Date(item.created_at).getFullYear() }}</p>
+                <div class="overflow-x-auto scrollbar-style">
+                    <div class="flex px-1 py-2 space-x-7 w-max">
+                        <div v-for="item in myAlbumList" :key="item.id" class="flex-shrink-0 w-48 duration-200 ease-in-out cursor-pointer group hover:scale-105 hover:brightness-105"
+                            @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">                     
+                            <div class="w-full h-48 mb-2 rounded bg-zinc-700">
+                                <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
                             </div>
-                            <button class=" hover:bg-white/5 p-2 rounded text-[#FFE5D6]/50 transition-all duration-200"
-                                @click.stop="console.log(item); useModal.setPlaylistEditData(item); openEditAlbum = true">
-                                <Icon icon="material-symbols:edit-square-rounded" class="text-xl " />
-                            </button>
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="text-lg font-medium">{{ item.name }}</p>
+                                    <p class="text-sm text-zinc-400">Năm {{ new Date(item.created_at).getFullYear() }}</p>
+                                </div>
+                                <button class=" hover:bg-white/5 p-2 rounded text-[#FFE5D6]/50 transition-all duration-200"
+                                    @click.stop="console.log(item); useModal.setPlaylistEditData(item); openEditAlbum = true">
+                                    <Icon icon="material-symbols:edit-square-rounded" class="text-xl " />
+                                </button>
+                            </div>                 
                         </div>
-                    </div>
+                    </div>               
                 </div>
             </div>
 
             <div class="mt-8 mb-3" v-if="mySongList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Danh sách bài hát của tôi</h2>
-                <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in mySongList" :key="item.id" class="flex-shrink-0 cursor-pointer relative"
-                        @click="useSong.playThisSong(item)">
-                        <div class="  w-32 h-32 mb-5 rounded-full bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
-                        </div>
-                        <div class="flex justify-between">
-                            <div>
-                                <p class="font-medium ">{{ item.name }}</p>
+                <div class="overflow-x-auto scrollbar-style">
+                    <div class="flex px-1 py-2 space-x-7 w-max">
+                        <div v-for="item in mySongList" :key="item.id" class="relative flex-shrink-0 duration-200 ease-in-out cursor-pointer group hover:scale-105 hover:brightness-105"
+                            @click="useSong.playThisSong(item)">
+                            <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
+                                <img class="object-cover w-full h-full rounded-full" :src="item.thumbnail_path" @error="event => event.target.src = defaultImgage">
                             </div>
-                            <button @click.stop="useSong.addSongToWaitlist(item);"
-                                class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
-                                <Icon icon="material-symbols:home-storage-outline" class=" text-2xl" />
-                            </button>
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="font-medium ">{{ item.name }}</p>
+                                </div>
+                                <button @click.stop="useSong.addSongToWaitlist(item);"
+                                    class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
+                                    <Icon icon="material-symbols:home-storage-outline" class="text-2xl " />
+                                </button>
+                            </div>
                         </div>
-
                     </div>
-
                 </div>
             </div>
 
@@ -157,38 +159,39 @@ onMounted(() => {
 
             <div v-if="myPlaylistList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Playlist của tôi</h2>
-                <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in myPlaylistList" :key="item.id" class="flex-shrink-0 w-32 cursor-pointer"
-                        @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
-                        <div class="w-full h-32 mb-2 rounded bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path"
-                                @error="event => event.target.src = defaultImgage">
+                <div class="overflow-x-auto scrollbar-style">
+                    <div class="flex px-1 py-2 space-x-7 w-max">
+                        <div v-for="item in myPlaylistList" :key="item.id" class="flex-shrink-0 w-32 duration-200 ease-in-out cursor-pointer group hover:scale-105 hover:brightness-105"
+                            @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
+                            <div class="w-full h-32 mb-2 rounded bg-zinc-700">
+                                <img class="object-cover w-full h-full rounded-xl" :src="item.thumbnail_path"
+                                    @error="event => event.target.src = defaultImgage">
+                            </div>
+                            <p class="font-medium">{{ item.name }}</p>
                         </div>
-                        <p class="font-medium">{{ item.name }}</p>
-                    </div>
+                    </div>              
                 </div>
             </div>
 
             <div class="mt-8" v-if="followArtistList.length > 0">
                 <h2 class="mb-4 text-lg font-semibold">Đang theo dõi</h2>
-                <div class="flex overflow-x-auto space-x-7 scrollbar-style">
-                    <div v-for="item in followArtistList" :key="item.id" class="flex-shrink-0 cursor-pointer"
-                        @click="useView.selectItem(item.artist); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);">
-                        <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
-                            <img class="object-cover w-full h-full rounded-full" :src="item.artist.avatar_path" @error="event => event.target.src = defaultImgage">
+                <div class="overflow-x-auto scrollbar-style">
+                    <div class="flex px-1 py-2 space-x-7 w-max">
+                        <div v-for="item in followArtistList" :key="item.id" class="flex-shrink-0 duration-200 ease-in-out cursor-pointer group hover:scale-105 hover:brightness-105"
+                            @click="useView.selectItem(item.artist); useView.setComponent('ArtistPage'); useView.setArtistData(item.artist);">
+                            <div class="w-32 h-32 mb-5 rounded-full bg-zinc-700">
+                                <img class="object-cover w-full h-full rounded-full" :src="item.artist.avatar_path" @error="event => event.target.src = defaultImgage">
+                            </div>
+                            <p class="text-sm text-zinc-400">{{ item.artist.name }}</p>
                         </div>
-                        <p class="text-sm text-zinc-400">{{ item.artist.name }}</p>
-
                     </div>
-
                 </div>
             </div>
 
 
             <div v-if="bills.length > 0">
-                <h2 class="mt-8 text-lg font-semibold mb-4">Lịch sử thanh toán</h2>
-                <div class="max-h-[30rem] overflow-y-auto border border-gray-700 rounded-lg scrollbar-style">
-                    
+                <h2 class="mt-8 mb-4 text-lg font-semibold">Lịch sử thanh toán</h2>
+                <div class="max-h-[30rem] overflow-y-auto border border-gray-700 rounded-lg scrollbar-style">               
                     <table class="min-w-full bg-[#1a1a1a]">
                         <thead class="sticky top-0 bg-[#2a2a2a]">
                             <tr>

@@ -57,7 +57,7 @@ onMounted(() => {
 </script>
 <template>
     <div class="py-8 space-y-10 text-[#FFFF]">
-        <div class="px-8 overflow-auto scrollbar-style h-[calc(100vh-220px)]">
+        <div class="px-8 overflow-y-auto scrollbar-style h-[calc(100vh-220px)]">
 
             <div class="text-[#FFE5D6] mb-20 ">
                 <div class="flex flex-row gap-6 ">
@@ -90,7 +90,7 @@ onMounted(() => {
 
                     <div class="flex-1 " v-if="listSongSearch.length > 0">
                         <h2 class="mb-1 text-2xl font-semibold ">Bài hát</h2>
-                        <div class="pr-8 mt-3">
+                        <div class="h-56 pr-8 mt-3 overflow-y-auto scrollbar-style">
                             <div v-for="item, index in listSongSearch" :key="item.id"
                                 class="flex items-center justify-between hover:bg-[#2a1d18] p-2 rounded-lg transition cursor-pointer "
                                 @click="useSong.playThisSong(item)">
@@ -136,7 +136,7 @@ onMounted(() => {
 
             <div class="text-[#FFE5D6] mb-8" v-if="listAlbumSearch.length > 0">
                 <h2 class="mb-1 text-2xl font-semibold">Albums</h2>
-                <div class="w-full overflow-x-auto scrollbar-style scrollbar-none">
+                <div class="w-full overflow-x-auto scrollbar-style ">
                     <div class="flex px-1 py-2 space-x-4 w-max ">
                         <div v-for="item in listAlbumSearch" :key="item.id"
                             class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 "
