@@ -196,7 +196,7 @@ watch(() => isTrackTimeCurrent.value, (time) => {
 		class="fixed bottom-0 flex items-center justify-between w-full z-50 h-[9.4%] bg-[#181413] border-t border-t-[#272727]">
 		<div class="flex items-center w-1/4 ">
 			<div class="flex items-center ml-4">
-				<img class="object-cover rounded-sm shadow-2xl" width="55" :src="currentTrack['thumbnail_path']"
+				<img class="object-cover rounded-full shadow-2xl aspect-square" width="55" :src="currentTrack['thumbnail_path']"
 					@error="event => event.target.src = defaultImgage" />
 				<div class="ml-4">
 					<div style="font-family: 'Montserrat', sans-serif;"
