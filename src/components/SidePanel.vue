@@ -85,12 +85,14 @@ onMounted(() => {
                 <div class="w-16 h-16 bg-gray-600 rounded-full">
                     <img class="object-cover w-full h-full rounded-full" :src="currentTrack.author.avatar_path" >
                 </div>
-                <button v-if="!isFollowed" @click="followThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
-                    Theo dõi
-                </button>
-                <button v-else @click="unfollowThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
-                    Hủy theo dõi
-                </button>
+                <div v-if="currentTrack.author.id !== authStore.user.id">
+                    <button v-if="!isFollowed" @click="followThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                        Theo dõi
+                    </button>
+                    <button v-else @click="unfollowThisArtist" class="border border-[#BC4D15] text-[#BC4D15] px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#BC4D15] hover:text-black transition">
+                        Hủy theo dõi
+                    </button>
+                </div>
             </div>
 
             <div>
