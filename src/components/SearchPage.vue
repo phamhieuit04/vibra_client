@@ -137,7 +137,7 @@ onMounted(() => {
             <div class="text-[#FFE5D6] mb-8" v-if="listAlbumSearch.length > 0">
                 <h2 class="mb-1 text-2xl font-semibold">Albums</h2>
                 <div class="w-full overflow-x-auto overflow-y-hidden scrollbar-style">
-                    <div class="flex px-1 py-2 space-x-4 w-max scrollbar-none">
+                    <div class="flex px-1 py-2 space-x-4 w-max">
                         <div v-for="item in listAlbumSearch" :key="item.id"
                             class="flex-shrink-0 w-48 px-2 duration-200 ease-in-out rounded-lg cursor-pointer hover:scale-105 "
                             @click="useView.selectItem(item); useView.setComponent('PlaylistPage'); useView.setPlaylistData(item);">
