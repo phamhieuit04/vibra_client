@@ -10,6 +10,7 @@ import { useSongStore } from "@/stores/song";
 import { useModalStore } from "@/stores/modal";
 import { useActivityStore } from "@/stores/activity";
 import defaultImgage from '@/assets/default.jpg'
+import Loading from "@/components/Loading.vue";
 
 const useView = useViewStore();
 const authStore = useAuthStore();
@@ -17,6 +18,7 @@ const useSong = useSongStore();
 const useModal = useModalStore();
 const useActivity = useActivityStore();
 const { isPlaylist } = storeToRefs(useActivity) 
+const isLoading = ref(true)
 
 async function sendEmail() {
     try {
@@ -25,6 +27,7 @@ async function sendEmail() {
                 'Authorization': 'Bearer ' + authStore.user.token,
             }
         });
+		console.log(res)
     } catch (err) {
         console.error(err);
     }
@@ -41,13 +44,16 @@ async function updateBill() {
     }
 }
 
-onMounted(() => {
-	sendEmail();
-	updateBill();
+onMounted(async () => {
+	isLoading.value = true
+	await sendEmail();
+	await updateBill();
+	isLoading.value = false
 })
 </script>
 
 <template>
+	<Loading v-if="isLoading"/>
 	<div
 		class="min-h-screen w-full bg-[#0A0A0A] relative flex items-center justify-center p-6 font-sans overflow-hidden">
 		<!-- Surrounding Effects -->
