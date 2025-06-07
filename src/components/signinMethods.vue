@@ -42,6 +42,11 @@ export default {
 			deviceToken: ""
 		}
 	},
+	created() {
+		this.googleProvider.setCustomParameters({
+			prompt: 'select_account'
+		});
+	},
 	components: {
 		Icon
 	},
@@ -81,7 +86,7 @@ export default {
 					headers: {
 						Authorization: 'Bearer ' + this.authStore.user.token,
 					},
-				}); 
+				});
 			} catch (e) {
 				console.log(e);
 			}
