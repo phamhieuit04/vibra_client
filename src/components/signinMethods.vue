@@ -1,12 +1,10 @@
 <template>
     <ul class="py-8">
         <li class="mb-2">
-            <button
-                v-on:click="
-                    (getDeviceToken(), firebaseSignInPopup(googleProvider))
+            <button v-on:click="
+                (getDeviceToken(), firebaseSignInPopup(googleProvider))
                 "
-                class="flex h-[52px] w-[350px] items-center rounded-full border border-gray-500 pl-9 transition duration-300 hover:border-white"
-            >
+                class="flex h-[52px] w-[350px] items-center rounded-full border border-gray-500 pl-9 transition duration-300 hover:border-white">
                 <Icon icon="devicon:google" class="size-6" />
                 <p class="pl-9 text-lg font-bold text-white">
                     Đăng nhập với Google
@@ -14,12 +12,10 @@
             </button>
         </li>
         <li class="mb-2">
-            <button
-                v-on:click="
-                    (getDeviceToken(), firebaseSignInPopup(facebookProvider))
+            <button v-on:click="
+                (getDeviceToken(), firebaseSignInPopup(facebookProvider))
                 "
-                class="flex h-[52px] w-[350px] items-center rounded-full border border-gray-500 pl-9 transition duration-300 hover:border-white"
-            >
+                class="flex h-[52px] w-[350px] items-center rounded-full border border-gray-500 pl-9 transition duration-300 hover:border-white">
                 <Icon icon="logos:facebook" class="size-6" />
                 <p class="pl-9 text-lg font-bold text-white">
                     Đăng nhập với Facebook
