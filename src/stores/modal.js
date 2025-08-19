@@ -1,19 +1,19 @@
-import { defineStore } from "pinia";
-export const useModalStore = defineStore("modal", {
-  state: () => ({
-    playlistEditData: null,
-    songUpdateData: null,
+import { defineStore } from 'pinia';
+export const useModalStore = defineStore('modal', {
+    state: () => ({
+        playlistEditData: null,
+        songUpdateData: null,
 
-    openEditProfile: false,
-    openEditPlaylist: false,
-    openUploadSong: false,
-    openEditAlbum: false,
-    loading: false,
-  }),
+        openEditProfile: false,
+        openEditPlaylist: false,
+        openUploadSong: false,
+        openEditAlbum: false,
+        loading: false,
+    }),
 
-  actions: {
-    setPlaylistEditData(playlist) {
-      this.playlistEditData = playlist;
+    actions: {
+        setPlaylistEditData(playlist) {
+            this.playlistEditData = playlist;
+        },
     },
-  },
 });

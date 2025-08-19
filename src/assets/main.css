@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 body {
-	background-color: black;
-	font-family: 'Montserrat Variable', sans-serif;
+    background-color: black;
+    font-family: 'Montserrat Variable', sans-serif;
 }

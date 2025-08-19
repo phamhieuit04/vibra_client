@@ -1,13 +1,13 @@
 <script setup>
 import SongRow from './SongRow.vue';
 import { Icon } from '@iconify/vue';
-import { useSongStore } from "@/stores/song";
+import { useSongStore } from '@/stores/song';
 import { useViewStore } from '@/stores/view';
 import { useAuthStore } from '@/stores/auth';
-import { storeToRefs } from "pinia";
+import { storeToRefs } from 'pinia';
 import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
-import defaultImgage from '@/assets/default.jpg'
+import defaultImgage from '@/assets/default.jpg';
 import FavCover from '@/assets/FavCover.jpg';
 import { useActivityStore } from '@/stores/activity';
 
@@ -16,100 +16,114 @@ const useSong = useSongStore();
 const useView = useViewStore();
 const useActivity = useActivityStore();
 
-
-const { followAlbumList } = storeToRefs(useActivity)
-const { playlistData } = storeToRefs(useView)
-const playlistSong = ref([])
+const { followAlbumList } = storeToRefs(useActivity);
+const { playlistData } = storeToRefs(useView);
+const playlistSong = ref([]);
 const reloadKey = ref(0);
-const isFollowed = ref(false)
-const isLoading = ref(true)
+const isFollowed = ref(false);
+const isLoading = ref(true);
 
 async function FetchPlaylistData() {
     if (playlistData.value.type == 1) {
         try {
-            const res = await axios.get(`http://spotify_clone_api.test/api/playlist/show/${playlistData.value.id}`, {
-                'headers': {
-                    'Authorization': 'Bearer ' + authStore.user.token,
-                }
-            });
-            playlistSong.value = res.data.data
+            const res = await axios.get(
+                `http://spotify_clone_api.test/api/playlist/show/${playlistData.value.id}`,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
+                    },
+                },
+            );
+            playlistSong.value = res.data.data;
         } catch (e) {
             console.log(e);
-            useActivity.addNotify(true, "Call Api thất bại!")
+            useActivity.addNotify(true, 'Call Api thất bại!');
         }
     } else {
         try {
-            const res = await axios.get(`http://spotify_clone_api.test/api/library/list-playlist-song/${playlistData.value.id}`, {
-                'headers': {
-                    'Authorization': 'Bearer ' + authStore.user.token,
-                }
-            });
+            const res = await axios.get(
+                `http://spotify_clone_api.test/api/library/list-playlist-song/${playlistData.value.id}`,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
+                    },
+                },
+            );
             const rawList = res.data.data;
             const onlySongs = rawList.map((item) => item.song);
-            playlistSong.total_song = onlySongs.value
-            playlistSong.value = onlySongs
+            playlistSong.total_song = onlySongs.value;
+            playlistSong.value = onlySongs;
         } catch (e) {
             console.log(e);
-            useActivity.addNotify(true, "Call Api thất bại!")
+            useActivity.addNotify(true, 'Call Api thất bại!');
         }
     }
 }
 
 async function addToLibrary() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/home/store/${playlistData.value.id}`, {
-            'headers': {
-                'Authorization': 'Bearer ' + authStore.user.token,
-            }
-        });
+        const res = await axios.get(
+            `http://spotify_clone_api.test/api/home/store/${playlistData.value.id}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + authStore.user.token,
+                },
+            },
+        );
         useActivity.fetchData();
-        isFollowed.value = !isFollowed.value
-        useActivity.addNotify(false, "Đã thêm vào thư viện!")
+        isFollowed.value = !isFollowed.value;
+        useActivity.addNotify(false, 'Đã thêm vào thư viện!');
     } catch (e) {
         console.log(e);
-        useActivity.addNotify(true, "Call Api thất bại!")
+        useActivity.addNotify(true, 'Call Api thất bại!');
     }
 }
 async function removeFromLibrary() {
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/library/destroy-playlist/${playlistData.value.id}`, {
-            'headers': {
-                'Authorization': 'Bearer ' + authStore.user.token,
-            }
-        });
+        const res = await axios.get(
+            `http://spotify_clone_api.test/api/library/destroy-playlist/${playlistData.value.id}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + authStore.user.token,
+                },
+            },
+        );
         useActivity.fetchData();
-        isFollowed.value = !isFollowed.value
-        useActivity.addNotify(false, "Đã xóa khỏi thư viện!")
+        isFollowed.value = !isFollowed.value;
+        useActivity.addNotify(false, 'Đã xóa khỏi thư viện!');
     } catch (e) {
         console.log(e);
-        useActivity.addNotify(true, "Call Api thất bại!")
+        useActivity.addNotify(true, 'Call Api thất bại!');
     }
 }
 
 async function downloadThisPlaylist() {
-    if (!playlistData.value.id) return
+    if (!playlistData.value.id) return;
     try {
-        const res = await axios.get(`http://spotify_clone_api.test/api/payment/create-bill?playlist_id=${playlistData.value.id}`, {
-            'headers': {
-                'Authorization': 'Bearer ' + authStore.user.token,
-            }
-        });
+        const res = await axios.get(
+            `http://spotify_clone_api.test/api/payment/create-bill?playlist_id=${playlistData.value.id}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + authStore.user.token,
+                },
+            },
+        );
         if (res.data.code == 200) {
             useActivity.setDownload(res.data.data);
             window.location.href = res.data.data.checkout_url;
         } else {
-            useActivity.addNotify(true, "Không lấy được link thanh toán!")
+            useActivity.addNotify(true, 'Không lấy được link thanh toán!');
         }
     } catch (err) {
         console.error(err);
-        useActivity.addNotify(true, "Không lấy được link thanh toán!")
+        useActivity.addNotify(true, 'Không lấy được link thanh toán!');
     }
 }
 
 function onSongDel(trackId) {
-    playlistSong.value = playlistData.value.songs
-    playlistSong.value = playlistSong.value.filter(t => t.id !== trackId);
-    playlistData.value.songs = playlistSong.value
+    playlistSong.value = playlistData.value.songs;
+    playlistSong.value = playlistSong.value.filter((t) => t.id !== trackId);
+    playlistData.value.songs = playlistSong.value;
     reloadKey.value++;
 }
 
@@ -117,81 +131,138 @@ function onPlaylistSongDel(trackId) {
     FetchPlaylistData();
 }
 
-watch(() => playlistData.value, async () => {
-    isLoading.value = true
-    if (!playlistData.value.isFav) {
-        await FetchPlaylistData();
-        followAlbumList.value.forEach(album => {
-            if (album.id === playlistData.value.id) {
-                isFollowed.value = true
-            }
-        })
-    } else {
-        playlistSong.value = playlistData.value.songs
-    }
-    isLoading.value = false
-})
-
-
+watch(
+    () => playlistData.value,
+    async () => {
+        isLoading.value = true;
+        if (!playlistData.value.isFav) {
+            await FetchPlaylistData();
+            followAlbumList.value.forEach((album) => {
+                if (album.id === playlistData.value.id) {
+                    isFollowed.value = true;
+                }
+            });
+        } else {
+            playlistSong.value = playlistData.value.songs;
+        }
+        isLoading.value = false;
+    },
+);
 
 onMounted(async () => {
-    isLoading.value = true
+    isLoading.value = true;
     if (!playlistData.value.isFav) {
         await FetchPlaylistData();
-        followAlbumList.value.forEach(album => {
+        followAlbumList.value.forEach((album) => {
             if (album.id === playlistData.value.id) {
-                isFollowed.value = true
+                isFollowed.value = true;
             }
-        })
+        });
     } else {
-        playlistSong.value = playlistData.value.songs
+        playlistSong.value = playlistData.value.songs;
     }
-    isLoading.value = false
-})
+    isLoading.value = false;
+});
 </script>
 <template>
-    <div class="p-8 overflow-y-auto h-[calc(100vh-12rem)] scrollbar-none">
-
-        <div class="relative flex items-center w-full">
-            <div class="w-48 h-48 bg-gray-500 rounded-xl aspect-square">
-                <img v-if="playlistData.isFav" class="object-cover max-w-48 max-h-48 rounded-xl aspect-square"
-                    :src="FavCover">
-                <img v-else class="object-cover max-w-48 max-h-48 rounded-xl aspect-square"
-                    :src="playlistData.thumbnail_path" @error="event => event.target.src = defaultImgage">
+    <div class="h-[calc(100vh-12rem)] overflow-y-auto p-8 scrollbar-none">
+        <div class="relative flex w-full items-center">
+            <div class="aspect-square h-48 w-48 rounded-xl bg-gray-500">
+                <img
+                    v-if="playlistData.isFav"
+                    class="aspect-square max-h-48 max-w-48 rounded-xl object-cover"
+                    :src="FavCover"
+                />
+                <img
+                    v-else
+                    class="aspect-square max-h-48 max-w-48 rounded-xl object-cover"
+                    :src="playlistData.thumbnail_path"
+                    @error="(event) => (event.target.src = defaultImgage)"
+                />
             </div>
             <div class="w-[100% - 192px] ml-5">
-                <div class="text-lg font-semibold text-white"> {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}
+                <div class="text-lg font-semibold text-white">
+                    {{ playlistData.type == 1 ? 'Album' : 'Danh sách phát' }}
                 </div>
                 <div
-                    class="flex-1 font-bold text-white break-normal whitespace-pre text-7xl wrap-normal md:break-all md:whitespace-normal">
+                    class="wrap-normal flex-1 whitespace-pre break-normal text-7xl font-bold text-white md:whitespace-normal md:break-all"
+                >
                     {{ playlistData.name }}
                 </div>
 
-                <div class="text-gray-300 mt-[28px] flex">
-                    <Icon v-if="playlistData.type == 1 && !isFollowed"
+                <div class="mt-[28px] flex text-gray-300">
+                    <Icon
+                        v-if="playlistData.type == 1 && !isFollowed"
                         icon="material-symbols:add-circle-outline-rounded"
-                        class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" @click="addToLibrary" />
-                    <Icon v-else-if="playlistData.type == 1" icon="material-symbols:check-circle"
-                        class="flex pb-2 ml-2 mr-2 text-6xl cursor-pointer" @click="removeFromLibrary" />
+                        class="ml-2 mr-2 flex cursor-pointer pb-2 text-6xl"
+                        @click="addToLibrary"
+                    />
+                    <Icon
+                        v-else-if="playlistData.type == 1"
+                        icon="material-symbols:check-circle"
+                        class="ml-2 mr-2 flex cursor-pointer pb-2 text-6xl"
+                        @click="removeFromLibrary"
+                    />
 
-                    <button @click.stop="useSong.addPlaylistToWaitlist(playlistSong)"
-                        class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
-                        <Icon icon="material-symbols:home-storage-outline" class=" text-5xl" />
+                    <button
+                        @click.stop="
+                            useSong.addPlaylistToWaitlist(playlistSong)
+                        "
+                        class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5"
+                    >
+                        <Icon
+                            icon="material-symbols:home-storage-outline"
+                            class="text-5xl"
+                        />
                     </button>
-                    <button v-if="playlistData.type == 1"
-                        @click.stop="useSong.setDownload('playlist'); useSong.setPlaylist(playlistSong); downloadThisPlaylist()"
-                        class=" hover:bg-white/5 p-1 rounded text-[#FFE5D6]/50 mr-4">
-                        <Icon icon="material-symbols:arrow-circle-down-outline-rounded" class=" text-5xl" />
+                    <button
+                        v-if="playlistData.type == 1"
+                        @click.stop="
+                            useSong.setDownload('playlist');
+                            useSong.setPlaylist(playlistSong);
+                            downloadThisPlaylist();
+                        "
+                        class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5"
+                    >
+                        <Icon
+                            icon="material-symbols:arrow-circle-down-outline-rounded"
+                            class="text-5xl"
+                        />
                     </button>
-                    <div class="flex text-[13px] mt-5">{{ playlistData.author?.name }}</div>
-                    <Icon v-if="!playlistData.isFav" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
-                    <div class="flex text-[13px] mt-5">{{ !playlistData.isFav ? new
-                        Date(playlistData.created_at).getFullYear() : "" }}</div>
-                    <Icon icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
-                    <span class="flex text-[13px] mt-5">{{ playlistData.total_song }} bài hát</span>
-                    <Icon v-if="playlistData.type == 1" icon="ci:dot-03-m" class="flex mt-5 ml-2 mr-2 text-lg" />
-                    <span v-if="playlistData.type == 1" class="flex text-[13px] mt-5">{{ playlistData.price }}
-                        vnd</span>
+                    <div class="mt-5 flex text-[13px]">
+                        {{ playlistData.author?.name }}
+                    </div>
+                    <Icon
+                        v-if="!playlistData.isFav"
+                        icon="ci:dot-03-m"
+                        class="ml-2 mr-2 mt-5 flex text-lg"
+                    />
+                    <div class="mt-5 flex text-[13px]">
+                        {{
+                            !playlistData.isFav
+                                ? new Date(
+                                      playlistData.created_at,
+                                  ).getFullYear()
+                                : ''
+                        }}
+                    </div>
+                    <Icon
+                        icon="ci:dot-03-m"
+                        class="ml-2 mr-2 mt-5 flex text-lg"
+                    />
+                    <span class="mt-5 flex text-[13px]"
+                        >{{ playlistData.total_song }} bài hát</span
+                    >
+                    <Icon
+                        v-if="playlistData.type == 1"
+                        icon="ci:dot-03-m"
+                        class="ml-2 mr-2 mt-5 flex text-lg"
+                    />
+                    <span
+                        v-if="playlistData.type == 1"
+                        class="mt-5 flex text-[13px]"
+                        >{{ playlistData.price }} vnd</span
+                    >
                 </div>
             </div>
         </div>
@@ -204,28 +275,41 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div class="border-b border-b-[#A2A2A2] mt-2"></div>
+        <div class="mt-2 border-b border-b-[#A2A2A2]"></div>
         <div class="mb-4"></div>
         <ul class="w-full" :key="reloadKey">
-            <SongRow v-for="track, index in playlistSong" :key="track.id" :playlist="playlistData" :track="track"
-                :index="++index" :isFav="!playlistData.isFav" @delete-fav-song="onSongDel"
-                @deletePlaylistSong="onPlaylistSongDel" />
+            <SongRow
+                v-for="(track, index) in playlistSong"
+                :key="track.id"
+                :playlist="playlistData"
+                :track="track"
+                :index="++index"
+                :isFav="!playlistData.isFav"
+                @delete-fav-song="onSongDel"
+                @deletePlaylistSong="onPlaylistSongDel"
+            />
 
-
-            <li v-if="isLoading" class="flex items-center justify-between rounded-md cursor-pointer h-14 my-2">
-                <div class="flex items-center w-full py-1.5">
-                    <div class="w-[40px] h-10 bg-[#2A2929] ml-[14px] mr-[10px] cursor-pointer rounded"> 
-                    </div>
+            <li
+                v-if="isLoading"
+                class="my-2 flex h-14 cursor-pointer items-center justify-between rounded-md"
+            >
+                <div class="flex w-full items-center py-1.5">
+                    <div
+                        class="ml-[14px] mr-[10px] h-10 w-[40px] cursor-pointer rounded bg-[#2A2929]"
+                    ></div>
                     <div>
-                        <div  class=" h-5 text-white font-semibold bg-[#2A2929] w-24 mt-1  rounded"></div>
-                        <div class=" h-5 font-semibold text-gray-400 bg-[#2A2929] w-20 my-1 rounded" ></div>
+                        <div
+                            class="mt-1 h-5 w-24 rounded bg-[#2A2929] font-semibold text-white"
+                        ></div>
+                        <div
+                            class="my-1 h-5 w-20 rounded bg-[#2A2929] font-semibold text-gray-400"
+                        ></div>
                     </div>
                 </div>
-                <div class="flex items-center">  
-                    <div class="mx-4 bg-[#2A2929] w-10 h-4 rounded"></div>  
-                    <div class="mx-3 bg-[#2A2929] w-4 h-4 rounded"></div>  
-                    <div class="mx-4 bg-[#2A2929] w-4 h-4 rounded"></div>  
-
+                <div class="flex items-center">
+                    <div class="mx-4 h-4 w-10 rounded bg-[#2A2929]"></div>
+                    <div class="mx-3 h-4 w-4 rounded bg-[#2A2929]"></div>
+                    <div class="mx-4 h-4 w-4 rounded bg-[#2A2929]"></div>
                 </div>
             </li>
         </ul>

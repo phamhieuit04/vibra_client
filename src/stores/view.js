@@ -1,73 +1,73 @@
-import { defineStore } from "pinia";
-export const useViewStore = defineStore("view", {
-  state: () => ({
-    currentComponent: "HomePage",
-    currentColor: null,
-    selected: null,
-    page: null,
-    isFullscreen: false,
-    showSidePanel: false,
-    sidePanelState: '',
-    showWaitlistPanel: false,
-    categoriesData: null,
+import { defineStore } from 'pinia';
+export const useViewStore = defineStore('view', {
+    state: () => ({
+        currentComponent: 'HomePage',
+        currentColor: null,
+        selected: null,
+        page: null,
+        isFullscreen: false,
+        showSidePanel: false,
+        sidePanelState: '',
+        showWaitlistPanel: false,
+        categoriesData: null,
 
-    playlistData: null,
-    artistData: null,
-    userData: null,
-  }),
+        playlistData: null,
+        artistData: null,
+        userData: null,
+    }),
 
-  actions: {
-    setComponent(name) {
-      this.currentComponent = name;
-    },
+    actions: {
+        setComponent(name) {
+            this.currentComponent = name;
+        },
 
-    selectItem(item) {
-      this.selected = item;
-    },
+        selectItem(item) {
+            this.selected = item;
+        },
 
-    setPlaylistData(playlist) {
-      this.playlistData = playlist;
-    },
+        setPlaylistData(playlist) {
+            this.playlistData = playlist;
+        },
 
-    setArtistData(artist){
-      this.artistData = artist;
-    },
+        setArtistData(artist) {
+            this.artistData = artist;
+        },
 
-    setCategoriesData(categories){
-      this.categoriesData = categories
-    },
+        setCategoriesData(categories) {
+            this.categoriesData = categories;
+        },
 
-    toggleFullscreen() {
-      const el = this.page;
-      if (!document.fullscreenElement) {
-        el.requestFullscreen();
-        this.isFullscreen = true;
-      } else {
-        document.exitFullscreen();
-        this.isFullscreen = false;
-      }
-    },
+        toggleFullscreen() {
+            const el = this.page;
+            if (!document.fullscreenElement) {
+                el.requestFullscreen();
+                this.isFullscreen = true;
+            } else {
+                document.exitFullscreen();
+                this.isFullscreen = false;
+            }
+        },
 
-    toggleSidePanel() {
-      this.showSidePanel = !this.showSidePanel;
-    },
+        toggleSidePanel() {
+            this.showSidePanel = !this.showSidePanel;
+        },
 
-    toggleWaitlistPanel(){
-      this.showWaitlistPanel = !this.showWaitlistPanel;
-    },
+        toggleWaitlistPanel() {
+            this.showWaitlistPanel = !this.showWaitlistPanel;
+        },
 
-    setFullscreenPage(page){
-      this.page = page;
-    },
+        setFullscreenPage(page) {
+            this.page = page;
+        },
 
-    listenFullscreenChange() {
-      document.addEventListener('fullscreenchange', () => {
-        this.isFullscreen = !!document.fullscreenElement;
-      });
+        listenFullscreenChange() {
+            document.addEventListener('fullscreenchange', () => {
+                this.isFullscreen = !!document.fullscreenElement;
+            });
+        },
+        setCurrentColor(color) {
+            this.currentColor = color;
+        },
     },
-    setCurrentColor(color){
-      this.currentColor = color
-    },
-  },
-  persist: true,
+    persist: true,
 });
