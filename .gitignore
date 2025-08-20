@@ -30,5 +30,6 @@ coverage
 
 *.tsbuildinfo
 
-src/services/firebase.js
-public/firebase-messaging-sw.js
+public/*.js
+
+.env
