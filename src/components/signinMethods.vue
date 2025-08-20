@@ -1,3 +1,17 @@
+<script setup>
+import { api } from '@/api/axios';
+import { Icon } from '@iconify/vue';
+import {
+    getAuth,
+    GoogleAuthProvider,
+    FacebookAuthProvider,
+    signInWithPopup,
+} from 'firebase/auth';
+import { getMessaging, getToken } from 'firebase/messaging';
+import { useAuthStore } from '@/stores/auth';
+
+</script>
+
 <template>
     <ul class="py-8">
         <li class="mb-2">
@@ -26,26 +40,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { Icon } from '@iconify/vue';
-import {
-    getAuth,
-    GoogleAuthProvider,
-    FacebookAuthProvider,
-    signInWithPopup,
-} from 'firebase/auth';
-import { getMessaging, getToken } from 'firebase/messaging';
-import { fcmKeyPair } from '@/services/firebase';
-import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
-
 export default {
-    setup() {
-        const authStore = useAuthStore();
-        const isLoading = ref(false);
-
-        return { authStore };
-    },
     data() {
         return {
             googleProvider: new GoogleAuthProvider(),
@@ -60,69 +55,55 @@ export default {
             prompt: 'select_account',
         });
     },
-    components: {
-        Icon,
+    computed: {
+        authStore() {
+            return useAuthStore();
+        }
     },
     methods: {
         firebaseSignInPopup(provider) {
             signInWithPopup(this.firebaseAuth, provider)
                 .then((authRes) => {
-                    this.callAuthAPI(authRes);
+                    this.auth(authRes);
                 })
                 .catch((authError) => {
                     console.log(authError);
                 });
         },
-        async callAuthAPI(authRes) {
-            this.isLoading = true;
-            await axios
-                .get('http://spotify_clone_api.test/api/firebase/auth', {
-                    params: {
-                        email: authRes.user.email,
-                        device_token: this.deviceToken,
-                    },
-                })
-                .then((apiRes) => {
-                    if (apiRes.data.code == 200) {
-                        this.authStore.setIsLoggedIn(true);
-                        this.authStore.setUser(apiRes.data.data);
-                        this.sendGreeting();
-                        this.$router.push('/');
-                        this.isLoading = false;
-                    }
-                })
-                .catch((apiError) => {
-                    console.log(apiError);
-                    alert('Call API thất bại');
-                });
+        async auth(authRes) {
+            await api.get('/firebase/auth', {
+                params: {
+                    email: authRes.user.email,
+                    device_token: this.deviceToken,
+                },
+            }).then((apiRes) => {
+                if (apiRes.data.code === 200) {
+                    this.authStore.setIsLoggedIn(true);
+                    this.authStore.setUser(apiRes.data.data);
+                    this.sendGreeting();
+                    this.$router.push('/');
+                }
+            }).catch((apiError) => {
+                console.log(apiError);
+                alert('Call API thất bại');
+            });
         },
         async sendGreeting() {
-            try {
-                const res = await axios.get(
-                    'http://spotify_clone_api.test/api/email/send-greeting',
-                    {
-                        headers: {
-                            Authorization:
-                                'Bearer ' + this.authStore.user.token,
-                        },
-                    },
-                );
-            } catch (e) {
-                console.log(e);
-            }
+            await api.get('/email/send-greeting', {
+                headers: {
+                    Authorization: 'Bearer ' + this.authStore.user.token,
+                },
+            });
         },
         getDeviceToken() {
-            getToken(this.messaging, { vapidKey: fcmKeyPair })
+            getToken(this.messaging, { vapidKey: import.meta.env.VITE_FCM_KEY_PAIR })
                 .then((currentToken) => {
                     if (currentToken) {
                         this.deviceToken = currentToken;
                     } else {
-                        console.log(
-                            'No registration token available. Request permission to generate one.',
-                        );
+                        console.log('No registration token available. Request permission to generate one.');
                     }
-                })
-                .catch((error) => {
+                }).catch((error) => {
                     alert('Can not get fcm device token', error);
                 });
         },
