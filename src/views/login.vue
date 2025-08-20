@@ -1,10 +1,10 @@
 <script setup>
+import { api } from '@/api/axios';
 import SigninMethods from '@/components/signinMethods.vue';
 import { Icon } from '@iconify/vue';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
 import MyLogo from '@/assets/MyLogo.svg';
 
 const authStore = useAuthStore();
@@ -21,8 +21,8 @@ const login = async () => {
     }
     try {
         isLoading.value = true;
-        const res = await axios.post(
-            'http://spotify_clone_api.test/api/login',
+        const res = await api.post(
+            '/login',
             {
                 email: email.value,
                 password: password.value,
@@ -52,13 +52,11 @@ const login = async () => {
 
 async function sendGreeting() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/email/send-greeting`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get('/email/send-greeting', {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
+        },
         );
     } catch (e) {
         console.log(e);
@@ -66,28 +64,15 @@ async function sendGreeting() {
 }
 </script>
 <template>
-    <div
-        class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60"
-        v-if="isLoading"
-    >
-        <Icon
-            icon="svg-spinners:180-ring"
-            class="text-[200px] text-[#BC4D15]"
-        />
+    <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60" v-if="isLoading">
+        <Icon icon="svg-spinners:180-ring" class="text-[200px] text-[#BC4D15]" />
     </div>
-    <div
-        class="flex h-screen items-center justify-center bg-gradient-to-b from-[#292929] from-10% to-black to-80%"
-    >
-        <div
-            class="flex h-[740px] w-[734px] flex-col items-center rounded-2xl bg-[#121212] px-24 py-8"
-        >
+    <div class="flex h-screen items-center justify-center bg-gradient-to-b from-[#292929] from-10% to-black to-80%">
+        <div class="flex h-[740px] w-[734px] flex-col items-center rounded-2xl bg-[#121212] px-24 py-8">
             <!-- Start Spotify logo -->
             <RouterLink to="/">
-                <img
-                    :src="MyLogo"
-                    alt=""
-                    class="duration-400 my-[-60px] h-[200px] w-[200px] text-[#FFE5D6] invert transition hover:text-white"
-                />
+                <img :src="MyLogo" alt=""
+                    class="duration-400 my-[-60px] h-[200px] w-[200px] text-[#FFE5D6] invert transition hover:text-white" />
             </RouterLink>
             <!-- End Sportfy logo -->
 
@@ -105,28 +90,14 @@ async function sendGreeting() {
 
             <!-- Start login form -->
             <form @submit.prevent="login" class="flex w-[350px] flex-col py-8">
-                <label class="pb-1 text-lg font-bold text-white"
-                    >Địa chỉ Email</label
-                >
-                <input
-                    type="email"
-                    placeholder="Email"
-                    v-model="email"
-                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm"
-                />
-                <label class="mt-2 pb-1 text-lg font-bold text-white"
-                    >Mật khẩu</label
-                >
-                <input
-                    type="password"
-                    placeholder="Password"
-                    v-model="password"
-                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm"
-                />
-                <button
-                    type="submit"
-                    class="mt-6 rounded-full bg-[#BC4D15] p-4 font-bold text-black transition ease-in hover:scale-105 hover:bg-[#b36b47]"
-                >
+                <label class="pb-1 text-lg font-bold text-white">Địa chỉ Email</label>
+                <input type="email" placeholder="Email" v-model="email"
+                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm" />
+                <label class="mt-2 pb-1 text-lg font-bold text-white">Mật khẩu</label>
+                <input type="password" placeholder="Password" v-model="password"
+                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm" />
+                <button type="submit"
+                    class="mt-6 rounded-full bg-[#BC4D15] p-4 font-bold text-black transition ease-in hover:scale-105 hover:bg-[#b36b47]">
                     Continue
                 </button>
             </form>
@@ -135,12 +106,9 @@ async function sendGreeting() {
             <!-- Start sign up link -->
             <div class="flex flex-row items-center">
                 <p class="text-[#aeaeae]">Bạn chưa có tài khoản?</p>
-                <RouterLink
-                    to="/signup"
-                    class="pl-4 font-semibold text-white underline underline-offset-2 transition hover:text-[#BC4D15]"
-                >
-                    Đăng ký</RouterLink
-                >
+                <RouterLink to="/signup"
+                    class="pl-4 font-semibold text-white underline underline-offset-2 transition hover:text-[#BC4D15]">
+                    Đăng ký</RouterLink>
             </div>
             <!-- End sign up link -->
         </div>

@@ -1,10 +1,9 @@
 <script setup>
+import { api } from '@/api/axios';
 import SigninMethods from '@/components/signinMethods.vue';
-import { Icon } from '@iconify/vue';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
 import MyLogo from '@/assets/MyLogo.svg';
 
 const router = useRouter();
@@ -19,12 +18,10 @@ const signup = async () => {
         return;
     }
     try {
-        const res = await axios.post(
-            'http://spotify_clone_api.test/api/signup',
-            {
-                email: email.value,
-                password: password.value,
-            },
+        const res = await api.post('/signup', {
+            email: email.value,
+            password: password.value,
+        },
         );
         if (res.data.code == 200) {
             alert('Đăng Kí Thành Công!!!');
@@ -45,48 +42,25 @@ const signup = async () => {
         <div class="flex w-96 flex-col items-center">
             <!-- Start signup header -->
             <RouterLink to="/">
-                <img
-                    :src="MyLogo"
-                    alt=""
-                    class="duration-400 my-[-60px] h-[200px] w-[200px] text-[#FFE5D6] invert transition hover:text-white"
-                />
+                <img :src="MyLogo" alt=""
+                    class="duration-400 my-[-60px] h-[200px] w-[200px] text-[#FFE5D6] invert transition hover:text-white" />
             </RouterLink>
             <h1 class="text-center text-5xl font-bold text-white">Đăng ký</h1>
             <!-- End signup header -->
 
             <!-- Start signup form -->
             <form @submit.prevent="signup" class="flex w-[350px] flex-col py-8">
-                <label class="pb-1 text-lg font-medium text-white"
-                    >Địa chỉ Email</label
-                >
-                <input
-                    type="email"
-                    placeholder="name@domain.com"
-                    v-model="email"
-                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm"
-                />
-                <label class="mt-2 pb-1 text-lg font-medium text-white"
-                    >Mật khẩu</label
-                >
-                <input
-                    type="password"
-                    placeholder="Mật khẩu"
-                    v-model="password"
-                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm"
-                />
-                <label class="mt-2 pb-1 text-lg font-medium text-white"
-                    >Nhập lại mật khẩu</label
-                >
-                <input
-                    type="password"
-                    placeholder="Nhập lại mật khẩu"
-                    v-model="rePassword"
-                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm"
-                />
-                <button
-                    type="submit"
-                    class="mt-6 rounded-full bg-[#BC4D15] p-4 font-bold text-black transition ease-in hover:scale-105 hover:bg-[#b36b47]"
-                >
+                <label class="pb-1 text-lg font-medium text-white">Địa chỉ Email</label>
+                <input type="email" placeholder="name@domain.com" v-model="email"
+                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm" />
+                <label class="mt-2 pb-1 text-lg font-medium text-white">Mật khẩu</label>
+                <input type="password" placeholder="Mật khẩu" v-model="password"
+                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm" />
+                <label class="mt-2 pb-1 text-lg font-medium text-white">Nhập lại mật khẩu</label>
+                <input type="password" placeholder="Nhập lại mật khẩu" v-model="rePassword"
+                    class="rounded-md border border-gray-500 bg-transparent p-3 text-white placeholder:text-sm" />
+                <button type="submit"
+                    class="mt-6 rounded-full bg-[#BC4D15] p-4 font-bold text-black transition ease-in hover:scale-105 hover:bg-[#b36b47]">
                     Đăng Ký
                 </button>
             </form>
@@ -109,12 +83,9 @@ const signup = async () => {
             <!-- Start login link -->
             <div class="flex flex-row items-center">
                 <p class="text-[#aeaeae]">Bạn đã có tài khoản?</p>
-                <RouterLink
-                    to="/login"
+                <RouterLink to="/login"
                     class="pl-4 font-semibold text-white underline underline-offset-2 transition hover:text-[#BC4D15]"
-                    href="#"
-                    >Đăng nhập</RouterLink
-                >
+                    href="#">Đăng nhập</RouterLink>
             </div>
             <!-- End login link -->
         </div>

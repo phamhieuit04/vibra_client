@@ -1,4 +1,5 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref } from 'vue';
 import { useViewStore } from '@/stores/view';
 import { useAuthStore } from '@/stores/auth';
@@ -6,7 +7,6 @@ import { useModalStore } from '@/stores/modal';
 import { useActivityStore } from '@/stores/activity';
 import { Icon } from '@iconify/vue';
 import { storeToRefs } from 'pinia';
-import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg';
 
 const authStore = useAuthStore();
@@ -90,14 +90,11 @@ function chooseImg() {
 
 async function songNotify(artistId, songId) {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/firebase/notify-new-song?artist_id=${artistId}&song_id=${songId}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/firebase/notify-new-song?artist_id=${artistId}&song_id=${songId}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
     } catch (e) {
         console.log(e);
     }
@@ -130,15 +127,11 @@ const uploadSong = async () => {
     }
 
     try {
-        const res = await axios.post(
-            'http://spotify_clone_api.test/api/profile/upload-song',
-            formData,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + user.value.token,
-                },
+        const res = await api.post('/profile/upload-song', formData, {
+            headers: {
+                Authorization: 'Bearer ' + user.value.token,
             },
-        );
+        });
         console.log(res.data.data);
         if (res.data.code == 200) {
             useActivity.fetchUserData();
@@ -158,158 +151,92 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60"
-    >
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
         <div class="relative w-[900px] rounded-lg bg-[#1D1512] p-6 text-white">
-            <button
-                class="absolute right-4 top-4 text-white hover:text-red-500"
-                @click="openUploadSong = false"
-            >
+            <button class="absolute right-4 top-4 text-white hover:text-red-500" @click="openUploadSong = false">
                 ✕
             </button>
 
-            <h2
-                class="mb-6 text-2xl font-bold"
-                :style="{ color: useView.currentColor }"
-            >
+            <h2 class="mb-6 text-2xl font-bold" :style="{ color: useView.currentColor }">
                 Đăng tải bài hát
             </h2>
 
             <div class="mb-3 flex gap-1">
                 <div
-                    class="group relative flex h-80 w-80 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-zinc-700"
-                >
-                    <img
-                        class="h-full w-full rounded-xl object-cover"
-                        :src="previewImg ? previewImg : defaultImgage"
-                        @error="(event) => (event.target.src = defaultImgage)"
-                        alt=""
-                    />
-                    <div
-                        class="absolute inset-0 flex items-center justify-center rounded-xl bg-black bg-opacity-50 opacity-0 transition group-hover:opacity-100"
-                        @click="chooseImg"
-                    >
-                        <Icon
-                            icon="material-symbols:edit-rounded text-black "
-                        />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref="fileInput"
-                            style="display: none"
-                            @change="onImgChoosed"
-                        />
+                    class="group relative flex h-80 w-80 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-zinc-700">
+                    <img class="h-full w-full rounded-xl object-cover" :src="previewImg ? previewImg : defaultImgage"
+                        @error="(event) => (event.target.src = defaultImgage)" alt="" />
+                    <div class="absolute inset-0 flex items-center justify-center rounded-xl bg-black bg-opacity-50 opacity-0 transition group-hover:opacity-100"
+                        @click="chooseImg">
+                        <Icon icon="material-symbols:edit-rounded text-black " />
+                        <input type="file" accept="image/*" ref="fileInput" style="display: none"
+                            @change="onImgChoosed" />
                     </div>
                 </div>
                 <div class="ml-2 flex-1">
-                    <button
-                        @click="chooseSong"
-                        class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                    >
+                    <button @click="chooseSong" class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white">
                         {{
                             selectedSongFile
                                 ? selectedSongFile.name
                                 : 'Chọn file Nhạc'
                         }}
                     </button>
-                    <input
-                        type="file"
-                        ref="songInput"
-                        accept="audio/*"
-                        @change="onSongChoosed"
-                        class="hidden"
-                    />
+                    <input type="file" ref="songInput" accept="audio/*" @change="onSongChoosed" class="hidden" />
 
-                    <textarea
-                        v-model="songDescrip"
-                        rows="5"
+                    <textarea v-model="songDescrip" rows="5"
                         class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                        placeholder="Mô tả bài hát..."
-                    ></textarea>
-                    <input
-                        v-model="songPrice"
-                        type="number"
-                        class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                        placeholder="Giá bài hát"
-                    />
+                        placeholder="Mô tả bài hát..."></textarea>
+                    <input v-model="songPrice" type="number"
+                        class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white" placeholder="Giá bài hát" />
 
                     <div class="mb-3 grid grid-cols-3 gap-4">
                         <div class="relative">
-                            <button
-                                @click="toggleCateDropdown"
-                                class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                            >
+                            <button @click="toggleCateDropdown"
+                                class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white">
                                 {{ selectedCategoryName || 'Chọn thể loại' }}
                             </button>
-                            <ul
-                                v-if="showCateDropdown"
-                                class="scrollbar-style absolute z-10 ml-5 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-gray-400 bg-[#25211F] shadow-md"
-                            >
-                                <li
-                                    v-for="cate in allCategories"
-                                    :key="cate.id"
-                                    @click="selectCategory(cate)"
-                                    class="cursor-pointer rounded-lg px-4 py-3 hover:bg-gray-500"
-                                >
+                            <ul v-if="showCateDropdown"
+                                class="scrollbar-style absolute z-10 ml-5 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-gray-400 bg-[#25211F] shadow-md">
+                                <li v-for="cate in allCategories" :key="cate.id" @click="selectCategory(cate)"
+                                    class="cursor-pointer rounded-lg px-4 py-3 hover:bg-gray-500">
                                     {{ cate.name }}
                                 </li>
                             </ul>
                         </div>
 
                         <div class="relative">
-                            <button
-                                @click="toggleAlbumDropdown"
-                                class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                            >
+                            <button @click="toggleAlbumDropdown"
+                                class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white">
                                 {{ selectedAlbumName || 'Chọn album' }}
                             </button>
-                            <ul
-                                v-if="showAlbumDropdown"
-                                class="scrollbar-style absolute z-10 ml-5 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-gray-400 bg-[#25211F] shadow-md"
-                            >
-                                <li
-                                    v-for="album in myAlbumList"
-                                    :key="album.id"
-                                    @click="selectAlbum(album)"
-                                    class="cursor-pointer rounded-lg px-4 py-3 hover:bg-gray-500"
-                                >
+                            <ul v-if="showAlbumDropdown"
+                                class="scrollbar-style absolute z-10 ml-5 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-gray-400 bg-[#25211F] shadow-md">
+                                <li v-for="album in myAlbumList" :key="album.id" @click="selectAlbum(album)"
+                                    class="cursor-pointer rounded-lg px-4 py-3 hover:bg-gray-500">
                                     {{ album.name }}
                                 </li>
                             </ul>
                         </div>
 
-                        <button
-                            @click="chooseTxt"
-                            class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                        >
+                        <button @click="chooseTxt" class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white">
                             {{
                                 selectedTxtFile
                                     ? selectedTxtFile.name
                                     : 'Chọn file Lyric'
                             }}
                         </button>
-                        <input
-                            type="file"
-                            ref="txtInput"
-                            accept=".txt"
-                            @change="onTxtChoosed"
-                            class="hidden"
-                        />
+                        <input type="file" ref="txtInput" accept=".txt" @change="onTxtChoosed" class="hidden" />
                     </div>
 
                     <div class="mt-4 flex justify-end space-x-4">
                         <button
                             class="rounded-3xl bg-gray-600 px-7 py-2 font-semibold text-white transition hover:bg-gray-500"
-                            @click="openUploadSong = false"
-                        >
+                            @click="openUploadSong = false">
                             Hủy
                         </button>
                         <button
                             class="ml-4 rounded-3xl px-7 py-2 font-semibold text-white transition hover:brightness-125"
-                            :style="{ backgroundColor: useView.currentColor }"
-                            @click="uploadSong"
-                        >
+                            :style="{ backgroundColor: useView.currentColor }" @click="uploadSong">
                             Lưu
                         </button>
                     </div>

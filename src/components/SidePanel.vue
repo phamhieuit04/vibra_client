@@ -1,8 +1,8 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref, watch, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from '@/stores/view';
@@ -24,14 +24,11 @@ const isFollowed = ref(false);
 
 async function followThisArtist() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/artist/follow/${currentTrack.value.author.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/artist/follow/${currentTrack.value.author.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value;
         useActivity.addNotify(false, 'Đã theo dõi nghệ sĩ!');
@@ -42,14 +39,11 @@ async function followThisArtist() {
 }
 async function unfollowThisArtist() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/library/destroy-favorite-artist/${currentTrack.value.author.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/library/destroy-favorite-artist/${currentTrack.value.author.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         useActivity.fetchData();
         isFollowed.value = !isFollowed.value;
         useActivity.addNotify(false, 'Đã bỏ theo dõi nghệ sĩ!');
@@ -59,17 +53,14 @@ async function unfollowThisArtist() {
     }
 }
 
-watch(
-    () => currentTrack.value,
-    () => {
-        isFollowed.value = false;
-        followArtistList.value.forEach((artist) => {
-            if (artist.artist_id === currentTrack.value.author.id) {
-                isFollowed.value = true;
-            }
-        });
-    },
-);
+watch(() => currentTrack.value, () => {
+    isFollowed.value = false;
+    followArtistList.value.forEach((artist) => {
+        if (artist.artist_id === currentTrack.value.author.id) {
+            isFollowed.value = true;
+        }
+    });
+});
 
 onMounted(() => {
     isFollowed.value = false;
@@ -83,36 +74,22 @@ onMounted(() => {
 <template>
     <div class="relative h-[calc(100vh-155px)] w-full bg-slate-400 text-white">
         <div class="h-full">
-            <img
-                class="h-full w-full object-cover opacity-50"
-                :src="currentTrack.thumbnail_path"
-            />
+            <img class="h-full w-full object-cover opacity-50" :src="currentTrack.thumbnail_path" />
         </div>
 
-        <div
-            class="absolute bottom-5 left-1/2 w-11/12 -translate-x-1/2 transform rounded-2xl bg-[#1D1512] p-4"
-        >
+        <div class="absolute bottom-5 left-1/2 w-11/12 -translate-x-1/2 transform rounded-2xl bg-[#1D1512] p-4">
             <h2 class="mb-3 text-sm font-semibold">Giới thiệu về nghệ sĩ</h2>
             <div class="mb-4 flex items-center justify-between">
                 <div class="h-16 w-16 rounded-full bg-gray-600">
-                    <img
-                        class="h-full w-full rounded-full object-cover"
-                        :src="currentTrack.author.avatar_path"
-                    />
+                    <img class="h-full w-full rounded-full object-cover" :src="currentTrack.author.avatar_path" />
                 </div>
                 <div v-if="currentTrack.author.id !== authStore.user.id">
-                    <button
-                        v-if="!isFollowed"
-                        @click="followThisArtist"
-                        class="rounded-full border border-[#BC4D15] px-4 py-2 text-sm font-semibold text-[#BC4D15] transition hover:bg-[#BC4D15] hover:text-black"
-                    >
+                    <button v-if="!isFollowed" @click="followThisArtist"
+                        class="rounded-full border border-[#BC4D15] px-4 py-2 text-sm font-semibold text-[#BC4D15] transition hover:bg-[#BC4D15] hover:text-black">
                         Theo dõi
                     </button>
-                    <button
-                        v-else
-                        @click="unfollowThisArtist"
-                        class="rounded-full border border-[#BC4D15] px-4 py-2 text-sm font-semibold text-[#BC4D15] transition hover:bg-[#BC4D15] hover:text-black"
-                    >
+                    <button v-else @click="unfollowThisArtist"
+                        class="rounded-full border border-[#BC4D15] px-4 py-2 text-sm font-semibold text-[#BC4D15] transition hover:bg-[#BC4D15] hover:text-black">
                         Hủy theo dõi
                     </button>
                 </div>

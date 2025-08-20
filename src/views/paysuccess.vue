@@ -1,8 +1,8 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref, watch, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from '@/stores/view';
@@ -22,14 +22,11 @@ const isLoading = ref(true);
 
 async function sendEmail() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/email/send-appreciation?id=${useActivity.downloadBill.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/email/send-appreciation?id=${useActivity.downloadBill.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         console.log(res);
     } catch (err) {
         console.error(err);
@@ -37,14 +34,11 @@ async function sendEmail() {
 }
 async function updateBill() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/payment/update-status/${useActivity.downloadBill.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/payment/update-status/${useActivity.downloadBill.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
     } catch (err) {
         console.error(err);
     }
@@ -61,36 +55,20 @@ onMounted(async () => {
 <template>
     <Loading v-if="isLoading" />
     <div
-        class="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#0A0A0A] p-6 font-sans"
-    >
+        class="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#0A0A0A] p-6 font-sans">
         <!-- Surrounding Effects -->
         <div class="pointer-events-none absolute inset-0">
             <!-- Meteor Shower -->
-            <div
-                class="meteor"
-                style="left: 10%; top: 20%; animation-delay: 0s"
-            ></div>
-            <div
-                class="meteor"
-                style="left: 70%; top: 30%; animation-delay: 1.5s"
-            ></div>
-            <div
-                class="meteor"
-                style="left: 30%; top: 70%; animation-delay: 3s"
-            ></div>
+            <div class="meteor" style="left: 10%; top: 20%; animation-delay: 0s"></div>
+            <div class="meteor" style="left: 70%; top: 30%; animation-delay: 1.5s"></div>
+            <div class="meteor" style="left: 30%; top: 70%; animation-delay: 3s"></div>
             <!-- Bokeh Lights -->
             <div class="bokeh" style="left: 15%; top: 15%"></div>
             <div class="bokeh" style="left: 75%; top: 25%"></div>
             <div class="bokeh" style="left: 40%; top: 60%"></div>
             <!-- Firework Effects -->
-            <div
-                class="firework"
-                style="left: 20%; top: 10%; animation-delay: 0s"
-            ></div>
-            <div
-                class="firework"
-                style="left: 80%; top: 40%; animation-delay: 2s"
-            ></div>
+            <div class="firework" style="left: 20%; top: 10%; animation-delay: 0s"></div>
+            <div class="firework" style="left: 80%; top: 40%; animation-delay: 2s"></div>
             <!-- Kaleidoscope Effect -->
             <div class="kaleidoscope"></div>
             <!-- Fog Effect -->
@@ -98,30 +76,24 @@ onMounted(async () => {
         </div>
         <!-- Main Content -->
         <div
-            class="hover:shadow-3xl relative z-10 w-full max-w-3xl transform overflow-hidden rounded-3xl bg-gradient-to-br from-[#1DB954]/80 to-[#168740]/80 text-[#FFFFFF] shadow-2xl transition-all duration-500 hover:-translate-y-2"
-        >
+            class="hover:shadow-3xl relative z-10 w-full max-w-3xl transform overflow-hidden rounded-3xl bg-gradient-to-br from-[#1DB954]/80 to-[#168740]/80 text-[#FFFFFF] shadow-2xl transition-all duration-500 hover:-translate-y-2">
             <!-- Background Gradient Overlay with 3D Animation -->
-            <div
-                class="animate-gradient-3d absolute inset-0 bg-gradient-to-br from-[#1DB954]/20 to-[#168740]/20"
-            ></div>
+            <div class="animate-gradient-3d absolute inset-0 bg-gradient-to-br from-[#1DB954]/20 to-[#168740]/20"></div>
             <div class="relative p-16 text-center">
                 <!-- Circle with Premium Effects -->
                 <div
-                    class="relative mx-auto flex h-56 w-56 items-center justify-center rounded-full border-4 border-[#1DB954]/40 bg-[#121212] shadow-[0_0_20px_rgba(29,185,84,0.6),_0_0_40px_rgba(29,185,84,0.3)] transition-all duration-500 hover:shadow-[0_0_30px_rgba(29,185,84,0.8),_0_0_60px_rgba(29,185,84,0.5)]"
-                >
+                    class="relative mx-auto flex h-56 w-56 items-center justify-center rounded-full border-4 border-[#1DB954]/40 bg-[#121212] shadow-[0_0_20px_rgba(29,185,84,0.6),_0_0_40px_rgba(29,185,84,0.3)] transition-all duration-500 hover:shadow-[0_0_30px_rgba(29,185,84,0.8),_0_0_60px_rgba(29,185,84,0.5)]">
                     <!-- Neon Glow -->
                     <div
-                        class="animate-neon-glow absolute inset-0 rounded-full bg-gradient-to-r from-[#1DB954]/50 to-[#168740]/50 blur-sm filter"
-                    ></div>
+                        class="animate-neon-glow absolute inset-0 rounded-full bg-gradient-to-r from-[#1DB954]/50 to-[#168740]/50 blur-sm filter">
+                    </div>
                     <!-- Bloom Effect -->
                     <div
-                        class="animate-bloom absolute inset-0 rounded-full bg-gradient-to-r from-[#1DB954]/40 to-[#168740]/40 blur-md filter"
-                    ></div>
+                        class="animate-bloom absolute inset-0 rounded-full bg-gradient-to-r from-[#1DB954]/40 to-[#168740]/40 blur-md filter">
+                    </div>
                     <!-- Lens Flare Effect -->
                     <div class="animate-flare absolute inset-0 rounded-full">
-                        <div
-                            class="absolute left-8 top-8 h-20 w-20 rounded-full bg-[#1DB954]/50 blur-2xl"
-                        ></div>
+                        <div class="absolute left-8 top-8 h-20 w-20 rounded-full bg-[#1DB954]/50 blur-2xl"></div>
                     </div>
                     <!-- Light Rays Effect -->
                     <div class="absolute inset-0 rounded-full">
@@ -146,38 +118,21 @@ onMounted(async () => {
                         <div class="ripple" style="animation-delay: 1s"></div>
                     </div>
                     <!-- SVG Checkmark (Static) -->
-                    <svg
-                        class="animate-scale-in h-24 w-24 text-[#1DB954]"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                    >
-                        <path
-                            d="M5 13l4 4L19 7"
-                            stroke="currentColor"
-                            stroke-width="3"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
+                    <svg class="animate-scale-in h-24 w-24 text-[#1DB954]" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                            stroke-linejoin="round" />
                     </svg>
                 </div>
                 <!-- Enhanced Sound Wave Visualizer -->
-                <div
-                    class="relative mt-6 flex items-center justify-center space-x-2"
-                >
-                    <div
-                        v-for="i in 9"
-                        :key="i"
-                        class="animate-wave w-1 rounded-full bg-gradient-to-b from-[#1DB954]/90 to-[#168740]/90"
-                        :style="{
+                <div class="relative mt-6 flex items-center justify-center space-x-2">
+                    <div v-for="i in 9" :key="i"
+                        class="animate-wave w-1 rounded-full bg-gradient-to-b from-[#1DB954]/90 to-[#168740]/90" :style="{
                             animationDelay: `${i * 0.08}s`,
                             height: `${10 + i * 4}px`,
-                        }"
-                    ></div>
+                        }"></div>
                 </div>
                 <!-- Snowfall Effect -->
-                <div
-                    class="pointer-events-none absolute inset-0 overflow-hidden"
-                >
+                <div class="pointer-events-none absolute inset-0 overflow-hidden">
                     <div class="snowflake" style="left: 10%; top: 10%"></div>
                     <div class="snowflake" style="left: 30%; top: 20%"></div>
                     <div class="snowflake" style="left: 50%; top: 5%"></div>
@@ -187,16 +142,13 @@ onMounted(async () => {
                 <!-- Title with Hover Effect -->
                 <div class="flex flex-col items-center justify-center">
                     <h1
-                        class="animate-pulse-slow cursor-pointer bg-gradient-to-r from-[#FFFFFF] to-[#1DB954] bg-clip-text text-5xl font-black leading-loose tracking-tight text-transparent transition-all duration-500"
-                    >
+                        class="animate-pulse-slow cursor-pointer bg-gradient-to-r from-[#FFFFFF] to-[#1DB954] bg-clip-text text-5xl font-black leading-loose tracking-tight text-transparent transition-all duration-500">
                         Thanh toán thành công, thông tin sẽ được gửi vào email
                         của bạn!
                     </h1>
                     <div class="flex gap-4 text-xl">
-                        <RouterLink
-                            to="/"
-                            class="cursor-pointer underline opacity-75 transition-all duration-300 hover:opacity-50"
-                        >
+                        <RouterLink to="/"
+                            class="cursor-pointer underline opacity-75 transition-all duration-300 hover:opacity-50">
                             Nhấn vào đây để quay trở lại trang chủ
                         </RouterLink>
                     </div>
@@ -325,6 +277,7 @@ onMounted(async () => {
 }
 
 @keyframes bloom {
+
     0%,
     100% {
         opacity: 0.5;
@@ -360,6 +313,7 @@ onMounted(async () => {
 }
 
 @keyframes glow {
+
     0%,
     100% {
         box-shadow:
@@ -380,6 +334,7 @@ onMounted(async () => {
 }
 
 @keyframes flare {
+
     0%,
     100% {
         opacity: 0.4;
@@ -418,6 +373,7 @@ onMounted(async () => {
 }
 
 @keyframes pulse {
+
     0%,
     100% {
         opacity: 1;
@@ -451,6 +407,7 @@ onMounted(async () => {
 }
 
 @keyframes wave {
+
     0%,
     100% {
         transform: scaleY(0.4);
@@ -466,11 +423,9 @@ onMounted(async () => {
     position: absolute;
     width: 1px;
     height: 100%;
-    background: linear-gradient(
-        to bottom,
-        rgba(29, 185, 84, 0.2),
-        rgba(29, 185, 84, 0.6)
-    );
+    background: linear-gradient(to bottom,
+            rgba(29, 185, 84, 0.2),
+            rgba(29, 185, 84, 0.6));
     transform-origin: center;
 }
 
@@ -503,6 +458,7 @@ onMounted(async () => {
 }
 
 @keyframes ray-pulse {
+
     0%,
     100% {
         height: 50%;
@@ -568,11 +524,9 @@ onMounted(async () => {
     position: absolute;
     width: 2px;
     height: 50px;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.8),
-        rgba(255, 255, 255, 0)
-    );
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.8),
+            rgba(255, 255, 255, 0));
     transform: rotate(-45deg);
     animation: meteor-shower 2s infinite linear;
 }
@@ -601,6 +555,7 @@ onMounted(async () => {
 }
 
 @keyframes bokeh-pulse {
+
     0%,
     100% {
         transform: scale(1);
@@ -645,11 +600,9 @@ onMounted(async () => {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(
-        circle,
-        rgba(29, 185, 84, 0.1) 0%,
-        rgba(10, 10, 10, 0) 70%
-    );
+    background: radial-gradient(circle,
+            rgba(29, 185, 84, 0.1) 0%,
+            rgba(10, 10, 10, 0) 70%);
     animation: kaleidoscope-spin 20s infinite linear;
 }
 
@@ -672,11 +625,9 @@ onMounted(async () => {
     position: absolute;
     width: 200%;
     height: 200%;
-    background: radial-gradient(
-        circle,
-        rgba(29, 185, 84, 0.05) 0%,
-        rgba(10, 10, 10, 0.8) 70%
-    );
+    background: radial-gradient(circle,
+            rgba(29, 185, 84, 0.05) 0%,
+            rgba(10, 10, 10, 0.8) 70%);
     animation: fog-move 15s infinite linear;
 }
 

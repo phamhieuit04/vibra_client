@@ -1,8 +1,8 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref, watch, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from '@/stores/view';
@@ -32,14 +32,11 @@ function checkNull() {
 async function FetchSearchData() {
     if (!searchKey.value) return;
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/home/search?search-key=${searchKey.value}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/home/search?search-key=${searchKey.value}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         if (res.data.code == 200) {
             listAlbumSearch.value = res.data.data.albums;
             listArtistSearch.value = res.data.data.artists;
@@ -49,12 +46,9 @@ async function FetchSearchData() {
         console.log(e);
     }
 }
-watch(
-    () => searchKey.value,
-    () => {
-        FetchSearchData();
-    },
-);
+watch(() => searchKey.value, () => {
+    FetchSearchData();
+});
 
 onMounted(() => {
     FetchSearchData();
@@ -69,39 +63,26 @@ onMounted(() => {
                         <h2 class="mb-1 text-2xl font-semibold">
                             Top tìm kiếm
                         </h2>
-                        <div
-                            class="group relative cursor-pointer rounded-lg bg-[#2a2a2a] p-4 transition hover:bg-[#333]"
-                            @click="checkNull"
-                        >
+                        <div class="group relative cursor-pointer rounded-lg bg-[#2a2a2a] p-4 transition hover:bg-[#333]"
+                            @click="checkNull">
                             <button
                                 class="absolute bottom-6 right-6 flex h-16 w-16 translate-y-2 transform items-center justify-center rounded-full opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 hover:bg-black"
                                 :style="{
                                     backgroundColor: useView.currentColor,
-                                }"
-                            >
-                                <span class="ml-0.5 text-4xl text-black"
-                                    >▶</span
-                                >
+                                }">
+                                <span class="ml-0.5 text-4xl text-black">▶</span>
                             </button>
                             <div class="mb-9 items-start space-y-3">
-                                <div
-                                    class="relative h-24 w-24 overflow-hidden rounded-md bg-zinc-700"
-                                >
-                                    <img
-                                        class="h-full w-full rounded-xl object-cover"
-                                        :src="
-                                            listSongSearch[0]
-                                                ? listSongSearch[0]
-                                                      ?.thumbnail_path
-                                                : defaultImgage
-                                        "
-                                        @error="
+                                <div class="relative h-24 w-24 overflow-hidden rounded-md bg-zinc-700">
+                                    <img class="h-full w-full rounded-xl object-cover" :src="listSongSearch[0]
+                                        ? listSongSearch[0]
+                                            ?.thumbnail_path
+                                        : defaultImgage
+                                        " @error="
                                             (event) =>
-                                                (event.target.src =
-                                                    defaultImgage)
-                                        "
-                                        alt=""
-                                    />
+                                            (event.target.src =
+                                                defaultImgage)
+                                        " alt="" />
                                 </div>
                                 <div class="">
                                     <h3 class="text-2xl font-bold">
@@ -120,49 +101,29 @@ onMounted(() => {
 
                     <div class="flex-1" v-if="listSongSearch.length > 0">
                         <h2 class="mb-1 text-2xl font-semibold">Bài hát</h2>
-                        <div
-                            class="scrollbar-style mt-3 h-56 overflow-y-auto pr-8"
-                        >
-                            <div
-                                v-for="(item, index) in listSongSearch"
-                                :key="item.id"
+                        <div class="scrollbar-style mt-3 h-56 overflow-y-auto pr-8">
+                            <div v-for="(item, index) in listSongSearch" :key="item.id"
                                 class="flex cursor-pointer items-center justify-between rounded-lg p-2 transition hover:bg-[#2a1d18]"
-                                @click="useSong.playThisSong(item)"
-                            >
+                                @click="useSong.playThisSong(item)">
                                 <div class="flex items-center space-x-4">
-                                    <div
-                                        class="h-10 w-10 rounded-md bg-zinc-700"
-                                    >
-                                        <img
-                                            class="h-full w-full rounded-xl object-cover"
-                                            :src="item?.thumbnail_path"
+                                    <div class="h-10 w-10 rounded-md bg-zinc-700">
+                                        <img class="h-full w-full rounded-xl object-cover" :src="item?.thumbnail_path"
                                             @error="
                                                 (event) =>
-                                                    (event.target.src =
-                                                        defaultImgage)
-                                            "
-                                        />
+                                                (event.target.src =
+                                                    defaultImgage)
+                                            " />
                                     </div>
                                     <span class="font-medium">{{
                                         item.name
                                     }}</span>
                                 </div>
-                                <div
-                                    class="flex items-center space-x-8 text-sm"
-                                >
-                                    <span
-                                        >{{ item.total_played }} lượt nghe</span
-                                    >
-                                    <button
-                                        @click.stop="
-                                            useSong.addSongToWaitlist(item)
-                                        "
-                                        class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5"
-                                    >
-                                        <Icon
-                                            icon="material-symbols:home-storage-outline"
-                                            class="text-2xl"
-                                        />
+                                <div class="flex items-center space-x-8 text-sm">
+                                    <span>{{ item.total_played }} lượt nghe</span>
+                                    <button @click.stop="
+                                        useSong.addSongToWaitlist(item)
+                                        " class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5">
+                                        <Icon icon="material-symbols:home-storage-outline" class="text-2xl" />
                                     </button>
                                 </div>
                             </div>
@@ -175,27 +136,18 @@ onMounted(() => {
                 <h2 class="mb-1 text-2xl font-semibold">Nghệ sĩ</h2>
                 <div class="scrollbar-style flex space-x-4 overflow-x-auto">
                     <div class="flex w-max space-x-4 px-1 py-2">
-                        <div
-                            v-for="item in listArtistSearch"
-                            :key="item.id"
+                        <div v-for="item in listArtistSearch" :key="item.id"
                             class="w-48 flex-shrink-0 cursor-pointer rounded-lg px-2 duration-200 ease-in-out hover:scale-105"
                             @click="
                                 useView.selectItem(item);
-                                useView.setComponent('ArtistPage');
-                                useView.setArtistData(item);
-                            "
-                        >
-                            <div
-                                class="mb-2 h-48 w-48 rounded-full bg-zinc-700"
-                            >
-                                <img
-                                    class="h-48 w-48 rounded-full object-cover"
-                                    :src="item.avatar_path"
-                                    @error="
-                                        (event) =>
-                                            (event.target.src = defaultImgage)
-                                    "
-                                />
+                            useView.setComponent('ArtistPage');
+                            useView.setArtistData(item);
+                            ">
+                            <div class="mb-2 h-48 w-48 rounded-full bg-zinc-700">
+                                <img class="h-48 w-48 rounded-full object-cover" :src="item.avatar_path" @error="
+                                    (event) =>
+                                        (event.target.src = defaultImgage)
+                                " />
                             </div>
                             <p class="font-medium">{{ item.name }}</p>
                             <p class="text-sm">
@@ -208,29 +160,20 @@ onMounted(() => {
 
             <div class="mb-8 text-[#FFE5D6]" v-if="listAlbumSearch.length > 0">
                 <h2 class="mb-1 text-2xl font-semibold">Albums</h2>
-                <div
-                    class="scrollbar-style w-full overflow-x-auto overflow-y-hidden"
-                >
+                <div class="scrollbar-style w-full overflow-x-auto overflow-y-hidden">
                     <div class="flex w-max space-x-4 px-1 py-2">
-                        <div
-                            v-for="item in listAlbumSearch"
-                            :key="item.id"
+                        <div v-for="item in listAlbumSearch" :key="item.id"
                             class="w-48 flex-shrink-0 cursor-pointer rounded-lg px-2 duration-200 ease-in-out hover:scale-105"
                             @click="
                                 useView.selectItem(item);
-                                useView.setComponent('PlaylistPage');
-                                useView.setPlaylistData(item);
-                            "
-                        >
+                            useView.setComponent('PlaylistPage');
+                            useView.setPlaylistData(item);
+                            ">
                             <div class="mb-2 h-48 w-48 rounded-xl bg-zinc-700">
-                                <img
-                                    class="h-48 w-48 rounded-xl object-cover"
-                                    :src="item.thumbnail_path"
-                                    @error="
-                                        (event) =>
-                                            (event.target.src = defaultImgage)
-                                    "
-                                />
+                                <img class="h-48 w-48 rounded-xl object-cover" :src="item.thumbnail_path" @error="
+                                    (event) =>
+                                        (event.target.src = defaultImgage)
+                                " />
                             </div>
                             <p class="font-medium">{{ item.name }}</p>
                             <p class="text-sm">{{ item.description }}</p>

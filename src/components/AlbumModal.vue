@@ -1,10 +1,10 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref } from 'vue';
 import { useModalStore } from '@/stores/modal';
 import { useAuthStore } from '@/stores/auth';
 import { Icon } from '@iconify/vue';
 import { storeToRefs } from 'pinia';
-import axios from 'axios';
 import defaultImgage from '@/assets/default.jpg';
 import { useActivityStore } from '@/stores/activity';
 import { useViewStore } from '@/stores/view';
@@ -53,15 +53,12 @@ const saveProfile = async () => {
     }
 
     try {
-        const res = await axios.post(
-            `http://spotify_clone_api.test/api/profile/update-album/${playlistEditData.value.id}`,
-            formData,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.post(`/profile/update-album/${playlistEditData.value.id}`,
+            formData, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         if (res.data.code == 200) {
             useActivity.fetchData();
             useActivity.fetchUserData();
@@ -80,89 +77,51 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60"
-    >
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60">
         <div class="relative w-[700px] rounded-lg bg-[#1D1512] p-6 text-white">
-            <button
-                class="absolute right-4 top-4 text-white hover:text-red-500"
-                @click="openEditAlbum = false"
-            >
+            <button class="absolute right-4 top-4 text-white hover:text-red-500" @click="openEditAlbum = false">
                 ✕
             </button>
 
-            <h2
-                class="mb-6 text-2xl font-bold"
-                :style="{ color: useView.currentColor }"
-            >
+            <h2 class="mb-6 text-2xl font-bold" :style="{ color: useView.currentColor }">
                 Chỉnh sửa Album
             </h2>
 
             <div class="mb-3 flex gap-1">
                 <div
-                    class="group relative flex h-64 w-64 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-zinc-700"
-                >
-                    <img
-                        class="h-full w-full rounded-xl object-cover"
-                        :src="
-                            previewImg
-                                ? previewImg
-                                : playlistEditData.thumbnail_path
-                        "
-                        @error="(event) => (event.target.src = defaultImgage)"
-                        alt=""
-                    />
-                    <div
-                        class="absolute inset-0 flex items-center justify-center rounded-xl bg-black bg-opacity-50 opacity-0 transition group-hover:opacity-100"
-                        @click="chooseImg"
-                    >
-                        <Icon
-                            icon="material-symbols:edit-rounded text-black "
-                        />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref="fileInput"
-                            style="display: none"
-                            @change="onImgChoosed"
-                        />
+                    class="group relative flex h-64 w-64 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-zinc-700">
+                    <img class="h-full w-full rounded-xl object-cover" :src="previewImg
+                        ? previewImg
+                        : playlistEditData.thumbnail_path
+                        " @error="(event) => (event.target.src = defaultImgage)" alt="" />
+                    <div class="absolute inset-0 flex items-center justify-center rounded-xl bg-black bg-opacity-50 opacity-0 transition group-hover:opacity-100"
+                        @click="chooseImg">
+                        <Icon icon="material-symbols:edit-rounded text-black " />
+                        <input type="file" accept="image/*" ref="fileInput" style="display: none"
+                            @change="onImgChoosed" />
                     </div>
                 </div>
                 <div class="ml-2 flex-1">
-                    <input
-                        v-model="albumName"
-                        class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                        placeholder="Tên Album"
-                    />
+                    <input v-model="albumName" class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
+                        placeholder="Tên Album" />
 
-                    <textarea
-                        v-model="albumDescrip"
-                        rows="5"
+                    <textarea v-model="albumDescrip" rows="5"
                         class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                        placeholder="Mô tả Album..."
-                    ></textarea>
+                        placeholder="Mô tả Album..."></textarea>
 
-                    <input
-                        v-model="albumPrice"
-                        type="number"
-                        class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white"
-                        placeholder="Giá"
-                    />
+                    <input v-model="albumPrice" type="number"
+                        class="mb-3 w-full rounded-lg bg-[#25211F] px-4 py-3 text-white" placeholder="Giá" />
                 </div>
             </div>
 
             <div class="float-end">
-                <button
-                    class="rounded-3xl bg-gray-600 px-7 py-2 font-semibold text-white transition hover:bg-gray-500"
-                    @click="openEditAlbum = false"
-                >
+                <button class="rounded-3xl bg-gray-600 px-7 py-2 font-semibold text-white transition hover:bg-gray-500"
+                    @click="openEditAlbum = false">
                     Hủy
                 </button>
                 <button
                     class="ml-4 rounded-3xl bg-[#BC4D15] px-7 py-2 font-semibold text-white transition hover:brightness-125"
-                    :style="{ backgroundColor: useView.currentColor }"
-                    @click="saveProfile"
-                >
+                    :style="{ backgroundColor: useView.currentColor }" @click="saveProfile">
                     Lưu
                 </button>
             </div>

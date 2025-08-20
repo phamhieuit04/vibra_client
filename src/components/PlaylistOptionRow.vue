@@ -1,8 +1,8 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref, watch, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from '@/stores/view';
@@ -29,14 +29,11 @@ const emit = defineEmits(['userPress']);
 
 async function getListSong() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/library/list-playlist-song/${item.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/library/list-playlist-song/${item.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         if (res.data.code == 200) {
             thisPlaylistListSong.value = res.data.data;
             notHaveSong.value = true;
@@ -54,14 +51,11 @@ async function getListSong() {
 
 async function addSongToPlaylist() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/song/add-song-to-playlist?song_id=${currentTrack.value.id}&playlist_id=${item.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/song/add-song-to-playlist?song_id=${currentTrack.value.id}&playlist_id=${item.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         if (res.data.code == 200) {
             useActivity.fetchData();
             getListSong();
@@ -75,29 +69,23 @@ async function addSongToPlaylist() {
     }
 }
 
-watch(
-    () => currentTrack.value,
-    () => {
-        getListSong();
-        notHaveSong.value = true;
-        thisPlaylistListSong.value.forEach((song) => {
-            if (song.song_id === currentTrack.value.id) {
-                notHaveSong.value = false;
-            }
-        });
-    },
-);
+watch(() => currentTrack.value, () => {
+    getListSong();
+    notHaveSong.value = true;
+    thisPlaylistListSong.value.forEach((song) => {
+        if (song.song_id === currentTrack.value.id) {
+            notHaveSong.value = false;
+        }
+    });
+});
 
 onMounted(() => {
     getListSong();
 });
 </script>
 <template>
-    <div
-        v-if="notHaveSong"
-        class="my-1 flex cursor-pointer justify-between text-nowrap text-xl hover:bg-[#3E3D3D]"
-        @click="addSongToPlaylist"
-    >
+    <div v-if="notHaveSong" class="my-1 flex cursor-pointer justify-between text-nowrap text-xl hover:bg-[#3E3D3D]"
+        @click="addSongToPlaylist">
         <div class="px-3 py-2 text-xs">
             {{ item.name }}
         </div>

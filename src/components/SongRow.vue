@@ -1,8 +1,8 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref, watch, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from '@/stores/view';
@@ -33,14 +33,11 @@ const emit = defineEmits(['deleteFavSong', 'deletePlaylistSong']);
 
 async function unloveThisSong() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/library/destroy-favorite-song/${track.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/library/destroy-favorite-song/${track.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
 
         if (res.data.code == 200) {
             useActivity.fetchData();
@@ -55,14 +52,11 @@ async function unloveThisSong() {
 
 async function removeFromPlaylist() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/song/destroy?song_id=${track.value.id}&playlist_id=${playlist.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/song/destroy?song_id=${track.value.id}&playlist_id=${playlist.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         if (res.data.code == 200) {
             useActivity.fetchData();
             emit('deletePlaylistSong', track.value.id);
@@ -86,51 +80,28 @@ onMounted(() => {
 });
 </script>
 <template>
-    <li
-        class="flex cursor-pointer items-center justify-between rounded-md hover:bg-[#2A2929]"
-        @mouseenter="isHover = true"
-        @mouseleave="isHover = false"
-        @click="useSong.playOrPauseThisSong(track)"
-    >
+    <li class="flex cursor-pointer items-center justify-between rounded-md hover:bg-[#2A2929]"
+        @mouseenter="isHover = true" @mouseleave="isHover = false" @click="useSong.playOrPauseThisSong(track)">
         <div class="flex w-full items-center py-1.5">
-            <div
-                v-if="isHover"
-                class="ml-[14px] mr-[6px] w-[40px] cursor-pointer"
-            >
-                <Icon
-                    icon="material-symbols:play-arrow-rounded"
-                    v-if="!isPlaying"
-                    class="size-7 text-white"
-                />
-                <Icon
-                    icon="material-symbols:play-arrow-rounded"
-                    v-else-if="isPlaying && currentTrack.name !== track.name"
-                    class="size-7 text-white"
-                />
-                <Icon
-                    icon="material-symbols:pause-rounded"
-                    v-else
-                    class="size-7 text-white"
-                />
+            <div v-if="isHover" class="ml-[14px] mr-[6px] w-[40px] cursor-pointer">
+                <Icon icon="material-symbols:play-arrow-rounded" v-if="!isPlaying" class="size-7 text-white" />
+                <Icon icon="material-symbols:play-arrow-rounded"
+                    v-else-if="isPlaying && currentTrack.name !== track.name" class="size-7 text-white" />
+                <Icon icon="material-symbols:pause-rounded" v-else class="size-7 text-white" />
             </div>
             <div v-else class="ml-5 w-[40px] p-1 font-semibold text-white">
-                <span
-                    :class="{
-                        'text-green-500':
-                            currentTrack && currentTrack.name == track.name,
-                    }"
-                >
+                <span :class="{
+                    'text-green-500':
+                        currentTrack && currentTrack.name == track.name,
+                }">
                     {{ index }}
                 </span>
             </div>
             <div>
-                <div
-                    :class="{
-                        'text-green-500':
-                            currentTrack && currentTrack.name == track.name,
-                    }"
-                    class="font-semibold text-white"
-                >
+                <div :class="{
+                    'text-green-500':
+                        currentTrack && currentTrack.name == track.name,
+                }" class="font-semibold text-white">
                     {{ track.name }}
                 </div>
                 <span class="text-sm font-semibold text-gray-400">{{
@@ -142,27 +113,16 @@ onMounted(() => {
             <div v-if="isTrackTime" class="mx-5 text-xs text-gray-400">
                 {{ isTrackTime }}
             </div>
-            <button
-                @click.stop="useSong.addSongToWaitlist(track)"
-                class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5"
-            >
-                <Icon
-                    icon="material-symbols:home-storage-outline"
-                    class="text-2xl"
-                />
+            <button @click.stop="useSong.addSongToWaitlist(track)"
+                class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5">
+                <Icon icon="material-symbols:home-storage-outline" class="text-2xl" />
             </button>
-            <button
-                v-if="!isFav"
-                @click.stop="unloveThisSong"
-                class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5"
-            >
+            <button v-if="!isFav" @click.stop="unloveThisSong"
+                class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5">
                 <Icon icon="material-symbols:delete-rounded" class="text-2xl" />
             </button>
-            <button
-                v-if="playlist.type === 2"
-                @click.stop="removeFromPlaylist"
-                class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5"
-            >
+            <button v-if="playlist.type === 2" @click.stop="removeFromPlaylist"
+                class="mr-4 rounded p-1 text-[#FFE5D6]/50 hover:bg-white/5">
                 <Icon icon="material-symbols:delete-rounded" class="text-2xl" />
             </button>
         </div>

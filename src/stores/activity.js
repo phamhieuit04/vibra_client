@@ -1,5 +1,5 @@
+import { api } from '@/api/axios';
 import { defineStore } from 'pinia';
-import axios from 'axios';
 import { useAuthStore } from './auth';
 import { ref } from 'vue';
 
@@ -31,8 +31,8 @@ export const useActivityStore = defineStore('activity', {
         async fetchData() {
             try {
                 const authStore = useAuthStore();
-                const albumRes = await axios.get(
-                    'http://spotify_clone_api.test/api/library/list-playlist?type=1',
+                const albumRes = await api.get(
+                    '/library/list-playlist?type=1',
                     {
                         headers: {
                             Authorization: 'Bearer ' + authStore.user.token,
@@ -40,8 +40,8 @@ export const useActivityStore = defineStore('activity', {
                         type: 1,
                     },
                 );
-                const myPlaylistRes = await axios.get(
-                    'http://spotify_clone_api.test/api/library/list-playlist?type=2',
+                const myPlaylistRes = await api.get(
+                    '/library/list-playlist?type=2',
                     {
                         headers: {
                             Authorization: 'Bearer ' + authStore.user.token,
@@ -49,22 +49,16 @@ export const useActivityStore = defineStore('activity', {
                         type: 2,
                     },
                 );
-                const artistRes = await axios.get(
-                    'http://spotify_clone_api.test/api/library/list-artist',
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + authStore.user.token,
-                        },
+                const artistRes = await api.get('/library/list-artist', {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
                     },
-                );
-                const songRes = await axios.get(
-                    'http://spotify_clone_api.test/api/library/list-song',
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + authStore.user.token,
-                        },
+                });
+                const songRes = await api.get('/library/list-song', {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
                     },
-                );
+                });
                 this.setFollowArtistList(artistRes.data.data);
                 this.setMyPlaylistList(myPlaylistRes.data.data);
                 this.setFollowAlbumList(albumRes.data.data);
@@ -99,22 +93,16 @@ export const useActivityStore = defineStore('activity', {
         async fetchUserData() {
             try {
                 const authStore = useAuthStore();
-                const res = await axios.get(
-                    `http://spotify_clone_api.test/api/profile/list-album`,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + authStore.user.token,
-                        },
+                const res = await api.get(`/profile/list-album`, {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
                     },
-                );
-                const res2 = await axios.get(
-                    `http://spotify_clone_api.test/api/profile/list-song`,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + authStore.user.token,
-                        },
+                });
+                const res2 = await api.get(`/profile/list-song`, {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
                     },
-                );
+                });
                 this.myAlbumList = res.data.data;
                 this.mySongList = res2.data.data;
             } catch (e) {
@@ -126,8 +114,8 @@ export const useActivityStore = defineStore('activity', {
         async syncGdrive(type, id) {
             try {
                 const authStore = useAuthStore();
-                const res = await axios.get(
-                    `http://spotify_clone_api.test/api/google-drive/sync-files?type=${type}&id=${id}`,
+                const res = await api.get(
+                    `/google-drive/sync-files?type=${type}&id=${id}`,
                     {
                         headers: {
                             Authorization: 'Bearer ' + authStore.user.token,

@@ -1,7 +1,7 @@
+import { api } from '@/api/axios';
 import { defineStore } from 'pinia';
 import defaultImgage from '@/assets/default.jpg';
 import defaultSong from '@/assets/DefaultSong.mp3';
-import axios from 'axios';
 import { useAuthStore } from './auth';
 import { useActivityStore } from './activity';
 
@@ -49,14 +49,11 @@ export const useSongStore = defineStore('song', {
 
             try {
                 const authStore = useAuthStore();
-                const res = axios.get(
-                    `http://spotify_clone_api.test/api/song/update/${track.id}`,
-                    {
-                        headers: {
-                            Authorization: 'Bearer ' + authStore.user.token,
-                        },
+                const res = api.get(`/song/update/${track.id}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + authStore.user.token,
                     },
-                );
+                });
             } catch (e) {
                 console.log(e);
                 alert('Call API thất bại');

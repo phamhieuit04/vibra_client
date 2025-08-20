@@ -1,8 +1,8 @@
 <script setup>
+import { api } from '@/api/axios';
 import { onMounted, ref, watch, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import axios from 'axios';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useViewStore } from '@/stores/view';
@@ -37,14 +37,11 @@ const openMenu = ref(false);
 
 async function loveThisSong() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/song/store/${currentTrack.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/song/store/${currentTrack.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
 
         if (res.data.code == 200) {
             useActivity.fetchData();
@@ -61,14 +58,11 @@ async function loveThisSong() {
 }
 async function unloveThisSong() {
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/library/destroy-favorite-song/${currentTrack.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/library/destroy-favorite-song/${currentTrack.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
 
         if (res.data.code == 200) {
             useActivity.fetchData();
@@ -84,14 +78,11 @@ async function unloveThisSong() {
 async function downloadThisSong() {
     if (!currentTrack.value.id) return;
     try {
-        const res = await axios.get(
-            `http://spotify_clone_api.test/api/payment/create-bill?song_id=${currentTrack.value.id}`,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + authStore.user.token,
-                },
+        const res = await api.get(`/payment/create-bill?song_id=${currentTrack.value.id}`, {
+            headers: {
+                Authorization: 'Bearer ' + authStore.user.token,
             },
-        );
+        });
         if (res.data.code == 200) {
             useActivity.setDownload(res.data.data);
             window.location.href = res.data.data.checkout_url;
@@ -173,74 +164,53 @@ const loadmetadata = () => {
     });
 };
 
-watch(
-    () => favSongList.value.songs,
-    () => {
-        isLoved.value = false;
-        favSongList.value.songs.forEach((song) => {
-            if (song.id === currentTrack.value.id) {
-                isLoved.value = true;
-            }
-        });
-    },
-);
-watch(
-    () => currentTrack.value,
-    () => {
-        openMenu.value = false;
-        isLoved.value = false;
-        favSongList.value.songs.forEach((song) => {
-            if (song.id === currentTrack.value.id) {
-                isLoved.value = true;
-            }
-        });
-    },
-);
-
-watch(
-    () => audio.value,
-    () => {
-        if (!currentTrack.value) return;
-        timeupdate();
-        loadmetadata();
-    },
-);
-
-watch(
-    () => isTrackTimeCurrent.value,
-    (time) => {
-        if (!currentTrack.value) return;
-        if (time && time == isTrackTimeTotal.value) {
-            useSong.nextSongs();
+watch(() => favSongList.value.songs, () => {
+    isLoved.value = false;
+    favSongList.value.songs.forEach((song) => {
+        if (song.id === currentTrack.value.id) {
+            isLoved.value = true;
         }
-    },
-);
+    });
+});
+
+watch(() => currentTrack.value, () => {
+    openMenu.value = false;
+    isLoved.value = false;
+    favSongList.value.songs.forEach((song) => {
+        if (song.id === currentTrack.value.id) {
+            isLoved.value = true;
+        }
+    });
+});
+
+watch(() => audio.value, () => {
+    if (!currentTrack.value) return;
+    timeupdate();
+    loadmetadata();
+});
+
+watch(() => isTrackTimeCurrent.value, (time) => {
+    if (!currentTrack.value) return;
+    if (time && time == isTrackTimeTotal.value) {
+        useSong.nextSongs();
+    }
+});
 </script>
 
 <template>
-    <div
-        id="MusicPlayer"
-        class="fixed bottom-0 z-50 flex h-[9.4%] w-full items-center justify-between border-t border-t-[#272727] bg-[#181413]"
-    >
+    <div id="MusicPlayer"
+        class="fixed bottom-0 z-50 flex h-[9.4%] w-full items-center justify-between border-t border-t-[#272727] bg-[#181413]">
         <div class="flex w-1/4 items-center">
             <div class="ml-4 flex items-center">
-                <img
-                    class="aspect-square rounded-full object-cover shadow-2xl"
-                    width="55"
-                    :src="currentTrack['thumbnail_path']"
-                    @error="(event) => (event.target.src = defaultImgage)"
-                />
+                <img class="aspect-square rounded-full object-cover shadow-2xl" width="55"
+                    :src="currentTrack['thumbnail_path']" @error="(event) => (event.target.src = defaultImgage)" />
                 <div class="ml-4">
-                    <div
-                        style="font-family: 'Montserrat', sans-serif"
-                        class="cursor-pointer text-[17px] font-bold text-[#FFE5D6] hover:underline"
-                    >
+                    <div style="font-family: 'Montserrat', sans-serif"
+                        class="cursor-pointer text-[17px] font-bold text-[#FFE5D6] hover:underline">
                         {{ currentTrack ? currentTrack['name'] : 'Bài hát' }}
                     </div>
-                    <div
-                        style="font-family: 'Montserrat', sans-serif"
-                        class="cursor-pointer text-[13px] font-medium text-[#FFE5D6]/30 hover:text-white hover:underline"
-                    >
+                    <div style="font-family: 'Montserrat', sans-serif"
+                        class="cursor-pointer text-[13px] font-medium text-[#FFE5D6]/30 hover:text-white hover:underline">
                         {{
                             currentTrack ? currentTrack.author.name : 'Tác giả'
                         }}
@@ -248,45 +218,24 @@ watch(
                 </div>
             </div>
             <div class="ml-8 flex items-center">
-                <Icon
-                    v-if="!isLoved"
-                    @click="loveThisSong"
-                    icon="solar:heart-linear"
-                    class="cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110"
-                />
-                <Icon
-                    v-else
-                    @click="unloveThisSong"
-                    icon="solar:heart-bold"
-                    class="cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110"
-                />
-                <Icon
-                    @click="openMenu = !openMenu"
-                    icon="material-symbols:add-circle-outline"
-                    class="ml-5 cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110"
-                />
+                <Icon v-if="!isLoved" @click="loveThisSong" icon="solar:heart-linear"
+                    class="cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110" />
+                <Icon v-else @click="unloveThisSong" icon="solar:heart-bold"
+                    class="cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110" />
+                <Icon @click="openMenu = !openMenu" icon="material-symbols:add-circle-outline"
+                    class="ml-5 cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110" />
                 <a>
-                    <Icon
-                        @click="
-                            useSong.setDownload('song');
-                            downloadThisSong();
-                        "
-                        icon="material-symbols:arrow-circle-down-outline-rounded"
-                        class="ml-5 cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110"
-                    />
+                    <Icon @click="
+                        useSong.setDownload('song');
+                    downloadThisSong();
+                    " icon="material-symbols:arrow-circle-down-outline-rounded"
+                        class="ml-5 cursor-pointer text-[23px] text-[#FFE5D6] hover:scale-110" />
                 </a>
             </div>
-            <span
-                v-if="openMenu"
-                class="absolute bottom-[68px] left-[250px] z-20 bg-[#282828] p-1"
-            >
+            <span v-if="openMenu" class="absolute bottom-[68px] left-[250px] z-20 bg-[#282828] p-1">
                 <div class="font-semibold text-gray-200">
-                    <PlaylistOptionRow
-                        v-for="item in myPlaylistList"
-                        :key="item.id"
-                        :item="item"
-                        @user-press="onUserPress"
-                    />
+                    <PlaylistOptionRow v-for="item in myPlaylistList" :key="item.id" :item="item"
+                        @user-press="onUserPress" />
                 </div>
             </span>
         </div>
@@ -294,49 +243,23 @@ watch(
         <div class="mx-auto w-2/4 max-w-[35%]">
             <div class="flex-col items-center justify-center">
                 <div class="flex h-[30px] items-center justify-center">
-                    <button
-                        v-if="isShuffle"
-                        class="mx-2"
-                        @click="isShuffle = false"
-                    >
-                        <Icon
-                            icon="mdi:shuffle"
-                            class="size-5 text-[#FFE5D6]"
-                        />
+                    <button v-if="isShuffle" class="mx-2" @click="isShuffle = false">
+                        <Icon icon="mdi:shuffle" class="size-5 text-[#FFE5D6]" />
                     </button>
                     <button v-else class="mx-2" @click="isShuffle = true">
-                        <Icon
-                            icon="mdi:shuffle-disabled"
-                            class="size-5 text-[#FFE5D6]"
-                        />
+                        <Icon icon="mdi:shuffle-disabled" class="size-5 text-[#FFE5D6]" />
                     </button>
 
                     <button class="mx-2" @click="useSong.prevSongs">
-                        <Icon
-                            icon="fa6-solid:backward-step"
-                            class="size-7 text-[#FFE5D6]"
-                        />
+                        <Icon icon="fa6-solid:backward-step" class="size-7 text-[#FFE5D6]" />
                     </button>
-                    <button
-                        class="mx-3 rounded-full p-1"
-                        @click="useSong.playOrPauseThisSong(currentTrack)"
-                    >
-                        <Icon
-                            icon="material-symbols:play-circle-rounded"
-                            v-if="!isPlaying"
-                            class="size-12 text-white"
-                        />
-                        <Icon
-                            icon="material-symbols:pause-circle"
-                            v-else
-                            class="size-12 text-white"
-                        />
+                    <button class="mx-3 rounded-full p-1" @click="useSong.playOrPauseThisSong(currentTrack)">
+                        <Icon icon="material-symbols:play-circle-rounded" v-if="!isPlaying"
+                            class="size-12 text-white" />
+                        <Icon icon="material-symbols:pause-circle" v-else class="size-12 text-white" />
                     </button>
                     <button class="mx-2" @click="useSong.nextSongs()">
-                        <Icon
-                            icon="fa6-solid:forward-step"
-                            class="size-7 text-[#FFE5D6]"
-                        />
+                        <Icon icon="fa6-solid:forward-step" class="size-7 text-[#FFE5D6]" />
                     </button>
 
                     <!-- <button class="mx-2" @click="useView.setComponent('HomePage'); useView.selectItem(this)">
@@ -344,11 +267,8 @@ watch(
 							class="text-[#FFE5D6]  transition duration-200 cursor-pointer size-5 hover:text-white"
 							:class="{ 'animate-bounce': isPlaying }" />
 					</button> -->
-                    <img
-                        :src="MyLogo"
-                        alt=""
-                        class="duration-400 mx-[-18px] h-[80px] w-[80px] text-[#FFE5D6] invert transition hover:text-white"
-                    />
+                    <img :src="MyLogo" alt=""
+                        class="duration-400 mx-[-18px] h-[80px] w-[80px] text-[#FFE5D6] invert transition hover:text-white" />
                 </div>
             </div>
 
@@ -356,26 +276,14 @@ watch(
                 <div class="pr-2 pt-[11px] text-[12px] text-white">
                     {{ isTrackTimeCurrent ? isTrackTimeCurrent : '00' }}
                 </div>
-                <div
-                    ref="seekerContainer"
-                    class="relative mb-3 mt-2 w-full"
-                    @mouseenter="isHover = true"
-                    @mouseleave="isHover = false"
-                >
-                    <input
-                        v-model="range"
-                        ref="seeker"
-                        type="range"
-                        class="absolute z-40 my-2 h-0 w-full cursor-pointer appearance-none rounded-full bg-opacity-100 accent-white focus:outline-none"
-                    />
-                    <div
-                        class="pointer-events-none absolute inset-y-0 left-0 z-10 mt-[6px] h-[4px] w-3"
-                        :style="`width: ${range}%;`"
-                        :class="isHover ? `bg-white` : 'bg-white'"
-                    ></div>
-                    <div
-                        class="absolute inset-y-0 left-0 z-[-0] mt-[6px] h-[4px] w-full rounded-full bg-gray-500"
-                    ></div>
+                <div ref="seekerContainer" class="relative mb-3 mt-2 w-full" @mouseenter="isHover = true"
+                    @mouseleave="isHover = false">
+                    <input v-model="range" ref="seeker" type="range"
+                        class="absolute z-40 my-2 h-0 w-full cursor-pointer appearance-none rounded-full bg-opacity-100 accent-white focus:outline-none" />
+                    <div class="pointer-events-none absolute inset-y-0 left-0 z-10 mt-[6px] h-[4px] w-3"
+                        :style="`width: ${range}%;`" :class="isHover ? `bg-white` : 'bg-white'"></div>
+                    <div class="absolute inset-y-0 left-0 z-[-0] mt-[6px] h-[4px] w-full rounded-full bg-gray-500">
+                    </div>
                 </div>
                 <div class="pl-2 pt-[11px] text-[12px] text-white">
                     {{ isTrackTimeTotal ? isTrackTimeTotal : '00' }}
